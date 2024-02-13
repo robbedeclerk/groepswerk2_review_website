@@ -1,0 +1,27 @@
+Welke routes we gaan gebruiken.
+
+@index
+
+@route('/titel')
+@route('/genre')
+@route('/etc')
+
+@route('/explore')
+
+@route('/reviews')
+@route('/reviews/land')
+@route('/reviews/titel')
+@route('/reviews/genre')
+@route('/reviews/most_recent')
+@route('/reviews/most_upvotes') # 10 reviews met de meeste upvotes
+@route('/reviews/most_downvotes') # 10 reviews met de meeste downvotes
+
+
+
+@route('/top_rated')
+@route('/top_rated/genre')
+
+
+
+@route('/register)'
+@route('/profile')
