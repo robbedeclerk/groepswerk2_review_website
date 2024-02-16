@@ -1,0 +1,43 @@
+/* Reset some default styles */
+body, h1, h2, h3, h4, h5, h6, p, ul, li {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: "Karma", sans-serif;
+    background-color: #f0f0f0; /* Set your preferred background color */
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    background-color: #333; /* Set your preferred header background color */
+    color: #fff; /* Set your preferred header text color */
+}
+
+.w3-main {
+    margin-top: 100px;
+}
+
+.w3-row-padding {
+    margin: 0 -16px;
+}
+
+.w3-quarter {
+    width: 25%;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+img {
+    width: 100%;
+    height: auto;
+}
+
+h3, p {
+    margin-top: 10px;
+}
+
+/* You can add more styles as needed */
+
