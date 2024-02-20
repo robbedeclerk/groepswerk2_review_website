@@ -265,7 +265,7 @@ def get_trending_movies_details():
 
 # get_popular_series_details_filtered_on_genre("comedy")
 # get_top_rated_series_details()
-# get_trending_movies_details()
+get_trending_movies_details()
 # $$
 #
 data = get_popular_series_details()
