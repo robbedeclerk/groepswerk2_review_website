@@ -1,4 +1,4 @@
-/* Reset some default styles */
+
 body, h1, h2, h3, h4, h5, h6, p, ul, li {
     margin: 0;
     padding: 0;
@@ -6,14 +6,15 @@ body, h1, h2, h3, h4, h5, h6, p, ul, li {
 
 body {
     font-family: "Karma", sans-serif;
-    background-color: #f0f0f0; /* Set your preferred background color */
+    background-color: white;
+    margin: 0;
 }
 
 header {
     text-align: center;
     padding: 20px;
-    background-color: #333; /* Set your preferred header background color */
-    color: #fff; /* Set your preferred header text color */
+    background-color: #333;
+    color: #fff;
 }
 
 .w3-main {
