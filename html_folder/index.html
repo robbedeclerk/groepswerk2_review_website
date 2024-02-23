@@ -37,10 +37,12 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
         <!--content-->
         <div class="w3-main w3-content w3-paddin" style="max-width:1200px;margin-top:100px"></div>
         <!--first row-->
-        <div class="w3-row-padding w3-padding-16 w3-center" id="food">
+        <div class="w3-row-padding w3-padding-16 w3-center" id="movie">
             {% for movie in movies %}
             <div class="w3-quarter">
+                <a href="film_profile.html">
                 <img src={{movieapi.get_poster(movieapi.get_id(movie['Title']))}} alt="tittle movie1" style="width:100%">
+                </a>
                 <h3>{{  movie['Title']  }}</h3>
                 <p>rating movie1</p>
             </div>
@@ -50,22 +52,30 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
         <!--second row-->
         <div class="w3-row-padding w3-padding-16 w3-center" id="food">
             <div class="w3-quarter">
-                <img src="movie5" alt="tittle movie5" style="width:100%">
+                <a href="film_profile.html">
+                    <img src="movie5.jpg" alt="Title of Movie 5" style="width: 100%;" />
+                </a>
                 <h3>tittle movie5</h3>
                 <p>rating movie5</p>
             </div>
             <div class="w3-quarter">
-                <img src="movie6" alt="tittle movie6" style="width:100%">
+                <a href="film_profile.html">
+                    <img src="movie6.jpg" alt="Title of Movie 6" style="width: 100%;" />
+                </a>
                 <h3>tittle movie6</h3>
                 <p>rating movie6</p>
             </div>
             <div class="w3-quarter">
-                <img src="movie7" alt="tittle movie7" style="width:100%">
+                <a href="film_profile.html">
+                    <img src="movie7.jpg" alt="Title of Movie 7" style="width: 100%;" />
+                </a>
                 <h3>tittle movie7</h3>
                 <p>rating movie7</p>
             </div>
             <div class="w3-quarter">
-                <img src="movie8" alt="tittle movie8" style="width:100%">
+                <a href="film_profile.html">
+                    <img src="movie8.jpg" alt="Title of Movie 8" style="width: 100%;" />
+                </a>
                 <h3>tittle movie8</h3>
                 <p>rating movie8</p>
             </div>
