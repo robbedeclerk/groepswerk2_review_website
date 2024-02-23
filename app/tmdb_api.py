@@ -188,28 +188,28 @@ class Tmdb:
         return list_details
 
 
-import time
+# import time
 
-movie = Tmdb(True)
-serie = Tmdb(False)
+# movie = Tmdb(True)
+# serie = Tmdb(False)
 
-start_time = time.time()
-popular_details_data = movie.get_popular_details()
-end_time = time.time()
-exec_time_1 = end_time - start_time
-# movie.print_titles(movie.get_popular_data())
-# print()
-#
-# serie.print_titles(serie.get_popular_data())
+# start_time = time.time()
+# popular_details_data = movie.get_popular_details()
+# end_time = time.time()
+# exec_time_1 = end_time - start_time
+# # movie.print_titles(movie.get_popular_data())
+# # print()
+# #
+# # serie.print_titles(serie.get_popular_data())
 
-for thing in popular_details_data:
-    print(thing)
+# for thing in popular_details_data:
+#     print(thing)
 
-start_time = time.time()
-popular_details_data2 = movie.get_popular_details()
-end_time = time.time()
-exec_time_2 = end_time - start_time
-print(popular_details_data2[0])
-# Cijfers na ::: is alles cached
-print(f"ZonderCache: {exec_time_1}")  # AVG: 25.3, 25.1, 26.04:::25.4, 25.5
-print(f"MetCaching: {exec_time_2}")  # AVG: 8.57, 8.73, 8.7:::0, 0   TOP
+# start_time = time.time()
+# popular_details_data2 = movie.get_popular_details()
+# end_time = time.time()
+# exec_time_2 = end_time - start_time
+# print(popular_details_data2[0])
+# # Cijfers na ::: is alles cached
+# print(f"ZonderCache: {exec_time_1}")  # AVG: 25.3, 25.1, 26.04:::25.4, 25.5
+# print(f"MetCaching: {exec_time_2}")  # AVG: 8.57, 8.73, 8.7:::0, 0   TOP
