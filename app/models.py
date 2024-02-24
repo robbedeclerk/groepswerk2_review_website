@@ -1,7 +1,7 @@
 from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from app import movie_db
+from ..app import movie_db
 from datetime import timezone, datetime
 
 

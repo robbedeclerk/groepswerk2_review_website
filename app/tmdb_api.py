@@ -171,8 +171,12 @@ class Tmdb:
             list_details.append(self.get_details(self.get_id(title)))
         return list_details
 
+    def get_details_from_data(self, data):
+        list_details = self.get_list_details(self.get_titles(data))
+        return list_details
+
     def get_details_filtered_on_genre(self, genre):
-        list_details = self.get_list_details(self.get_titles(self.get_data_filtered_genres_on_popularity(genre)))
+        list_details = self.get_details_from_data(self.get_data_filtered_genres_on_popularity(genre))
         return list_details
 
     def get_popular_details(self):
