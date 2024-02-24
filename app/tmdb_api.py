@@ -13,6 +13,12 @@ class Tmdb:
             "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyMGU4ZGIyOTNmZGRlOTc3YWEzMDQ0YjUwMmRmMDI5NyIsInN1YiI6IjY1YzIyOTdkZWZlYTdhMDE4NDUyY2I2ZSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.r1F8ZMiAf1b20cYYmqtAuv7kCNBBHTOvAETk5kxI61I"
         }
 
+    def get_type(self):
+        if self.isMovie:
+            return "film"
+        else:
+            return "serie"
+
     def is_movie_arg(self):
         if self.isMovie:
             is_movie_arg = "movie"
