@@ -36,17 +36,22 @@
 
 <body>
 <div class="w3-center" style="margin-top: 200px;text-align:center">
-    <img src={{  movieapi.get_poster(id)  }} alt="tittle movie" style="width:100%">
+    <img src={{  movieapi.get_poster(id)  }} alt="title movie" style="width:30%">
+    <h3>{{  movie['Title']  }}</h3>
+    <p>{{  movie['Overview']  }}</p>
+    <p>{{  movie['Release_date']  }}</p>
+    <p>{{  movie['Runtime']  }}</p>
+    <p>{{  movie['Genre']  }}</p>
+    <p>rating movie</p>
+    {% for movieB in similars %}
+    <div class="w3-center" style="margin-top: 200px;text-align:center" >
+        <a href="{{ url_for('search', id=movieapi.get_id(movieB['Title']), type= movieapi.get_type())}}">
+        <img src={{  movieB['Poster']  }} alt="title movie" style="width:10%"></a>
+        <h3>{{  movieB['Title']  }}</h3>
+        <p>rating movie</p></p>
+        </div>
+    {% endfor %}
 
-
-    <!--    {% for movie in movies %}-->
-    <!--    <div class="w3-center" style="margin-top: 200px;text-align:center" >-->
-    <!--        <img src={{movieapi.get_poster(movieapi.get_id(movie['Title']))}} alt="tittle movie" style="width:100%">-->
-    <!--        <h3>{{  movie['Title']  }}</h3>-->
-    <!--        <p>rating movie</p>-->
-    <!--    </div>-->
-    <!--    {% endfor %}-->
-</body>
 
 
 <script>
