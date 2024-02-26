@@ -53,6 +53,31 @@ def profile():
     else:
         return redirect(url_for('main'))
 
+@app.route('/change_email', methods=['POST'])
+def change_email():
+    if request.method == 'POST':
+        new_email = request.form['new_email']
+        conn=psycopg2.connect(**db_params)
+        cur=conn.cursor()
+        cur.execute("UPDATE users SET email = %s WHERE email = %s", (new_email, session['user']))
+        conn.commit()
+        cur.close()
+        conn.close()
+        session['email']= new_email
+        return redirect(url_for('profile'))
+
+def change_username():
+    if request.method == 'POST':
+        new_username = request.form['new_username']
+        conn = psycopg2.connect(**db_params)
+        cur = conn.cursor()
+        cur.execute("UPDATE gebruikers SET username = %s WHERE email = %s", (new_username, session['email']))
+        conn.commit()
+        cur.close()
+        conn.close()
+        session['user'] = new_username
+        return redirect(url_for('profile'))
+
 
 if __name__ == '__main__':
     app.run(debug=True)

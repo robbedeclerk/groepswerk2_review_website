@@ -18,17 +18,26 @@
             <h2>profile info</h2>
             <p>username: {{ user }}</p>
             <p>email: {{ email }}</p>
-            <!-- can meet toevoegen moest het nodig zijn -->
-        </div>
+            <!-- kan meer toevoegen moest het nodig zijn -->
+
+            <h3>change email or username</h3>
+            <from action="/change_email" method="post">
+
+                <label for="new_email">new email</label>
+                <input type="email" id="'new_email" name="new_email" required>
+                <button type="submit">change email</button>
+                <form action="/change_username" method="post">
+
+                <label for="new_username">New Username:</label>
+                <input type="text" id="new_username" name="new_username" required>
+                <button type="submit">Change Username</button>
+                </form>
+            </div>
     </section>
 
     <section class="reviews">
         <h2>reviews</h2>
         <ul>
-            <li>HTML</li>
-            <li>CSS</li>
-            <li>JavaScript</li>
-            <!-- Add more skills as needed -->
         </ul>
     </section>
 </body>
