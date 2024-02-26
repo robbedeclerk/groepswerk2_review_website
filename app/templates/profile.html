@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="stylesheet" type="text/css" href="/html_folder/cssmaps/profile.css"/>
+    <title>profile</title>
+</head>
+<body>
+    <header>
+        <h1>Welcome to the profile!</h1>
+        <p>you are logged in as {{ user }}</p>
+    </header>
+
+    <section class="profile">
+        <img src="profile-picture.jpg" alt="Profile Picture">
+        <div class="bio">
+            <h2>profile info</h2>
+            <p>username: {{ user }}</p>
+            <p>email: {{ email }}</p>
+            <!-- can meet toevoegen moest het nodig zijn -->
+        </div>
+    </section>
+
+    <section class="reviews">
+        <h2>reviews</h2>
+        <ul>
+            <li>HTML</li>
+            <li>CSS</li>
+            <li>JavaScript</li>
+            <!-- Add more skills as needed -->
+        </ul>
+    </section>
+</body>
+<footer>
+    <p>want to return to home press <a href="main.html">here.</a></p>
+</footer>
+</html>

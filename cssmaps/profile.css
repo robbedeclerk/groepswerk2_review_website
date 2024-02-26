@@ -1,0 +1,41 @@
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #4caf50;
+    color: #fff;
+    text-align: center;
+    padding: 20px;
+}
+
+.profile {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.profile img {
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.profile_info {
+    text-align: center;
+    max-width: 400px;
+}
+
+.skills {
+    background-color: #f2f2f2;
+    padding: 20px;
+}
+
+footer {
+    background-color: #fff;
+    color: #333;
+    text-align: center;
+    padding: 10px;
+}
