@@ -3,7 +3,7 @@ import psycopg2
 
 app = Flask(__name__)
 app.secret_key = 'mysecretkey'  # the key voor de sessie
-
+movie_db = SQLAlchemy(app)
 db_params = {
     'dbname': 'the database name', 'user': 'the username', 'password': 'the password', 'host': 'the host',
     'port': 'the port'}
