@@ -1,0 +1,7 @@
+__init__.py
+__pycache__/
+app/__pycache__/models.cpython-311.pyc
+app/__pycache__/routes.cpython-311.pyc
+app/__pycache__/tmdb_api.cpython-311.pyc
+groepswerkVenv/
+.gitignore

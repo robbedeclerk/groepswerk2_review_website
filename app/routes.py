@@ -9,7 +9,8 @@ serie = Tmdb(False)
 @app.route('/')
 @app.route('/index')
 def index():
-    movie_list = movie.get_popular_details()
+    # movie_list = movie.get_popular_details()
+    movie_list = movie.get_details_out_data(movie.get_popular_data())
     return render_template('index.html', movies=movie_list, movieapi=movie)
 
 
@@ -26,7 +27,7 @@ def search(type, id=None):
             movie_similars = movie.get_small_details_out_data(movie.get_similar_data(id))
             return render_template('film_profile.html', movie=movie_details, movieapi=movie, id=id, similars=movie_similars)
         else:
-            movie_list = movie.get_popular_details()
+            movie_list = movie.get_small_details_out_data(movie.get_popular_data())
             return render_template('index.html', movies=movie_list, movieapi=movie)
     elif type == "serie":
         if id:
@@ -34,7 +35,7 @@ def search(type, id=None):
             serie_similars = serie.get_small_details_out_data(serie.get_similar_data(id))
             return render_template('film_profile.html', serie=serie_details, movieapi=serie, id=id, similars=serie_similars)
         else:
-            serie_list = serie.get_popular_details()
+            serie_list = serie.get_small_details_out_data(serie.get_popular_data())
             return render_template('index.html', movies=serie_list, movieapi=serie)
 
 
