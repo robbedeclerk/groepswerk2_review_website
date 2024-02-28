@@ -80,7 +80,7 @@ class Tmdb:
 
         response = requests.get(url, headers=self.headers)
         if response.status_code == 200:
-            print(response)
+            # print(response)
             data = response.json()
             return data
 
