@@ -335,6 +335,6 @@ class Tmdb:
 # # print(id)
 # # poster = movie.get_poster(1058048)
 # # print(poster)
-movie = Tmdb(True)
-print(movie.get_popular_data())
+# movie = Tmdb(True)
+# print(movie.get_popular_data())
 # print(serie.get_popular_data())
