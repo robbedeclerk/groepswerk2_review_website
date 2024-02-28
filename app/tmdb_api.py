@@ -80,6 +80,7 @@ class Tmdb:
 
         response = requests.get(url, headers=self.headers)
         if response.status_code == 200:
+            print(response)
             data = response.json()
             return data
 
@@ -155,7 +156,7 @@ class Tmdb:
                     movie_info = {
                         "Title": each['original_title'],
                         "Released": each['release_date'],
-                        "Runtime": each['runtime'],
+                        # "Runtime": each['runtime'],
                         "Overview": each['overview'],
                         "Poster": each['poster_path'],
                         "Id": each['id']
@@ -293,47 +294,47 @@ class Tmdb:
         return list_details
 
 
-# import time
-
+# # import time
+#
+# # movie = Tmdb(True)
+# # serie = Tmdb(False)
+#
+# # start_time = time.time()
+# # popular_details_data = movie.get_popular_details()
+# # end_time = time.time()
+# # exec_time_1 = end_time - start_time
+# # # movie.print_titles(movie.get_popular_data())
+# # # print()
+# # #
+# # # serie.print_titles(serie.get_popular_data())
+#
+# # for thing in popular_details_data:
+# #     print(thing)
+#
+# # start_time = time.time()
+# # popular_details_data2 = movie.get_popular_details()
+# # end_time = time.time()
+# # exec_time_2 = end_time - start_time
+# # print(popular_details_data2[0])
+# # # Cijfers na ::: is alles cached
+# # print(f"ZonderCache: {exec_time_1}")  # AVG: 25.3, 25.1, 26.04:::25.4, 25.5
+# # print(f"MetCaching: {exec_time_2}")  # AVG: 8.57, 8.73, 8.7:::0, 0   TOP
 # movie = Tmdb(True)
 # serie = Tmdb(False)
-
-# start_time = time.time()
-# popular_details_data = movie.get_popular_details()
-# end_time = time.time()
-# exec_time_1 = end_time - start_time
-# # movie.print_titles(movie.get_popular_data())
-# # print()
+# # # similar_details_details = movie.get_similar_details(400)
+# # similar_details_data = movie.get_similar_data(1072790)
+# # # print(similar_details_details)
+# # print(similar_details_data)
 # #
-# # serie.print_titles(serie.get_popular_data())
-
-# for thing in popular_details_data:
-#     print(thing)
-
-# start_time = time.time()
-# popular_details_data2 = movie.get_popular_details()
-# end_time = time.time()
-# exec_time_2 = end_time - start_time
-# print(popular_details_data2[0])
-# # Cijfers na ::: is alles cached
-# print(f"ZonderCache: {exec_time_1}")  # AVG: 25.3, 25.1, 26.04:::25.4, 25.5
-# print(f"MetCaching: {exec_time_2}")  # AVG: 8.57, 8.73, 8.7:::0, 0   TOP
-movie = Tmdb(True)
-serie = Tmdb(False)
-# # similar_details_details = movie.get_similar_details(400)
-# similar_details_data = movie.get_similar_data(1072790)
-# # print(similar_details_details)
-# print(similar_details_data)
+# # print(movie.get_small_details_out_data(similar_details_data))
 #
-# print(movie.get_small_details_out_data(similar_details_data))
-
-
-# movieshit = movie.get_details_filtered_on_genre("Action")
-# print(movieshit)
-# id = movie.get_id("404")
-# print(id)
-# poster = movie.get_poster(1058048)
-# print(poster)
-
+#
+# # movieshit = movie.get_details_filtered_on_genre("Action")
+# # print(movieshit)
+# # id = movie.get_id("404")
+# # print(id)
+# # poster = movie.get_poster(1058048)
+# # print(poster)
+movie = Tmdb(True)
 print(movie.get_popular_data())
-print(serie.get_popular_data())
+# print(serie.get_popular_data())

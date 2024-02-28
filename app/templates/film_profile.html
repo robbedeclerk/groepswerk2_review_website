@@ -18,7 +18,7 @@
              style="display:none;z-index:2;width:40%;min-width:300px" id="mySidebar">
             <a href="javascript:void(0)" onclick="w3_close()"
                class="w3-bar-item w3-button">Close Menu</a>
-            <a href="main.html" onclick="w3_close()" class="w3-bar-item w3-button">home</a>
+            <a href="{{ url_for('index')}}" onclick="w3_close()" class="w3-bar-item w3-button">home</a>
             <a href="login.html" onclick="w3_close()" class="w3-bar-item w3-button">login</a>
         </nav>
 
@@ -43,17 +43,78 @@
     <p>{{  movie['Runtime']  }}</p>
     <p>{{  movie['Genre']  }}</p>
     <p>rating movie</p>
-    {% for movieB in similars %}
-    <div class="w3-center" style="margin-top: 200px;text-align:center" >
-        <a href="{{ url_for('search', id=movieapi.get_id(movieB['Title']), type= movieapi.get_type())}}">
-        <img src={{  movieB['Poster']  }} alt="title movie" style="width:10%"></a>
-        <h3>{{  movieB['Title']  }}</h3>
-        <p>rating movie</p></p>
+    <div class="similar-movies">
+        {% for movieB in similars %}
+        <div class="similar-movie">
+            <a href="{{ url_for('search', id=movieapi.get_id(movieB['Title']), type= movieapi.get_type()) }}">
+                <img src={{ movieB['Poster'] }} alt="title movie" style="width:100%">
+            </a>
+            <h3>{{ movieB['Title'] }}</h3>
+            <p>rating movie</p>
         </div>
-    {% endfor %}
+        {% endfor %}
+    </div>
+        <div class="navigation">
+        <button id="prevBtn"><<</button>
+        <button id="nextBtn">>>/button>
+    </div>
+</div>
+</body>
 
+<!-- CSS Styles for Smaller Movies -->
+<style>
+    .similar-movie {
+        display: flex;
+        width: 12%;
+        margin: 2px;
+        text-align: right;
+    }
+</style>
+<script>
+    var currentIndex = 0;
+    var similarMovies = document.querySelectorAll('.similar-movie');
+    var totalMovies = similarMovies.length;
 
+    // Initially hide the "Previous" button if there are no previous items
+    if (currentIndex === 0) {
+        document.getElementById('prevBtn').style.display = 'none';
+    }
 
+    document.getElementById('prevBtn').addEventListener('click', function() {
+        if (currentIndex > 0) {
+            currentIndex -= 5;
+            showHideMovies();
+            // Show the "Next" button when navigating to previous items
+            document.getElementById('nextBtn').style.display = 'inline-block';
+        }
+        // Hide the "Previous" button if there are no previous items after navigation
+        if (currentIndex === 0) {
+            document.getElementById('prevBtn').style.display = 'none';
+        }
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', function() {
+        if (currentIndex + 5 < totalMovies) {
+            currentIndex += 5;
+            showHideMovies();
+            // Show the "Previous" button when navigating to next items
+            document.getElementById('prevBtn').style.display = 'inline-block';
+        }
+    });
+
+    function showHideMovies() {
+        for (var i = 0; i < totalMovies; i++) {
+            if (i >= currentIndex && i < currentIndex + 5) {
+                similarMovies[i].style.display = 'inline-block';
+            } else {
+                similarMovies[i].style.display = 'none';
+            }
+        }
+    }
+
+    // Initially show first 5 movies
+    showHideMovies();
+</script>
 <script>
     // Script to open and close sidebar
     function w3_open() {
@@ -64,5 +125,4 @@
         document.getElementById("mySidebar").style.display = "none";
     }
 </script>
-</body>
 </html>

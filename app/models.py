@@ -4,8 +4,10 @@ import sqlalchemy.orm as so
 from datetime import timezone, datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from hashlib import md5
-from .app import movie_db
-from flask_login import UserMixin
+from ..app import movie_db
+
+
+# from flask_login import UserMixin/
 
 
 class User(movie_db.Model):
@@ -60,4 +62,3 @@ class Post(movie_db.Model):
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
 
     author: so.Mapped[User] = so.relationship(back_populates='posts')
-
