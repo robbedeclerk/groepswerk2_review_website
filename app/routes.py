@@ -1,6 +1,6 @@
-from ..app import app
+from app import app
 from flask import render_template, url_for
-from .tmdb_api import Tmdb
+from app.tmdb_api import Tmdb
 
 movie = Tmdb(True)
 serie = Tmdb(False)

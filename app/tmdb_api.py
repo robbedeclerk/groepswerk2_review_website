@@ -197,7 +197,6 @@ class Tmdb:
         list_details = self.get_list_details(self.get_titles(self.get_trending_data()))
         return list_details
 
-
 # import time
 
 # movie = Tmdb(True)
