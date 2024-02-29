@@ -1,7 +1,7 @@
 from ..app import app
 from ..app import db_params
 from .tmdb_api import Tmdb
-from flask import render_template, request, redirect, url_for, session
+from flask import render_template, request, redirect, url_for, session, jsonify
 import psycopg2
 
 movie = Tmdb(True)
@@ -20,7 +20,14 @@ def index():
 def home():
     return render_template("..templates/index.html")
 
-
+@app.route('/search_movies')
+def search_movies():
+    title = request.args.get('title')
+    if title:
+        results = movie.get_5_Titles_for_both(title)
+        return jsonify(results)
+    else:
+        return jsonify({'error': 'No title provided'})
 @app.route('/<type>/<id>')
 def search(type, id=None):
     if type == "film":
@@ -35,7 +42,7 @@ def search(type, id=None):
         if id.isnumeric():
             serie_details = serie.get_details(id)
             serie_similars = serie.get_small_details_out_data(serie.get_similar_data(id))
-            return render_template('film_profile.html', serie=serie_details, movieapi=serie, id=id, similars=serie_similars)
+            return render_template('film_profile.html', movie=serie_details, movieapi=serie, id=id, similars=serie_similars)
         else:
             serie_list = serie.get_small_details_out_data(serie.get_popular_data())
             return render_template('index.html', movies=serie_list, movieapi=serie)

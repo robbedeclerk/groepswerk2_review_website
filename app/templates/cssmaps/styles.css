@@ -32,13 +32,40 @@ header {
 }
 
 img {
-    width: 100%;
+    width: 10%;
     height: auto;
 }
 
 h3, p {
     margin-top: 10px;
 }
+.search-results-container {
+  max-height: 200px; /* Set maximum height for the results container */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+.movie-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; /* Adjust spacing between movie items */
+}
 
+.poster-image {
+  width: 10px; /* Adjust width of the poster images */
+  margin-right: 10px; /* Adjust spacing between poster and title */
+}
+
+.movie-title {
+  font-size: 16px; /* Adjust font size of the movie titles */
+}
+.search-results {
+  position: absolute;
+  top: 100%; /* Position below the search bar */
+  left: 0;
+  width: 10%;
+  max-height: 200px; /* Set max height for scrollable view */
+  overflow-y: auto; /* Enable vertical scrolling */
+  border: 1px solid #ccc;
+  background-color: #fff;
+}
 /* You can add more styles as needed */
 
