@@ -1,16 +1,17 @@
+from app import db
 from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
 from datetime import timezone, datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from hashlib import md5
-from ..app import movie_db
+from flask_login import UserMixin
 
 
-# from flask_login import UserMixin/
-
-
-class User(movie_db.Model):
+class User(db.Model):
+    """
+    The user table in the postgres database
+    """
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     username: so.Mapped[str] = so.mapped_column(sa.String(60), index=True, unique=True)
     email: so.Mapped[str] = so.mapped_column(sa.String(120), index=True, unique=True)
@@ -34,7 +35,10 @@ class User(movie_db.Model):
         return f'https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}'
 
 
-class Address(movie_db.Model):
+class Address(db.Model):
+    """
+    The address info of the Users stored in an other table for efficiency.
+    """
     id: so.Mapped[int] = so.mapped_column(primary_key=True)
     country: so.Mapped[str] = so.mapped_column(sa.String(55), index=True)
     city: so.Mapped[str] = so.mapped_column(sa.String(85), index=True)
@@ -48,7 +52,10 @@ class Address(movie_db.Model):
         return f' The Address is: {self.country},\n{self.city},\n {self.street}.'
 
 
-class Post(movie_db.Model):
+class Post(db.Model):
+    """
+    The posts table in the postgress database.
+    """
     id: so.Mapped[str] = so.mapped_column(primary_key=True)
     post_message: so.Mapped[str] = so.mapped_column(sa.Text)
     rating: so.Mapped[int] = so.mapped_column(
