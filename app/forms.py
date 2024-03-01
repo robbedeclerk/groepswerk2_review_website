@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextA
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
 import sqlalchemy as sa
 from models import User
-
+from app import db
 
 
 class RegistrationForm(FlaskForm):
@@ -18,6 +18,13 @@ class RegistrationForm(FlaskForm):
 
     def validate_username(self, username):
         user = db.session.scalar(sa.select(User).where(User.username == username.data))
+        if user is not None:
+            raise ValidationError('Please use a different username. This name is already taken.')
+
+    def validate_email(self, email):
+        user = db.session.scalar(sa.select(User).where(User.email == email.data))
+        if user is not None:
+            raise ValidationError('Please use a different email.')
 
 
 class LoginForm(FlaskForm):
@@ -28,3 +35,19 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Login')
+
+
+class ResetpasswordRequestForm(FlaskForm):
+    """
+    Request to try and reset password
+    """
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Submit')
+
+class ResetPasswordForm(FlaskForm):
+    """
+    Reset password form for users who have forgotten their password.
+    """
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField('Password', validators=[DataRequired(), EqualTo('Password')])
+    submit = SubmitField('Submit')
