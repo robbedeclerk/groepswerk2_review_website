@@ -1,6 +1,6 @@
-from ..app import app
-from ..app import db_params
-from .tmdb_api import Tmdb
+from app import app
+from app import db_params
+from app.tmdb_api import Tmdb
 from flask import render_template, request, redirect, url_for, session
 import psycopg2
 
