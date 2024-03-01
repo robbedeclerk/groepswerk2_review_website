@@ -1,5 +1,5 @@
 from flask import Flask
-from config import Config
+from ..config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
@@ -9,4 +9,4 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 login = Login
 
-from app import routes, models, tmdb_api
+from ..app import routes, models, tmdb_api

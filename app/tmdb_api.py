@@ -56,6 +56,29 @@ class Tmdb:
                 return genre['id']
         return None
 
+    def get_5_Titles_for_both(self, title):
+        print("Fetching data...")
+        film_details = []
+        serie_details = []
+        url = f"https://api.themoviedb.org/3/search/tv?query={title}&include_adult=true&language=en-US&page=1"
+        url2 = f"https://api.themoviedb.org/3/search/movie?query={title}&include_adult=true&language=en-US&page=1"
+        response = requests.get(url, headers=self.headers)
+        if response.status_code == 200:
+            print("Data fetched from API.")
+            data = response.json()
+            serie_data = data['results'][0:5]
+            for each in serie_data:
+                serie_details.append(self.get_small_details_out_single_data(False, each))
+
+        response = requests.get(url2, headers=self.headers)
+        if response.status_code == 200:
+            print("Data fetched from API.")
+            data = response.json()
+            film_data = data['results'][0:5]
+            for each in film_data:
+                film_details.append(self.get_small_details_out_single_data(True, each))
+            print(film_details)
+        return serie_details + film_details
     @cached(cache={})
     def get_trending_data(self):
         url = f"https://api.themoviedb.org/3/trending/{self.is_movie_arg()}/day?language=en-US"
@@ -190,11 +213,42 @@ class Tmdb:
             }
         return movie_info
 
+    def get_small_details_out_single_data(self,isMovie, data):
+        poster_path = data['poster_path']
+        poster_base_url = 'https://image.tmdb.org/t/p/original'
+
+        if poster_path:
+            poster_url = poster_base_url + poster_path
+        else:
+            poster_url = 'https://image.tmdb.org/t/p/original/xypWiOvbEjyLTHRQp4G57hAcb0.jpg'
+        if isMovie:
+            movie_info = {
+                "Title": data['title'],
+                "Poster": poster_url,
+                "Id": data['id'],
+                "IsMovie": "film",
+                "Popularity": data['popularity']
+            }
+        else:
+            movie_info = {
+                "Title": data['name'],
+                "Poster": poster_url,
+                "Id": data['id'],
+                "IsMovie": "serie",
+                "Popularity": data['popularity']
+            }
+        return movie_info
     def get_small_details_out_data(self, data):
         datalist = []
+        poster_base_url = 'https://image.tmdb.org/t/p/original'
+
         if data['results']:
             for each in data['results']:
-                poster_url = self.get_poster(each['id'])
+                poster_path = each['poster_path']
+                if poster_path:
+                    poster_url = poster_base_url + poster_path
+                else:
+                    poster_url = 'https://image.tmdb.org/t/p/original/xypWiOvbEjyLTHRQp4G57hAcb0.jpg'
                 if self.isMovie:
                     movie_info = {
                         "Title": each['title'],
@@ -209,7 +263,11 @@ class Tmdb:
                     }
                 datalist.append(movie_info)
             return datalist
-        poster_url = self.get_poster(data['id'])
+        poster_path = data['poster_path']
+        if poster_path:
+            poster_url = poster_base_url + poster_path
+        else:
+            poster_url = 'https://image.tmdb.org/t/p/original/xypWiOvbEjyLTHRQp4G57hAcb0.jpg'
         if self.isMovie:
             movie_info = {
                 "Title": data['title'],
@@ -233,7 +291,9 @@ class Tmdb:
         if response.status_code == 200:
             print("Data fetched from API.")
             data = response.json()
-            poster_url = self.get_poster(id)
+            poster_path = data['poster_path']
+            poster_base_url = 'https://image.tmdb.org/t/p/original'
+            poster_url = poster_base_url + poster_path
             genres = data['genres']
             genre = []
             for each in genres:
@@ -294,31 +354,32 @@ class Tmdb:
         return list_details
 
 
-# # import time
+# import time
 #
-# # movie = Tmdb(True)
-# # serie = Tmdb(False)
-#
-# # start_time = time.time()
-# # popular_details_data = movie.get_popular_details()
-# # end_time = time.time()
-# # exec_time_1 = end_time - start_time
-# # # movie.print_titles(movie.get_popular_data())
-# # # print()
-# # #
-# # # serie.print_titles(serie.get_popular_data())
-#
-# # for thing in popular_details_data:
-# #     print(thing)
-#
-# # start_time = time.time()
-# # popular_details_data2 = movie.get_popular_details()
-# # end_time = time.time()
-# # exec_time_2 = end_time - start_time
-# # print(popular_details_data2[0])
-# # # Cijfers na ::: is alles cached
-# # print(f"ZonderCache: {exec_time_1}")  # AVG: 25.3, 25.1, 26.04:::25.4, 25.5
-# # print(f"MetCaching: {exec_time_2}")  # AVG: 8.57, 8.73, 8.7:::0, 0   TOP
+# #
+# movie = Tmdb(True)
+# serie = Tmdb(False)
+# #
+# start_time = time.time()
+# popular_details_data = movie.get_popular_data()
+# end_time = time.time()
+# exec_time_1 = end_time - start_time
+# # # # movie.print_titles(movie.get_popular_data())
+# # # # print()
+# # # #
+# # # # serie.print_titles(serie.get_popular_data())
+# #
+# # # for thing in popular_details_data:
+# # #     print(thing)
+# #
+# start_time = time.time()
+# popular_details_data2 = movie.get_details_out_data(movie.get_popular_data())
+# end_time = time.time()
+# exec_time_2 = end_time - start_time
+# # # print(popular_details_data2[0])
+# # # # Cijfers na ::: is alles cached
+# print(f"ZonderCache: {exec_time_1}")  # AVG: 25.3, 25.1, 26.04:::25.4, 25.5
+# print(f"MetCaching: {exec_time_2}")  # AVG: 8.57, 8.73, 8.7:::0, 0   TOP
 # movie = Tmdb(True)
 # serie = Tmdb(False)
 # # # similar_details_details = movie.get_similar_details(400)
@@ -338,3 +399,5 @@ class Tmdb:
 # movie = Tmdb(True)
 # print(movie.get_popular_data())
 # print(serie.get_popular_data())
+
+# print(movie.get_5_Titles_for_both("Avatar"))

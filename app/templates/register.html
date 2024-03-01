@@ -1,11 +1,15 @@
-<!DOCTYPE html>
+{% comment %} <!DOCTYPE html>
 <html lang="en">
 <head>  
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width"/>
-    <link rel="stylesheet" type="text/css" href="/html_folder/cssmaps/register.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssmaps/styles.css"/>
+    <div class= register>
+    <form action="register.html" method="post"> {% endcomment %}
 
-    <form action="register.html" method="post">
+{% extends "base.html" %}
+{% block content%}
+
         <div class="register">
             <h1>Register</h1>
             <p>Please fill in this form to create an account.</p>
@@ -32,3 +36,4 @@
             <p>want to return to home press <a href="main.html">here.</a></p>
         </div>
     </form>
+</div>

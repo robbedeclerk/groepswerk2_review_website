@@ -1,11 +1,15 @@
-<!DOCTYPE html>
+{% comment %} <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width"/>
-    <link rel="stylesheet" type="text/css" href="/html_folder/cssmaps/profile.css"/>
+    <link rel="stylesheet" type="text/css" href="/cssmaps/styles.css"/>
     <title>profile</title>
-</head>
+</head> {% endcomment %}
+
+{% extends "base.html" %}
+{% block content%}
+<div class= profile>
 <body>
     <header>
         <h1>Welcome to the profile!</h1>
@@ -44,4 +48,5 @@
 <footer>
     <p>want to return to home press <a href="main.html">here.</a></p>
 </footer>
+</div>
 </html>
