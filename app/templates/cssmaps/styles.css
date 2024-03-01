@@ -277,3 +277,156 @@ a:hover {
     color: #45a049;
 }
 }
+
+{% comment %} new password css stuff {% endcomment %}
+.new_password{
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    text-align: center;
+}
+
+.reset_password {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    }
+
+.reset_password h1 {
+    color: #333;
+}
+
+hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 20px;
+}
+
+form {
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+    color: #555;
+}
+
+input[type="email"] {
+    width: 500px; 
+    padding: 10px;
+    margin: 8px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    width: 500px;
+    display: block;
+    margin: 0 auto;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.reset_password,
+div {
+    text-align: center;
+    margin-top: 20px;
+    color: #555;
+}
+
+a {
+    text-decoration: none;
+    color: #4caf50;
+}
+
+a:hover {
+    color: #45a049;
+}
+}
+
+{% comment %} reset password css stuff {% endcomment %}
+.reset_password{
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+}
+
+.reset_password {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.reset_password h1 {
+    color: #333;
+}
+
+hr {
+    border: 1px solid #f1f1f1;
+    margin-bottom: 20px;
+}
+
+form {
+    text-align: center;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+    color: #555;
+}
+
+input[type="password"] {
+    width: 80%;
+    padding: 10px;
+    margin: 8px auto;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    width: 80%;
+    display: block;
+    margin: 0 auto;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.reset_password,
+div {
+    text-align: center;
+    margin-top: 20px;
+    color: #555;
+}
+
+a {
+    text-decoration: none;
+    color: #4caf50;
+}
+
+a:hover {
+    color: #45a049;
+}
+}
