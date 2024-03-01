@@ -226,15 +226,16 @@ class Tmdb:
                 "Title": data['title'],
                 "Poster": poster_url,
                 "Id": data['id'],
-                "IsMovie": "film"
+                "IsMovie": "film",
+                "Popularity": data['popularity']
             }
         else:
             movie_info = {
                 "Title": data['name'],
                 "Poster": poster_url,
                 "Id": data['id'],
-                "IsMovie": "serie"
-
+                "IsMovie": "serie",
+                "Popularity": data['popularity']
             }
         return movie_info
     def get_small_details_out_data(self, data):

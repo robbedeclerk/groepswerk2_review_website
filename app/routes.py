@@ -1,5 +1,5 @@
 from ..app import app
-from ..app import db_params
+from ..app import db
 from .tmdb_api import Tmdb
 from flask import render_template, request, redirect, url_for, session, jsonify
 import psycopg2
@@ -25,7 +25,8 @@ def search_movies():
     title = request.args.get('title')
     if title:
         results = movie.get_5_Titles_for_both(title)
-        return jsonify(results)
+        sorted_movie_list = sorted(results, key=lambda x: x['Popularity'], reverse=True)
+        return jsonify(sorted_movie_list)
     else:
         return jsonify({'error': 'No title provided'})
 @app.route('/<type>/<id>')

@@ -50,12 +50,12 @@ h3, p {
 }
 
 .poster-image {
-  width: 10px; /* Adjust width of the poster images */
+  width: 100px; /* Adjust width of the poster images */
   margin-right: 10px; /* Adjust spacing between poster and title */
 }
 
 .movie-title {
-  font-size: 16px; /* Adjust font size of the movie titles */
+  font-size: 14px; /* Adjust font size of the movie titles */
 }
 .search-results {
   position: absolute;

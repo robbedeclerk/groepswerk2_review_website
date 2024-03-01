@@ -30,6 +30,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
     </div>
     <div class="w3-white w3-xlarge" style="max-width:1000px;margin:auto;text-align:center;">
       <input type="text" placeholder="         look up a movie">
+      <table></table>
     </div>
   </div>
 
@@ -64,12 +65,13 @@ function displayResults(results) {
       // Create a link element
       var linkElement = document.createElement("a");
       linkElement.href = "/" + result['IsMovie'] + "/" + result['Id']; // Set the href to the movie URL
+      linkElement.style.display = "block"; // Set display to block for a new line
 
       // Create an image element for the poster
       var posterElement = document.createElement("img");
       posterElement.src = result['Poster']; // Set the source of the image
       posterElement.alt = result['Title']; // Set the alt text of the image
-      posterElement.style.width = "100px"; // Adjust width as needed
+      posterElement.style.width = "60px"; // Adjust width as needed
 
       // Create a span element for the title
       var titleElement = document.createElement("span");
