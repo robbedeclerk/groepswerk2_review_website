@@ -22,6 +22,8 @@
             <h2>profile info</h2>
             <p>username: {{ user }}</p>
             <p>email: {{ email }}</p>
+            <p>name: {{ name }}</p>
+            <p>family name: {{ family_name }}</p>
             <!-- kan meer toevoegen moest het nodig zijn -->
 
             <h3>change email or username</h3>
@@ -36,6 +38,16 @@
                 <input type="text" id="new_username" name="new_username" required>
                 <button type="submit">Change Username</button>
                 </form>
+
+                <label for="new_name">new name</label>
+                <input type="text" id="'new_name" name="new_name" required>
+                <button type="submit">change name</button>
+                <form action="/change_name" method="post">
+
+                <label for="new_family_name">new name</label>
+                <input type="text" id="'new_family_name" name="new_family_name" required>
+                <button type="submit">change family name</button>
+                <form action="/change_family_name" method="post">
             </div>
     </section>
 
