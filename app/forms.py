@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
 import sqlalchemy as sa
-from models import User
+from models import User, Address
 from app import db
 
 
@@ -14,6 +14,9 @@ class RegistrationForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField('Password', validators=[DataRequired(), EqualTo('password')])
+    firstname = StringField('First Name', validators=[DataRequired()])
+    family_name = StringField('Family Name', validators=[DataRequired()])
+    country = StringField('Country', validators=[DataRequired()])
     submit = SubmitField('Register')
 
     def validate_username(self, username):
@@ -25,6 +28,11 @@ class RegistrationForm(FlaskForm):
         user = db.session.scalar(sa.select(User).where(User.email == email.data))
         if user is not None:
             raise ValidationError('Please use a different email.')
+
+    def validate_country(self, country):
+        user = db.session.scalar(sa.select(Address).where(Address.country == country.data))
+        if user is None:
+            raise ValidationError('Please choose a valid country.')
 
 
 class LoginForm(FlaskForm):
@@ -44,6 +52,7 @@ class ResetpasswordRequestForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Submit')
 
+
 class ResetPasswordForm(FlaskForm):
     """
     Reset password form for users who have forgotten their password.
@@ -51,3 +60,29 @@ class ResetPasswordForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField('Password', validators=[DataRequired(), EqualTo('Password')])
     submit = SubmitField('Submit')
+
+
+class EditProfileForm(FlaskForm):
+    """
+    Edit your profile information.
+    """
+    country = StringField('Country', validators=[DataRequired()])
+    city = StringField('City', validators=[DataRequired()])
+    postalcode = StringField('Postal Code', validators=[DataRequired()])
+    street = StringField('Street', validators=[DataRequired()])
+    house_number = StringField('House Number', validators=[DataRequired()])
+    address = StringField('Address', validators=[DataRequired()])
+    username = StringField('Username', validators=[DataRequired()])
+
+
+
+    def __init__(self, original_username, *args, **kwargs):
+        super(EditProfileForm, self).__init__(*args, **kwargs)
+        self.original_username = original_username
+
+    def validate_username(self, username):
+        if username.data != self.original_username:
+            user = db.session.scalar(sa.select(User).where(User.username == username.data))
+            if user is not None:
+                raise ValidationError('Please use a different username.')
+
