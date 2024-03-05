@@ -1,4 +1,4 @@
-{% comment %} main page css stuff {% endcomment %}
+/* main page css stuff*/
 body, h1, h2, h3, h4, h5, h6, p, ul, li {
     margin: 0;
     padding: 0;
@@ -70,7 +70,7 @@ h3, p {
 /* You can add more styles as needed */
 
 
-{% comment %} register css stuff {% endcomment %}
+/* register css stuff */
 .register{
   body {
     font-family: Arial, sans-serif;
@@ -144,7 +144,7 @@ a:hover {
 }
 
 
-{% comment %} profile css stuff {% endcomment %}
+/* profile css stuff  */
 .profile{
   body {
     font-family: 'Arial', sans-serif;
@@ -189,7 +189,7 @@ footer {
 }
 }
 
-{% comment %} login css stuff {% endcomment %}
+/* login css stuff  */
 .login{
   body {
     font-family: Arial, sans-serif;
@@ -278,7 +278,7 @@ a:hover {
 }
 }
 
-{% comment %} new password css stuff {% endcomment %}
+/* new password css stuff  */
 .new_password{
 body {
     font-family: Arial, sans-serif;
@@ -355,7 +355,7 @@ a:hover {
 }
 }
 
-{% comment %} reset password css stuff {% endcomment %}
+/* reset password css stuff */
 .reset_password{
 body {
     font-family: Arial, sans-serif;
