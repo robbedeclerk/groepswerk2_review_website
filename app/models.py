@@ -1,4 +1,4 @@
-from app import db
+from app import db, login
 from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
@@ -8,7 +8,12 @@ from hashlib import md5
 from flask_login import UserMixin
 
 
-class User(UserMixin,db.Model):
+@login.user_loader
+def load_user(id):
+    return db.session.get(User, int(id))
+
+
+class User(UserMixin, db.Model):
     """
     The user table in the postgres database
     """

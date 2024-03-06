@@ -2,8 +2,9 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
 import sqlalchemy as sa
-from models import User, Address
+from app.models import User, Address
 from app import db
+import re
 
 
 class RegistrationForm(FlaskForm):
@@ -29,10 +30,19 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different email.')
 
+    @staticmethod
     def validate_country(self, country):
-        user = db.session.scalar(sa.select(Address).where(Address.country == country.data))
-        if user is None:
-            raise ValidationError('Please choose a valid country.')
+        """
+        Needs to be tested. This function validates if the country is in the list of countries,
+        This is important for future filters of movies.
+        """
+        with open('landen.txt') as landen_file:
+            landen_content = landen_file.read()
+            is_match = re.search(r"\b{}\b".format(eenland), landen_content)
+        if is_match:
+            user = db.session.scalar(sa.select(Address).where(Address.country == country.data))
+            if user is not None:
+                raise ValidationError('Please choose a valid country.')
 
 
 class LoginForm(FlaskForm):
