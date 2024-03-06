@@ -8,7 +8,7 @@ from hashlib import md5
 from flask_login import UserMixin
 
 
-class User(db.Model):
+class User(UserMixin,db.Model):
     """
     The user table in the postgres database
     """
@@ -35,7 +35,7 @@ class User(db.Model):
         return f'https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}'
 
 
-class Address(db.Model):
+class Address(UserMixin, db.Model):
     """
     The address info of the Users stored in an other table for efficiency.
     """
