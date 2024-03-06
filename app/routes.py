@@ -1,11 +1,11 @@
-from app import app
-from app import db
+from app import app, db
 from app.tmdb_api import Tmdb
 from flask import render_template, request, redirect, url_for, session, jsonify, flash
 import psycopg2, sqlalchemy as sa
 from flask_login import current_user, login_user
 from app.forms import LoginForm
 from app.models import User
+from urllib.parse import urlsplit
 
 movie = Tmdb(True)
 serie = Tmdb(False)
@@ -17,11 +17,6 @@ def index():
     # movie_list = movie.get_popular_details()
     movie_list = movie.get_details_out_data(movie.get_popular_data())
     return render_template('index.html', movies=movie_list, movieapi=movie)
-
-
-@app.route('/home')
-def home():
-    return render_template("..templates/index.html")
 
 
 @app.route('/search_movies')
@@ -141,11 +136,14 @@ def login():
         if user is None or not user.check_password(form.password.data):
             flash("Invalid username or password!")
             return redirect(url_for("login"))
-        # .scalar returned None or login failed on password check redirect to the login again.
+        # .scalar() returned None or login failed on password check redirect to the login again.
         login_user(user, remember=form.remember_me.data)
+        next_page = request.args.get('next')
+        if not next_page or urlsplit(next_page).netloc != '':
+            next_page = url_for('index')
         # If user exists and password is correct, then log the user in and redirect to homepage.
-        return redirect(url_for("index"))
-    return render_template("login.html", title="Sign in", form=form)
+        return redirect(url_for(next_page))
+    return render_template("templates/login.html", title="Login", form=form)
 
 
 @app.route('/profile')
