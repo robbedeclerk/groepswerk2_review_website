@@ -143,7 +143,7 @@ def login():
             next_page = url_for('index')
         # If user exists and password is correct, then log the user in and redirect to homepage.
         return redirect(url_for(next_page))
-    return render_template("templates/login.html", title="Login", form=form)
+    return render_template("login.html", title="Login", form=form)
 
 
 @app.route('/profile')
