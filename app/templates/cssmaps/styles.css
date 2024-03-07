@@ -6,14 +6,14 @@ body, h1, h2, h3, h4, h5, h6, p, ul, li {
 
 body {
     font-family: "Karma", sans-serif;
-    background-color: white;
+    background-color: #808080;
     margin: 0;
 }
 
 header {
     text-align: center;
     padding: 20px;
-    background-color: #fff;
+    background-color: #808080;
     color: #333;
 }
 
@@ -191,7 +191,7 @@ footer {
 
 /* login css stuff  */
 .login{
-  body {
+body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0;
     margin: 0;

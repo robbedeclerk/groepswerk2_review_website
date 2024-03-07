@@ -29,13 +29,13 @@
             <button type="submit" class="btn btn-primary">Login</button>
         </form>
         <p> 
-            forgot password? <a href="new_password.html">ask new pasword here</a>
+            forgot password? <a href="{{ url_for('reset_password_request')}}">ask new pasword here</a>
         </p>
-        <p>Not registered?<a href="register.html" style="text-decoration: none;">Create an account</a></p>
+        <p>Not registered?<a href="{{ url_for('register')}}">Create an account</a></p>
         <div>
-            <p>want to return to home press <a href="main.html">here.</a></p>
+            <p>want to return to home press <a href="{{ url_for('index')}}">here.</a></p>
         </div> 
     </body>
-    {% endblock %}
 </div>
 </html>
+{% endblock %}
