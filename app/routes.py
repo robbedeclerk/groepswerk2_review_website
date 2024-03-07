@@ -8,8 +8,8 @@ from app.forms import LoginForm, RegistrationForm, ResetpasswordRequestForm, Res
 from app.models import User
 from urllib.parse import urlsplit
 import sqlalchemy as sa
-from app.email import send_password_reset_e
-mail
+from app.email import send_password_reset_email
+
 
 movie = Tmdb(True)
 serie = Tmdb(False)
@@ -90,20 +90,23 @@ def popular(type, genre):
 #     return render_template('index.html', movies=serie_list, movieapi=serie, genre=genre)
 
 
-@app.route('/register', methods=['POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    if request.method == 'post':
-        email = request.form['email']
-        password = request.form['password']
-        # kan meer info onder zetten als we meer toevoegen
-
-        conn = psycopg2.connect(**db_params)
-        cur = conn.cursor()
-        cur.execute("INSERT INTO users (email, password) VALUES (%s, %s)", (email, password))
-        conn.commit()
-        conn.close()
-
+    """
+    Creates a new user.
+    """
+    if current_user.is_authenticated:
+        return redirect(url_for("index"))
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(username=form.username.data, email=form.email.data)
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash('Your account has been created!')
         return redirect(url_for('login'))
+    return render_template('register.html', title='Register', form=form)
+
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -131,6 +134,7 @@ def login():
         return redirect(url_for(next_page))
     return render_template("login.html", title="Login", form=form)
 
+
 @app.route('/logout')
 def logout():
     """
@@ -140,21 +144,13 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/profile')
-def profile():
-    if 'user' in session:
-        return f"profile - logged in as {session['user']}"
-    else:
-        return redirect(url_for('main'))
-
-
 @app.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
     """
     This function deals with a password reset request.
     """
     if current_user.is_authenticated:
-        return redirect(url_for(index))
+        return redirect(url_for('index'))
     # If the user is logged in already, he gets redirected to homepage.
     form = ResetpasswordRequestForm()
     if form.validate_on_submit():
@@ -167,6 +163,31 @@ def reset_password_request():
     return render_template('reset_password_request.html', title='Reset Password', form=form)
 
 
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    """
+    Reset the user's password using a token.
+    """
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+    user = User.verify_reset_password_token(token)
+    if not user:
+        return redirect(url_for('index'))
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        user.set_password(form.password.data)
+        db.session.commit()
+        flash('Your password has been reset.')
+        return redirect(url_for('login'))
+    return render_template('reset_password_new.html', form=form)
+
+
+@app.route('/profile')
+def profile():
+    if 'user' in session:
+        return f"profile - logged in as {session['user']}"
+    else:
+        return redirect(url_for('main'))
 
 
 @app.route('/change_email', methods=['POST'])
