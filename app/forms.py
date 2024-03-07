@@ -18,6 +18,11 @@ class RegistrationForm(FlaskForm):
     firstname = StringField('First Name', validators=[DataRequired()])
     family_name = StringField('Family Name', validators=[DataRequired()])
     country = StringField('Country', validators=[DataRequired()])
+    city = StringField('City', validators=[DataRequired()])
+    postalcode = StringField('Postal Code', validators=[DataRequired()])
+    street = StringField('Street', validators=[DataRequired()])
+    house_number = StringField('House Number', validators=[DataRequired()])
+    address_suffix = StringField('Address Suffix')
     submit = SubmitField('Register')
 
     def validate_username(self, username):
@@ -38,7 +43,7 @@ class RegistrationForm(FlaskForm):
         """
         with open('landen.txt') as landen_file:
             landen_content = landen_file.read()
-            is_match = re.search(r"\b{}\b".format(eenland), landen_content)
+            is_match = re.search(fr"\b{country.data}\b", landen_content)
         if is_match:
             user = db.session.scalar(sa.select(Address).where(Address.country == country.data))
             if user is not None:
