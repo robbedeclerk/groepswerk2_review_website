@@ -2,7 +2,7 @@ from app import app, db
 from app.tmdb_api import Tmdb
 from flask import render_template, request, redirect, url_for, session, jsonify, flash
 import psycopg2, sqlalchemy as sa
-from flask_login import current_user, login_user
+from flask_login import current_user, login_user, logout_user
 from app.forms import LoginForm
 from app.models import User
 from urllib.parse import urlsplit
@@ -102,24 +102,6 @@ def register():
         return redirect(url_for('login'))
 
 
-# @app.route('/login', methods=['POST'])
-# def login():
-#     if request.method == 'POST':
-#         email = request.form['email']
-#         password = request.form['password']
-#
-#         conn = psycopg2.connect(**db_params)
-#         cur = conn.cursor()
-#         cur.execute("SELECT * FROM users WHERE email = %s AND password = %s", (email, password))
-#         user = cur.fetchone()
-#         cur.close()
-#         conn.close()
-#
-#         if user:
-#             session['user'] = user[0]
-#             return redirect(url_for('profile'))
-#         else:
-#             return "Wrong email or password"
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """
@@ -144,6 +126,14 @@ def login():
         # If user exists and password is correct, then log the user in and redirect to homepage.
         return redirect(url_for(next_page))
     return render_template("login.html", title="Login", form=form)
+
+@app.route('/logout')
+def logout():
+    """
+    Logs the user out.
+    """
+    logout_user()
+    return redirect(url_for('index'))
 
 
 @app.route('/profile')
