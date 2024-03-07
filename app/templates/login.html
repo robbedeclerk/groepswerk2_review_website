@@ -13,7 +13,7 @@
     <body> 
         <h1>name website</h1>
         <h2>enter your loging details</h2>
-        <from method='post' action="{{ url_for('login') }}">
+        <form method='post' action="{{ url_for('login') }}">
             {{form.hidden_tag}}
             <label for="username">Username:</label>
             {{ form.username(class="form-control", placeholder="Enter your username") }}

@@ -1,11 +1,15 @@
+from turtle import title
 from app import app, db
 from app.tmdb_api import Tmdb
 from flask import render_template, request, redirect, url_for, session, jsonify, flash
-import psycopg2, sqlalchemy as sa
+import psycopg2
 from flask_login import current_user, login_user, logout_user
-from app.forms import LoginForm
+from app.forms import LoginForm, RegistrationForm, ResetpasswordRequestForm, ResetPasswordForm
 from app.models import User
 from urllib.parse import urlsplit
+import sqlalchemy as sa
+from app.email import send_password_reset_e
+mail
 
 movie = Tmdb(True)
 serie = Tmdb(False)
@@ -105,7 +109,7 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """
-    Makes it possible for user to login
+    This functionmakes it possible for the user to login
     """
     if current_user.is_authenticated:
         return redirect(url_for("index"))
@@ -144,6 +148,27 @@ def profile():
         return redirect(url_for('main'))
 
 
+@app.route('/reset_password_request', methods=['GET', 'POST'])
+def reset_password_request():
+    """
+    This function deals with a password reset request.
+    """
+    if current_user.is_authenticated:
+        return redirect(url_for(index))
+    # If the user is logged in already, he gets redirected to homepage.
+    form = ResetpasswordRequestForm()
+    if form.validate_on_submit():
+        user = db.session.scalar(sa.select(User).where(User.email == form.email.data))
+        if user:
+            send_password_reset_email(user)
+    # If the user address exists, the email will be sent.
+        flash("We have send an email with instructions to reset your password!")
+        return redirect(url_for('login'))
+    return render_template('reset_password_request.html', title='Reset Password', form=form)
+
+
+
+
 @app.route('/change_email', methods=['POST'])
 def change_email():
     if request.method == 'POST':
@@ -156,35 +181,3 @@ def change_email():
         conn.close()
         session['email'] = new_email
         return redirect(url_for('profile'))
-
-
-@app.route('/change_username', methods=['POST'])
-def change_username():
-    if request.method == 'POST':
-        new_username = request.form['new_username']
-        conn = psycopg2.connect(**db_params)
-        cur = conn.cursor()
-        cur.execute("UPDATE gebruikers SET username = %s WHERE email = %s", (new_username, session['email']))
-        conn.commit()
-        cur.close()
-        conn.close()
-        session['user'] = new_username
-        return redirect(url_for('profile'))
-
-
-@app.route('/forgot_password', methods=['GET', 'POST'])
-def forgot_password():
-    if request.method == 'POST':
-        email = request.form['email']
-        token = 'example_token'
-        reset_link = url_for('reset_password', token=token, _external=True)
-        return "Password reset link sent to your email."
-    return render_template('forgot_password.html')
-
-
-@app.route('/reset_password/<token>', methods=['GET', 'POST'])
-def reset_password(token):
-    if request.method == 'POST':
-        new_password = request.form['new_password']
-        return "Password reset successful. Redirect to login page."
-    return render_template('reset_password.html', token=token)
