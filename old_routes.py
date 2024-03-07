@@ -42,3 +42,18 @@ def reset_password(token):
         new_password = request.form['new_password']
         return "Password reset successful. Redirect to login page."
     return render_template('reset_password.html', token=token)
+
+@app.route('/register', methods=['POST'])
+def register():
+    if request.method == 'post':
+        email = request.form['email']
+        password = request.form['password']
+        # kan meer info onder zetten als we meer toevoegen
+
+        conn = psycopg2.connect(**db_params)
+        cur = conn.cursor()
+        cur.execute("INSERT INTO users (email, password) VALUES (%s, %s)", (email, password))
+        conn.commit()
+        conn.close()
+
+        return redirect(url_for('login'))
