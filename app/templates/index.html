@@ -26,8 +26,8 @@
         <div class="w3-row-padding w3-padding-16 w3-center" id="movie">
             {% for movie in movies %}
                 <div class="w3-quarter">
-                    <a href="{{ url_for('search', id=movie['Id'], type=movieapi.get_type()) }}">
-                        <img src="{{ movieapi.get_poster(movieapi.get_id(movie['Title'])) }}" alt="{{ movie['Title'] }}" style="width:100%">
+                    <a href="{{ url_for('search', id=movie['Id'], type=movie['Type']) }}">
+                        <img src="{{ movie['Poster'] }}" alt="{{ movie['Title'] }}" style="width:100%">
                     </a>
                     <h3>{{ movie['Title'] }}</h3>
                     <p>rating movie1</p>

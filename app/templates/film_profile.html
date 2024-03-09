@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content%}
 <div class="w3-center" style="margin-top: 200px;text-align:center">
-    <img src={{  movieapi.get_poster(id)  }} alt="title movie" style="width:30%">
+    <img src={{  movie['Poster']  }} alt="poster movie" style="width:30%">
     <h3>{{  movie['Title']  }}</h3>
     <p>{{  movie['Overview']  }}</p>
     <p>{{  movie['Release_date']  }}</p>
@@ -11,8 +11,8 @@
     <div class="similar-movies">
         {% for movieB in similars %}
         <div class="similar-movie">
-            <a href="{{ url_for('search', id=movieapi.get_id(movieB['Title']), type= movieapi.get_type()) }}">
-                <img src={{ movieB['Poster'] }} alt="title movie" style="width:100%">
+            <a href="{{ url_for('search', id=movieB['Id'], type= movie['Type']) }}">
+                <img src={{ movieB['Poster'] }} alt="{{ movieB['Title'] }}" style="width:100%">
             </a>
             <h3>{{ movieB['Title'] }}</h3>
             <p>rating movie</p>

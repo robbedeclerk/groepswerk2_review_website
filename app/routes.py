@@ -1,6 +1,6 @@
 from turtle import title
 from app import app, db
-from app.tmdb_api import Tmdb
+from app.new_tmdb_api import Tmdb
 from flask import render_template, request, redirect, url_for, session, jsonify, flash
 import psycopg2
 from flask_login import current_user, login_user, logout_user
@@ -18,8 +18,7 @@ serie = Tmdb(False)
 @app.route('/')
 @app.route('/index')
 def index():
-    # movie_list = movie.get_popular_details()
-    movie_list = movie.get_details_out_data(movie.get_popular_data())
+    movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
     return render_template('index.html', movies=movie_list, movieapi=movie)
 
 
@@ -38,21 +37,25 @@ def search_movies():
 def search(type, id=None):
     if type == "film":
         if id.isnumeric():
-            movie_details = movie.get_details(id)
-            movie_similars = movie.get_small_details_out_data(movie.get_similar_data(id))
+            movie_details = movie.get_small_details_out_single_movie(True, movie.get_data(id))
+            movie_similars = movie.get_small_details_out_big_data(movie.get_similar_data(id))
+            # movie_details = movie.get_details(id)
+            # movie_similars = movie.get_small_details_out_data(movie.get_similar_data(id))
             return render_template('film_profile.html', movie=movie_details, movieapi=movie, id=id,
                                    similars=movie_similars)
         else:
-            movie_list = movie.get_small_details_out_data(movie.get_popular_data())
+            movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
             return render_template('index.html', movies=movie_list, movieapi=movie)
     elif type == "serie":
         if id.isnumeric():
-            serie_details = serie.get_details(id)
-            serie_similars = serie.get_small_details_out_data(serie.get_similar_data(id))
+            serie_details = serie.get_small_details_out_single_movie(True, serie.get_data(id))
+            serie_similars = serie.get_small_details_out_big_data(serie.get_similar_data(id))
+            # serie_details = serie.get_details(id)
+            # serie_similars = serie.get_small_details_out_data(serie.get_similar_data(id))
             return render_template('film_profile.html', movie=serie_details, movieapi=serie, id=id,
                                    similars=serie_similars)
         else:
-            serie_list = serie.get_small_details_out_data(serie.get_popular_data())
+            serie_list = serie.get_small_details_out_big_data(serie.get_popular_data())
             return render_template('index.html', movies=serie_list, movieapi=serie)
 
 
