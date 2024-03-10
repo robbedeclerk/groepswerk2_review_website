@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% block content%}
 <div class="w3-center" style="margin-top: 200px;text-align:center">
-    <img src={{  movie['Poster']  }} alt="poster movie" style="width:30%">
-    <h3>{{  movie['Title']  }}</h3>
-    <p>{{  movie['Overview']  }}</p>
-    <p>{{  movie['Release_date']  }}</p>
-    <p>{{  movie['Runtime']  }}</p>
-    <p>{{  movie['Genre']  }}</p>
+    <img src="{{ movie['Poster'] }}" alt="poster movie" style="width:30%">
+    <h3>{{ movie['Title'] }}</h3>
+    <p>{{ movie['Overview'] }}</p>
+    <p>{{ movie['Release_date'] }}</p>
+    <p>{{ movie['Runtime'] }}</p>
+    <p>{{ movie['Genre'] }}</p>
     <p>rating movie</p>
     <div class="similar-movies">
         {% for movieB in similars %}
