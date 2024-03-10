@@ -6,7 +6,11 @@
     <p>{{ movie['Overview'] }}</p>
     <p>{{ movie['Release_date'] }}</p>
     <p>{{ movie['Runtime'] }}</p>
-    <p>{{ movie['Genre'] }}</p>
+        <p>
+        {% for genre in movie['Genre'] %}
+        <a href="{{ url_for('popular', type= movie['Type'], genre_id=genre['id']) }}">|{{ genre['name'] }}|</a>
+        {% endfor %}
+            </p>
     <p>rating movie</p>
     <div class="similar-movies">
         {% for movieB in similars %}

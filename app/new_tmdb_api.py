@@ -164,7 +164,7 @@ class Tmdb:
                 "Id": data['id'],
                 "Type": "film",
                 "Popularity": data['popularity'],
-                "Genre": genre_ids,
+                "Genre": genres,
                 "Overview": data['overview']
             }
         else:
@@ -174,7 +174,7 @@ class Tmdb:
                 "Id": data['id'],
                 "Type": "serie",
                 "Popularity": data['popularity'],
-                "Genre": genre_ids,
+                "Genre": genres,
                 "Overview": data['overview']
             }
         return movie_info

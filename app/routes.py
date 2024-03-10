@@ -71,14 +71,17 @@ def search(type, id=None):
 #     return render_template('index.html', movies=serie_list, movieapi=serie)
 
 
-@app.route('/<type>/popular/<genre>')
-def popular(type, genre):
+@app.route('/<type>/popular/<genre_id>')
+def popular(type, genre_id):
+    if type not in ["film", "serie"]:
+        return render_template('index.html', movies=movie.get_small_details_out_big_data(movie.get_popular_data()), movieapi=movie)
     if type == "film":
-        movie_list = movie.get_details_filtered_on_genre(genre)
-        return render_template('index.html', movies=movie_list, movieapi=movie, genre=genre)
+        movie_list = movie.get_data_filtered_genres_on_popularity(genre_id)
+        print('Test')
+        return render_template('index.html', movies=movie_list, movieapi=movie, genre=genre_id)
     elif type == "serie":
-        serie_list = serie.get_details_filtered_on_genre(genre)
-        return render_template('index.html', movies=serie_list, movieapi=serie, genre=genre)
+        serie_list = serie.get_data_filtered_genres_on_popularity(genre_id)
+        return render_template('index.html', movies=serie_list, movieapi=serie, genre=genre_id)
 
 
 # @app.route('/film/popular/<genre>')
