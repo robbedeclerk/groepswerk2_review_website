@@ -4,7 +4,7 @@ from app.new_tmdb_api import Tmdb
 from flask import render_template, request, redirect, url_for, session, jsonify, flash
 import psycopg2
 from flask_login import current_user, login_user, logout_user
-from app.forms import LoginForm, RegistrationForm, ResetpasswordRequestForm, ResetPasswordForm
+from app.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.models import User
 from urllib.parse import urlsplit
 import sqlalchemy as sa
