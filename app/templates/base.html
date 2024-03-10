@@ -2,12 +2,12 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=divice-width"/>
+<meta name="viewport" content="width=device-width"/>
 <link rel="stylesheet" type="text/css" href="/cssmaps/styles.css"/>
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
 <style>
-body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
+body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", "sans-serif"}
 .w3-bar-block .w3-bar-item {padding:20px}
 </style>
 </head>
@@ -19,7 +19,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
     <input type="text" id="searchInput" placeholder="Search">
     <div id="searchResults" class="search-results"></div>
     <a href="{{ url_for('index')}}" onclick="w3_close()" class="w3-bar-item w3-button">home</a>
-    <a href="login.html" onclick="w3_close()" class="w3-bar-item w3-button">login</a>
+    <a href="{{ url_for('login') }}" onclick="w3_close()" class="w3-bar-item w3-button">login</a>
   </nav>
 
   <div class="w3-top">
@@ -48,7 +48,6 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", sans-serif}
         <div role="menuitem"><a href="/tv/now-playing">Nu in de bioscoop</a></div>
         <div role="menuitem"><a href="/tv/top-rated">Best beoordeeld</a></div>
       </div>
-    </button>
           </div>
           </div>
   </div>
