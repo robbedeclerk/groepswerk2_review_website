@@ -10,7 +10,6 @@ from urllib.parse import urlsplit
 import sqlalchemy as sa
 from app.email import send_password_reset_email
 
-
 movie = Tmdb(True)
 serie = Tmdb(False)
 
@@ -33,7 +32,7 @@ def search_movies():
         return jsonify({'error': 'No title provided'})
 
 
-@app.route('/<type>/<id>')
+@app.route('/search/<type>/<id>')
 def search(type, id=None):
     if type == "film":
         if id.isnumeric():
@@ -44,19 +43,43 @@ def search(type, id=None):
             return render_template('film_profile.html', movie=movie_details, movieapi=movie, id=id,
                                    similars=movie_similars)
         else:
+            if id == "popular":
+                movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
+                return render_template('index.html', movies=movie_list, movieapi=movie)
+            elif id == "top-rated":
+                movie_list = movie.get_small_details_out_big_data(movie.get_top_rated_data())
+                return render_template('index.html', movies=movie_list, movieapi=movie)
+            elif id == "trending":
+                movie_list = movie.get_small_details_out_big_data(movie.get_trending_data())
+                return render_template('index.html', movies=movie_list, movieapi=movie)
+            elif id == "now-playing":
+                movie_list = movie.get_small_details_out_big_data(movie.get_now_playing_data())
+                return render_template('index.html', movies=movie_list, movieapi=movie)
             movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
             return render_template('index.html', movies=movie_list, movieapi=movie)
     elif type == "serie":
         if id.isnumeric():
-            serie_details = serie.get_small_details_out_single_movie(True, serie.get_data(id))
+            serie_details = serie.get_small_details_out_single_movie(False, serie.get_data(id))
             serie_similars = serie.get_small_details_out_big_data(serie.get_similar_data(id))
             # serie_details = serie.get_details(id)
             # serie_similars = serie.get_small_details_out_data(serie.get_similar_data(id))
             return render_template('film_profile.html', movie=serie_details, movieapi=serie, id=id,
                                    similars=serie_similars)
         else:
-            serie_list = serie.get_small_details_out_big_data(serie.get_popular_data())
-            return render_template('index.html', movies=serie_list, movieapi=serie)
+            if id == "popular":
+                movie_list = serie.get_small_details_out_big_data(serie.get_popular_data())
+                return render_template('index.html', movies=movie_list, movieapi=serie)
+            elif id == "top-rated":
+                movie_list = serie.get_small_details_out_big_data(serie.get_top_rated_data())
+                return render_template('index.html', movies=movie_list, movieapi=serie)
+            elif id == "trending":
+                movie_list = serie.get_small_details_out_big_data(serie.get_trending_data())
+                return render_template('index.html', movies=movie_list, movieapi=serie)
+            elif id == "now-playing":
+                movie_list = serie.get_small_details_out_big_data(serie.get_now_playing_data())
+                return render_template('index.html', movies=movie_list, movieapi=serie)
+            movie_list = serie.get_small_details_out_big_data(serie.get_popular_data())
+            return render_template('index.html', movies=movie_list, movieapi=serie)
 
 
 # @app.route('/film/popular')
@@ -71,18 +94,21 @@ def search(type, id=None):
 #     return render_template('index.html', movies=serie_list, movieapi=serie)
 
 
-@app.route('/<type>/popular/<genre_id>')
+@app.route('/genre/<type>/popular/<int:genre_id>')
 def popular(type, genre_id):
     if type not in ["film", "serie"]:
-        return render_template('index.html', movies=movie.get_small_details_out_big_data(movie.get_popular_data()), movieapi=movie)
+        return render_template('index.html', movies=movie.get_small_details_out_big_data(movie.get_popular_data()),
+                               movieapi=movie)
     if type == "film":
-        movie_list = movie.get_data_filtered_genres_on_popularity(genre_id)
+        movie_list = movie.get_small_details_out_big_data(movie.get_data_filtered_genres_on_popularity(genre_id))
         print('Test')
+        print(f"Type: {type}, Genre ID: {genre_id}")
+        print(f"{movie.get_small_details_out_big_data(movie.get_data_filtered_genres_on_popularity(genre_id))}")
+
         return render_template('index.html', movies=movie_list, movieapi=movie, genre=genre_id)
     elif type == "serie":
-        serie_list = serie.get_data_filtered_genres_on_popularity(genre_id)
+        serie_list = serie.get_small_details_out_big_data(serie.get_data_filtered_genres_on_popularity(genre_id))
         return render_template('index.html', movies=serie_list, movieapi=serie, genre=genre_id)
-
 
 # @app.route('/film/popular/<genre>')
 # def movie_popular(genre):
@@ -112,7 +138,6 @@ def register():
         flash('Your account has been created!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
-
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -163,7 +188,7 @@ def reset_password_request():
         user = db.session.scalar(sa.select(User).where(User.email == form.email.data))
         if user:
             send_password_reset_email(user)
-    # If the user address exists, the email will be sent.
+        # If the user address exists, the email will be sent.
         flash("We have send an email with instructions to reset your password!")
         return redirect(url_for('login'))
     return render_template('reset_password_request.html', title='Reset Password', form=form)
