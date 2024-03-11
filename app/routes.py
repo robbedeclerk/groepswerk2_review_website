@@ -32,7 +32,7 @@ def search_movies():
         return jsonify({'error': 'No title provided'})
 
 
-@app.route('/search/<type>/<id>')
+@app.route('<type>/<id>')
 def search(type, id=None):
     if type == "film":
         if id.isnumeric():
@@ -94,7 +94,7 @@ def search(type, id=None):
 #     return render_template('index.html', movies=serie_list, movieapi=serie)
 
 
-@app.route('/genre/<type>/popular/<int:genre_id>')
+@app.route('/<type>/popular/<int:genre_id>')
 def popular(type, genre_id):
     if type not in ["film", "serie"]:
         return render_template('index.html', movies=movie.get_small_details_out_big_data(movie.get_popular_data()),
