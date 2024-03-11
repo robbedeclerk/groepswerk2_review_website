@@ -29,3 +29,6 @@ typing_extensions==4.9.0
 urllib3==2.2.1
 Werkzeug==3.0.1
 WTForms==3.1.2
+
+pytest~=8.0.2
+Faker~=24.1.0

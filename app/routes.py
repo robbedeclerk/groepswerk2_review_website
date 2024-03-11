@@ -3,12 +3,13 @@ from app import app, db
 from app.new_tmdb_api import Tmdb
 from flask import render_template, request, redirect, url_for, session, jsonify, flash
 import psycopg2
-from flask_login import current_user, login_user, logout_user
-from app.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm
+from flask_login import current_user, login_user, logout_user, login_required
+from app.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm, EditProfileForm
 from app.models import User
 from urllib.parse import urlsplit
 import sqlalchemy as sa
 from app.email import send_password_reset_email
+
 
 movie = Tmdb(True)
 serie = Tmdb(False)
@@ -18,7 +19,7 @@ serie = Tmdb(False)
 @app.route('/index')
 def index():
     movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
-    return render_template('index.html', movies=movie_list, movieapi=movie)
+    return render_template('index.html', title='Homepage', movies=movie_list, movieapi=movie)
 
 
 @app.route('/search_movies')
@@ -82,16 +83,7 @@ def search(type, id=None):
             return render_template('index.html', movies=movie_list, movieapi=serie)
 
 
-# @app.route('/film/popular')
-# def movie_popular():
-#     movie_list = movie.get_popular_details()
-#     return render_template('index.html', movies=movie_list, movieapi=movie)
-#
-#
-# @app.route('/serie/popular')
-# def serie_popular():
-#     serie_list = serie.get_popular_details()
-#     return render_template('index.html', movies=serie_list, movieapi=serie)
+
 
 
 @app.route('/<type>/popular/<int:genre_id>')
@@ -110,16 +102,7 @@ def popular(type, genre_id):
         serie_list = serie.get_small_details_out_big_data(serie.get_data_filtered_genres_on_popularity(genre_id))
         return render_template('index.html', movies=serie_list, movieapi=serie, genre=genre_id)
 
-# @app.route('/film/popular/<genre>')
-# def movie_popular(genre):
-#     movie_list = movie.get_details_filtered_on_genre(genre)
-#     return render_template('index.html', movies=movie_list, movieapi=movie, genre=genre)
-#
-#
-# @app.route('/serie/popular/<genre>')
-# def serie_popular(genre):
-#     serie_list = serie.get_details_filtered_on_genre(genre)
-#     return render_template('index.html', movies=serie_list, movieapi=serie, genre=genre)
+
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -138,6 +121,7 @@ def register():
         flash('Your account has been created!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -183,7 +167,7 @@ def reset_password_request():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
     # If the user is logged in already, he gets redirected to homepage.
-    form = ResetpasswordRequestForm()
+    form = ResetPasswordRequestForm()
     if form.validate_on_submit():
         user = db.session.scalar(sa.select(User).where(User.email == form.email.data))
         if user:
@@ -210,26 +194,24 @@ def reset_password(token):
         db.session.commit()
         flash('Your password has been reset.')
         return redirect(url_for('login'))
-    return render_template('reset_password_new.html', form=form)
+    return render_template('reset_password_new.html', form=form, title='Edit Profile')
 
 
-@app.route('/profile')
+@app.route('/profile', methods=['GET', 'POST'])
+@login_required
 def profile():
-    if 'user' in session:
-        return f"profile - logged in as {session['user']}"
-    else:
-        return redirect(url_for('main'))
+    form = EditProfileForm(current_user.username)
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        db.session.commit()
+        flash('Your changes have been saved.')
+        return redirect(url_for('edit_profile'))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+    return render_template('profile.html', title='Edit Profile',
+                           form=form)
 
 
-@app.route('/change_email', methods=['POST'])
-def change_email():
-    if request.method == 'POST':
-        new_email = request.form['new_email']
-        conn = psycopg2.connect(**db_params)
-        cur = conn.cursor()
-        cur.execute("UPDATE users SET email = %s WHERE email = %s", (new_email, session['user']))
-        conn.commit()
-        cur.close()
-        conn.close()
-        session['email'] = new_email
-        return redirect(url_for('profile'))
+
+
+
