@@ -36,7 +36,7 @@ class User(UserMixin, db.Model):
         """
         Function defines string representation of the user object.
         """
-        return f"User: {self.username}"
+        return f"User: {self.username}, {self.email}, {self.password_hash}, {self.firstname}, {self.family_name}"
 
     def set_password(self, password):
         """
@@ -52,15 +52,18 @@ class User(UserMixin, db.Model):
 
     def avatar(self, size):
         """Generate avatar link"""
-        digest = md5(self.email.lower().encode('utf-8')).hexidigest()
+        digest = md5(self.email.lower().encode('utf-8')).hexdigest()
         return f'https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}'
     
     def get_reset_password_token(self, expires_in=600):
         """
         Function generates a token for password reset.
         """
-        return jwt.encode({'reset_password': self.id, 'exp': datetime.now(timezone.utc) + expires_in},
-                          app.config['SECRET_KEY'], algorithm='HS256')
+
+        def get_reset_password_token(self, expires_in=600):
+            return jwt.encode(
+                {'reset_password': self.id, 'exp': time() + expires_in},
+                app.config['SECRET_KEY'], algorithm='HS256')
     
     @staticmethod
     def verify_reset_password_token(token):
@@ -93,7 +96,8 @@ class Address(UserMixin, db.Model):
         """
         Function defines string representation of the address object.
         """
-        return f' The Address is: {self.country},\n{self.city},\n {self.street}.'
+        return (f' The Address is: {self.country}, {self.city}, {self.street}, {self.country},'
+                f'{self.city}, {self.postalcode}, {self.street}, {self.house_number}, {self.address_suffix}')
 
 
 class Post(db.Model):
