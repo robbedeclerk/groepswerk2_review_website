@@ -1,7 +1,7 @@
 from flask import request
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
-from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField
+from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length, NumberRange
 import sqlalchemy as sa
 from app.models import User, Address
 from app import db
@@ -61,6 +61,11 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Login')
 
+class PostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired(), Length(min=1, max=120)])
+    post_message = TextAreaField('Post Message')
+    rating = IntegerField('Rating [0-10]', validators=[DataRequired(), NumberRange(min=0, max=10)])
+    submit = SubmitField('Submit')
 
 class ResetPasswordRequestForm(FlaskForm):
     """
