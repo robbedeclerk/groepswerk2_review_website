@@ -8,12 +8,18 @@ from hashlib import md5
 from flask_login import UserMixin
 import jwt
 
+# votes = sa.Table('vote', db.metadata,
+#                  sa.Column('voter_id', sa.Integer,
+#                            sa.ForeignKey('user.id'),
+#                            primary_key=True)
+#                  )
+
 
 @login.user_loader
 def load_user(id):
     """
     This function is used to load the user object from the database.
-    The decorater indicates that the function is a callback for a user,
+    The decorator indicates that the function is a callback for a user,
     it retrieves the user from the database session based on the provided id.
     """
     return db.session.get(User, int(id))
@@ -38,6 +44,8 @@ class User(UserMixin, db.Model):
     family_name: so.Mapped[str] = so.mapped_column(sa.String(60), index=True)
 
     posts: so.WriteOnlyMapped['Post'] = so.relationship(back_populates='author')
+    # voted: so.WriteOnlyMapped['User'] = so.relationship(secondary=votes, primaryjoin=(votes.c.voter_id == id),
+    #                                                     back_populates='votes')
 
     def __repr__(self):
         """

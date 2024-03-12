@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length, NumberRange
 import sqlalchemy as sa
-from app.models import User, Address
+from app.models import User, Address, Post
 from app import db
 import re
 
@@ -26,7 +26,6 @@ class RegistrationForm(FlaskForm):
     address_suffix = StringField('Address Suffix')
     submit = SubmitField('Register')
 
-
     def validate_username(self, username):
         user = db.session.scalar(sa.select(User).where(User.username == username.data))
         if user is not None:
@@ -36,7 +35,6 @@ class RegistrationForm(FlaskForm):
         user = db.session.scalar(sa.select(User).where(User.email == email.data))
         if user is not None:
             raise ValidationError('Please use a different email.')
-
 
     def validate_country(self, country):
         """
@@ -61,11 +59,13 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Login')
 
+
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(min=1, max=120)])
     post_message = TextAreaField('Post Message')
     rating = IntegerField('Rating [0-10]', validators=[DataRequired(), NumberRange(min=0, max=10)])
     submit = SubmitField('Submit')
+
 
 class ResetPasswordRequestForm(FlaskForm):
     """
@@ -96,7 +96,6 @@ class EditProfileForm(FlaskForm):
     address_suffix = StringField('Address suffix')
     address = StringField('Address', validators=[DataRequired()])
     username = StringField('Username', validators=[DataRequired()])
-
 
     def __init__(self, original_username, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)
