@@ -96,8 +96,8 @@ class Address(UserMixin, db.Model):
         """
         Function defines string representation of the address object.
         """
-        return (f' The Address is: {self.country}, {self.city}, {self.street}, {self.country},'
-                f'{self.city}, {self.postalcode}, {self.street}, {self.house_number}, {self.address_suffix}')
+        return (f'The Address is: {self.country}, {self.city}, {self.street}, '
+                f'{self.postalcode}, {self.house_number}, {self.address_suffix}')
 
 
 class Post(db.Model):
@@ -117,3 +117,14 @@ class Post(db.Model):
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
 
     author: so.Mapped[User] = so.relationship(back_populates='posts')
+
+    def __repr__(self):
+        """
+        Function defines string representation of the Post object.
+        """
+        return (f"The post contains: "
+                f"{self.post_message}, "
+                f"{self.rating}, "
+                f"{self.upvote}, "
+                f"{self.downvote}, "
+                f"{self.time_of_posting}")

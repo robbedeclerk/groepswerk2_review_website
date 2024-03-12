@@ -78,12 +78,12 @@ def test_avatar(new_user):
 def new_address():
     address = Address(
         id=1,
-        country='Country'.capitalize(),
-        city='City'.capitalize(),
+        country='Country',
+        city='City',
         postalcode='2400qa',
-        street='Street'.capitalize(),
+        street='Street',
         house_number=100,
-        address_suffix='abc1',
+        address_suffix='abc1'
     )
     return address
 
@@ -99,3 +99,41 @@ def test_new_address(new_address):
     assert new_address.street == 'Street'
     assert new_address.house_number == 100
     assert new_address.address_suffix == 'abc1'
+
+
+def test_address_repr(new_address):
+    """
+    Tests the representation of the address model.
+    """
+    assert repr(new_address) == 'The Address is: Country, City, Street, 2400qa, 100, abc1'
+
+
+@pytest.fixture(scope='function')
+def new_post():
+    post = Post(
+        post_message='This is my review post',
+        rating=6,
+        upvote=46,
+        downvote=18,
+        time_of_posting='current_time'
+    )
+    return post
+
+
+def test_new_post(new_post):
+    """
+    tests the creation of a new post.
+    """
+    assert new_post.post_message == 'This is my review post'
+    assert new_post.rating == 6
+    assert new_post.upvote == 46
+    assert new_post.downvote == 18
+    assert new_post.time_of_posting == 'current_time'
+
+
+def test_post_repr(new_post):
+    """
+    Tests the string representation of the Post object.
+    """
+    assert repr(new_post) == ('The post contains: This is my review post, '
+                              '6, 46, 18, current_time')
