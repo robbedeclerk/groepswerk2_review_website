@@ -4,7 +4,7 @@ from app.new_tmdb_api import Tmdb
 from flask import render_template, request, redirect, url_for, session, jsonify, flash
 import psycopg2
 from flask_login import current_user, login_user, logout_user, login_required
-from app.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm, EditProfileForm
+from app.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm, EditProfileForm, PostForm, EmptyForm
 from app.models import User, Post
 from urllib.parse import urlsplit
 import sqlalchemy as sa
@@ -206,21 +206,29 @@ def reset_password(token):
     return render_template('reset_password_new.html', form=form, title='Edit Profile')
 
 
-@app.route('/profile', methods=['GET', 'POST'])
+@app.route('/profile/<user_id>', methods=['GET', 'POST'])
 @login_required
-def profile():
-    form = EditProfileForm(current_user.username)
-    if form.validate_on_submit():
-        current_user.username = form.username.data
-        db.session.commit()
-        flash('Your changes have been saved.')
-        return redirect(url_for('edit_profile'))
-    elif request.method == 'GET':
-        form.username.data = current_user.username
-    return render_template('profile.html', title='Edit Profile',
+def profile(user_id=None):
+    if user_id is None:
+        form = EditProfileForm(current_user.username)
+        if form.validate_on_submit():
+            current_user.username = form.username.data
+            db.session.commit()
+            flash('Your changes have been saved.')
+            return redirect(url_for('edit_profile'))
+        elif request.method == 'GET':
+            form.username.data = current_user.username
+        return render_template('profile.html', user=current_user,
                            form=form)
-
-
-
-
+    else:
+        user = db.first_or_404(sa.select(User).where(User.id == user_id))
+        page = request.args.get('page', 1, type=int)
+        query = user.posts.select().order_by(Post.time_of_posting.desc())
+        posts = db.paginate(query, page=page, per_page=10, error_out=False)
+        next_url = url_for('profile', user_id=user_id, page=posts.next_num) \
+            if posts.has_next else None
+        prev_url = url_for('profile', user_id=user_id, page=posts.prev_num) \
+            if posts.has_prev else None
+        form = EmptyForm()
+        return render_template('profile.html', user=user, posts=posts.items, next_url=next_url, prev_url=prev_url, form=form)
 

@@ -61,6 +61,8 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Login')
 
+class EmptyForm(FlaskForm):
+    submit = SubmitField('Submit')
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(min=1, max=120)])
     post_message = TextAreaField('Post Message')

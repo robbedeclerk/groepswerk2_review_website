@@ -8,23 +8,20 @@
 </head> -->
 
 {% extends "base.html" %}
-{% block content%}
-<div class= "profile">
-<body>
+{% block content %}
+<div class="profile">
+    <body>
     <header>
         <h1>Welcome to the profile!</h1>
         <p>you are logged in as {{ user }}</p>
     </header>
 
     <section class="profile">
-        <img src="profile-picture.jpg" alt="Profile Picture">
+        <img src="{{ user.avatar }}" alt="Profile Picture">
         <div class="bio">
             <h2>profile info</h2>
-            <p>username: {{ user }}</p>
-            <p>email: {{ email }}</p>
-            <p>name: {{ name }}</p>
-            <p>family name: {{ family_name }}</p>
-            <!-- kan meer toevoegen moest het nodig zijn -->
+            <p>username: {{ user.username }}</p>
+            <p>email: {{ user.email }}</p>
 
             <h3>change email or username</h3>
             <from action="/change_email" method="post">
@@ -34,9 +31,9 @@
                 <button type="submit">change email</button>
                 <form action="/change_username" method="post">
 
-                <label for="new_username">New Username:</label>
-                <input type="text" id="new_username" name="new_username" required>
-                <button type="submit">Change Username</button>
+                    <label for="new_username">New Username:</label>
+                    <input type="text" id="new_username" name="new_username" required>
+                    <button type="submit">Change Username</button>
                 </form>
 
                 <label for="new_name">new name</label>
@@ -44,11 +41,11 @@
                 <button type="submit">change name</button>
                 <form action="/change_name" method="post">
 
-                <label for="new_family_name">new name</label>
-                <input type="text" id="'new_family_name" name="new_family_name" required>
-                <button type="submit">change family name</button>
-                <form action="/change_family_name" method="post">
-            </div>
+                    <label for="new_family_name">new name</label>
+                    <input type="text" id="'new_family_name" name="new_family_name" required>
+                    <button type="submit">change family name</button>
+                    <form action="/change_family_name" method="post">
+        </div>
     </section>
 
     <section class="reviews">
@@ -56,9 +53,9 @@
         <ul>
         </ul>
     </section>
-</body>
-<footer>
-    <p>want to return to home press <a href="main.html">here.</a></p>
-</footer>
+    </body>
+    <footer>
+        <p>want to return to home press <a href="{{ url_for('index') }}">here.</a></p>
+    </footer>
 </div>
 </html>
