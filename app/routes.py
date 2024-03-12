@@ -8,7 +8,7 @@ from app.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, Res
 from app.models import User
 from urllib.parse import urlsplit
 import sqlalchemy as sa
-from app.email import send_password_reset_email
+from app.usermail import send_password_reset_email
 
 
 movie = Tmdb(True)
@@ -33,7 +33,7 @@ def search_movies():
         return jsonify({'error': 'No title provided'})
 
 
-@app.route('<type>/<id>')
+@app.route('/<type>/<id>')
 def search(type, id=None):
     if type == "film":
         if id.isnumeric():
