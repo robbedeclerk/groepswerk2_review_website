@@ -11,8 +11,8 @@ def new_user():
         username='benny',
         email='benny@example.com',
         password_hash='password',
-        firstname='firstname'.capitalize(),
-        family_name='family_name'.capitalize()
+        firstname='firstname',
+        family_name='family_name'
     )
     return user
 

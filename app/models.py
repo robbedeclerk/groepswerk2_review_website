@@ -104,7 +104,7 @@ class Post(db.Model):
     """
     The posts table in the postgress database.
     """
-    id: so.Mapped[int] = so.mapped_column(primary_key=True)
+    id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
     post_message: so.Mapped[str] = so.mapped_column(sa.Text)
     rating: so.Mapped[int] = so.mapped_column(
         sa.Integer)  # While implementing in the code we have to add min =0 and max = 10

@@ -33,6 +33,7 @@ for user in User.query.all():
     db.session.add(address)
 
 # Create fake posts for users
+id_number = 0
 for user in User.query.all():
     post = Post(
         post_message=fake.paragraph(),
