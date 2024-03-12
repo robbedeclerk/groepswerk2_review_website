@@ -86,7 +86,7 @@ def search(type, id=None):
 
 
 
-@app.route('/<type>/popular/<int:genre_id>')
+@app.route('/genre/<type>/popular/<int:genre_id>')
 def popular(type, genre_id):
     if type not in ["film", "serie"]:
         return render_template('index.html', movies=movie.get_small_details_out_big_data(movie.get_popular_data()),

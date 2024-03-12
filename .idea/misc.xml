@@ -3,5 +3,12 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.10 (Groepswerk2)" />
   </component>
+<<<<<<< HEAD
   <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (groepswerk2_review_website)" project-jdk-type="Python SDK" />
+=======
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.12 (groepswerk2_review_website)" project-jdk-type="Python SDK" />
+  <component name="PyCharmProfessionalAdvertiser">
+    <option name="shown" value="true" />
+  </component>
+>>>>>>> ef7dbe0d993dd216f831dc55c41aa5a82bc0bf98
 </project>
