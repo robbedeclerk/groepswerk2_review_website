@@ -99,9 +99,21 @@ def popular(type, genre_id):
         serie_list = serie.get_small_details_out_big_data(serie.get_data_filtered_genres_on_popularity(genre_id))
         return render_template('index.html', movies=serie_list, movieapi=serie, genre=genre_id)
 
+@app.route('/submit_post', methods=['GET', 'POST'])
+def submit_post(movie_id, is_movie, user_id):
+    form = PostForm(request.form)
+    if current_user.is_authenticated:
+        if request.method == 'POST' and form.validate():
+            # Access form data
+            if form.validate_on_submit():
+                post = Post(title=form.title.data, post_message=form.content.data, rating=form.rating.data, user_id=current_user.id, movie_id=movie_id, is_movie=is_movie)
+                db.session.add(post)
+                db.session.commit()
+                flash('Your post is now live!')
+                return redirect(url_for('index'))
 
-
-
+    movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
+    return render_template('index.html', movie_list=movie_list, movieapi=movie)
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """

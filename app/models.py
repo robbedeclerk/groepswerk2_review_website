@@ -18,6 +18,7 @@ def load_user(id):
     """
     return db.session.get(User, int(id))
 
+
 def get_posts(movie_id, is_movie):
     """
     This function gets all posts for a specific movie or user.
@@ -60,7 +61,7 @@ class User(UserMixin, db.Model):
         """Generate avatar link"""
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
         return f'https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}'
-    
+
     def get_reset_password_token(self, expires_in=600):
         """
         Function generates a token for password reset.
@@ -70,7 +71,7 @@ class User(UserMixin, db.Model):
             return jwt.encode(
                 {'reset_password': self.id, 'exp': time() + expires_in},
                 app.config['SECRET_KEY'], algorithm='HS256')
-    
+
     @staticmethod
     def verify_reset_password_token(token):
         """
@@ -111,15 +112,13 @@ class Post(db.Model):
     The posts table in the postgress database.
     """
     id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
+    title: so.Mapped[str] = so.mapped_column(sa.String(120))
     post_message: so.Mapped[str] = so.mapped_column(sa.Text)
     rating: so.Mapped[int] = so.mapped_column(
         sa.Integer)  # While implementing in the code we have to add min =0 and max = 10
-    upvote: so.Mapped[int] = so.mapped_column(sa.Integer)  # implement thumb up count.
-    downvote: so.Mapped[int] = so.mapped_column(sa.Integer)  # implement thumbs down count.
-    time_of_posting: so.Mapped[datetime] = so.mapped_column(
-        index=True,
-        default=lambda: datetime.now(timezone.utc)
-    )
+    upvote: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=True)  # implement thumb up count.
+    downvote: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=True)  # implement thumbs down count.
+    time_of_posting: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
     movie_id: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=True)
     is_movie: so.Mapped[bool] = so.mapped_column(sa.Boolean, nullable=True)
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)

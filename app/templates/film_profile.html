@@ -12,6 +12,22 @@
         {% endfor %}
             </p>
     <p>rating movie</p>
+{#hier moet de form komen om een post te bloggen#}
+{#    <form method='post' action="{{ url_for('submit_post') }}">#}
+{#            {{form.hidden_tag}}#}
+{#            <label for="username">Username:</label>#}
+{#            {{ form.username(class="form-control", placeholder="Enter your username") }}#}
+{##}
+{#            <label for="password">Password:</label>#}
+{#            {{ form.password(class="form-control", placeholder="Enter your password") }}#}
+{##}
+{#            <div class="form-check">#}
+{#                {{ form.remember_me(class="form-check-input") }}#}
+{#                <label class="form-check-label" for="remember_me">Remember Me</label>#}
+{#            </div>#}
+{##}
+{#            <button type="submit" class="btn btn-primary">Login</button>#}
+{#        </form>#}
     <div class="posts">
             {% if posts %}
         {% for post in posts %}
