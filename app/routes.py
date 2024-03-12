@@ -5,7 +5,7 @@ from flask import render_template, request, redirect, url_for, session, jsonify,
 import psycopg2
 from flask_login import current_user, login_user, logout_user, login_required
 from app.forms import LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm, EditProfileForm
-from app.models import User
+from app.models import User, Post
 from urllib.parse import urlsplit
 import sqlalchemy as sa
 from app.usermail import send_password_reset_email
@@ -32,17 +32,15 @@ def search_movies():
     else:
         return jsonify({'error': 'No title provided'})
 
-
 @app.route('/<type>/<id>')
 def search(type, id=None):
     if type == "film":
         if id.isnumeric():
+            posts = db.session.execute(sa.select(Post).where(Post.movie_id == id, Post.is_movie == True)).fetchall()
             movie_details = movie.get_small_details_out_single_movie(True, movie.get_data(id))
             movie_similars = movie.get_small_details_out_big_data(movie.get_similar_data(id))
-            # movie_details = movie.get_details(id)
-            # movie_similars = movie.get_small_details_out_data(movie.get_similar_data(id))
             return render_template('film_profile.html', movie=movie_details, movieapi=movie, id=id,
-                                   similars=movie_similars)
+                                   similars=movie_similars, posts = posts)
         else:
             if id == "popular":
                 movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
@@ -60,12 +58,11 @@ def search(type, id=None):
             return render_template('index.html', movies=movie_list, movieapi=movie)
     elif type == "serie":
         if id.isnumeric():
+            posts = db.session.execute(sa.select(Post).where(Post.movie_id == id, Post.is_movie == False)).fetchall()
             serie_details = serie.get_small_details_out_single_movie(False, serie.get_data(id))
             serie_similars = serie.get_small_details_out_big_data(serie.get_similar_data(id))
-            # serie_details = serie.get_details(id)
-            # serie_similars = serie.get_small_details_out_data(serie.get_similar_data(id))
             return render_template('film_profile.html', movie=serie_details, movieapi=serie, id=id,
-                                   similars=serie_similars)
+                                   similars=serie_similars, posts = posts)
         else:
             if id == "popular":
                 movie_list = serie.get_small_details_out_big_data(serie.get_popular_data())

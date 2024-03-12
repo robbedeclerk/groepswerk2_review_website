@@ -18,6 +18,12 @@ def load_user(id):
     """
     return db.session.get(User, int(id))
 
+def get_posts(movie_id, is_movie):
+    """
+    This function gets all posts for a specific movie or user.
+    """
+    return db.session.query(Post).filter(Post.movie_id == movie_id, Post.is_movie == is_movie)
+
 
 class User(UserMixin, db.Model):
     """
@@ -114,6 +120,8 @@ class Post(db.Model):
         index=True,
         default=lambda: datetime.now(timezone.utc)
     )
+    movie_id: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=True)
+    is_movie: so.Mapped[bool] = so.mapped_column(sa.Boolean, nullable=True)
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
 
     author: so.Mapped[User] = so.relationship(back_populates='posts')

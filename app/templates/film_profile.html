@@ -12,6 +12,26 @@
         {% endfor %}
             </p>
     <p>rating movie</p>
+    <div class="posts">
+            {% if posts %}
+        {% for post in posts %}
+            <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                <strong>Post ID:</strong> {{ post[0].id }}<br>
+                <strong>Message:</strong> {{ post[0].post_message }}<br>
+                <strong>Rating:</strong> {{ post[0].rating }}<br>
+                <strong>Upvotes:</strong> {{ post[0].upvote }}<br>
+                <strong>Downvotes:</strong> {{ post[0].downvote }}<br>
+                <strong>Time of Posting:</strong> {{ post[0].time_of_posting }}<br>
+                <strong>Movie ID:</strong> {{ post[0].movie_id }}<br>
+                <strong>Is Movie:</strong> {{ post[0].is_movie }}<br>
+                <strong>User ID:</strong> {{ post[0].user_id }}<br>
+                <!-- Add any additional post details you want to display -->
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No posts available.</p>
+    {% endif %}
+    </div>
     <div class="similar-movies">
         {% for movieB in similars %}
         <div class="similar-movie">

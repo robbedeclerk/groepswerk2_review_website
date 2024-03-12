@@ -244,16 +244,37 @@ class Tmdb:
 
 
 
-movie = Tmdb(True)
-movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
-for each in movie_list:
-    print(each["Id"])
 
-
-
-
-
-
-
+#
+#
+# movie_id_list = []
+# movie = Tmdb(True)
+# movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
+# for each in movie_list:
+#     movieBLa = {'id': each['Id'], 'Type': each['Type']}
+#     movie_id_list.append(movieBLa)
+#
+# serie_id_list = []
+# serie = Tmdb(False)
+# serie_list = serie.get_small_details_out_big_data(serie.get_popular_data())
+# for each in serie_list:
+#     serieBLa = {'Id': each['Id'], 'Type': each['Type']}
+#     serie_id_list.append(serieBLa)
+#
+#
+#
+# print(movie_id_list)
+# print(serie_id_list)
+# new_id_list = movie_id_list + serie_id_list
+# print(new_id_list)
+#
+#
+# from faker import Faker
+# fake = Faker()
+#
+# choice = fake.random.choices(new_id_list, k=1)
+# print(choice[0]['Type'])
+# print(choice[0]['Id'])
+#
 
 
