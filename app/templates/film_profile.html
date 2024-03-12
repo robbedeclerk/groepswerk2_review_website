@@ -1,18 +1,22 @@
 {% extends "base.html" %}
 {% block content%}
 <div class="w3-center" style="margin-top: 200px;text-align:center">
-    <img src={{  movieapi.get_poster(id)  }} alt="title movie" style="width:30%">
-    <h3>{{  movie['Title']  }}</h3>
-    <p>{{  movie['Overview']  }}</p>
-    <p>{{  movie['Release_date']  }}</p>
-    <p>{{  movie['Runtime']  }}</p>
-    <p>{{  movie['Genre']  }}</p>
+    <img src="{{ movie['Poster'] }}" alt="poster movie" style="width:30%">
+    <h3>{{ movie['Title'] }}</h3>
+    <p>{{ movie['Overview'] }}</p>
+    <p>{{ movie['Release_date'] }}</p>
+    <p>{{ movie['Runtime'] }}</p>
+        <p>
+        {% for genre in movie['Genre'] %}
+        <a href="{{ url_for('popular', type=movie['Type'], genre_id=genre['id']) }}">|{{ genre['name'] }}|</a>
+        {% endfor %}
+            </p>
     <p>rating movie</p>
     <div class="similar-movies">
         {% for movieB in similars %}
         <div class="similar-movie">
-            <a href="{{ url_for('search', id=movieapi.get_id(movieB['Title']), type= movieapi.get_type()) }}">
-                <img src={{ movieB['Poster'] }} alt="title movie" style="width:100%">
+            <a href="{{ url_for('search', id=movieB['Id'], type= movie['Type']) }}">
+                <img src={{ movieB['Poster'] }} alt="{{ movieB['Title'] }}" style="width:100%">
             </a>
             <h3>{{ movieB['Title'] }}</h3>
             <p>rating movie</p>

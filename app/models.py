@@ -30,7 +30,7 @@ class User(UserMixin, db.Model):
     firstname: so.Mapped[str] = so.mapped_column(sa.String(60))
     family_name: so.Mapped[str] = so.mapped_column(sa.String(60), index=True)
 
-    posts: so.WriteOnlyMapped['Post'] = so.relationship(back_populates='Author')
+    posts: so.WriteOnlyMapped['Post'] = so.relationship(back_populates='author')
 
     def __repr__(self):
         """
@@ -100,7 +100,7 @@ class Post(db.Model):
     """
     The posts table in the postgress database.
     """
-    id: so.Mapped[str] = so.mapped_column(primary_key=True)
+    id: so.Mapped[int] = so.mapped_column(primary_key=True)
     post_message: so.Mapped[str] = so.mapped_column(sa.Text)
     rating: so.Mapped[int] = so.mapped_column(
         sa.Integer)  # While implementing in the code we have to add min =0 and max = 10

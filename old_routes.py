@@ -57,3 +57,38 @@ def register():
         conn.close()
 
         return redirect(url_for('login'))
+
+@app.route('/film/popular')
+def movie_popular():
+    movie_list = movie.get_popular_details()
+    return render_template('index.html', movies=movie_list, movieapi=movie)
+
+
+@app.route('/serie/popular')
+def serie_popular():
+    serie_list = serie.get_popular_details()
+    return render_template('index.html', movies=serie_list, movieapi=serie)
+
+@app.route('/film/popular/<genre>')
+def movie_popular(genre):
+    movie_list = movie.get_details_filtered_on_genre(genre)
+    return render_template('index.html', movies=movie_list, movieapi=movie, genre=genre)
+
+
+@app.route('/serie/popular/<genre>')
+def serie_popular(genre):
+    serie_list = serie.get_details_filtered_on_genre(genre)
+    return render_template('index.html', movies=serie_list, movieapi=serie, genre=genre)
+
+@app.route('/change_email', methods=['POST'])
+def change_email():
+    if request.method == 'POST':
+        new_email = request.form['new_email']
+        conn = psycopg2.connect(**db_params)
+        cur = conn.cursor()
+        cur.execute("UPDATE users SET email = %s WHERE email = %s", (new_email, session['user']))
+        conn.commit()
+        cur.close()
+        conn.close()
+        session['email'] = new_email
+        return redirect(url_for('profile'))
