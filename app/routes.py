@@ -207,7 +207,7 @@ def reset_password_request():
         # If the user address exists, the email will be sent.
         flash("We have send an email with instructions to reset your password!")
         return redirect(url_for('login'))
-    return render_template('reset_password_request.html', title='Reset Password', form=form)
+    return render_template('email/reset_password_request.html', title='Reset Password', form=form)
 
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
@@ -226,7 +226,7 @@ def reset_password(token):
         db.session.commit()
         flash('Your password has been reset.')
         return redirect(url_for('login'))
-    return render_template('reset_password_new.html', form=form, title='Edit Profile')
+    return render_template('reset_password.html', form=form, title='Edit Profile')
 
 
 @app.route('/profile/<user_id>', methods=['GET', 'POST'])

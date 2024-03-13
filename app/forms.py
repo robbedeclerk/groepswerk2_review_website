@@ -84,7 +84,7 @@ class ResetPasswordForm(FlaskForm):
     Reset password form for users who have forgotten their password.
     """
     password = PasswordField('Password', validators=[DataRequired()])
-    confirm_password = PasswordField('Password', validators=[DataRequired(), EqualTo('password')])
+    confirm_password = PasswordField('Repeat password', validators=[DataRequired(), EqualTo('password')])
     submit = SubmitField('Submit')
 
 

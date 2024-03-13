@@ -2,11 +2,13 @@ from app import app, db, login
 from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from datetime import timezone, datetime, time
+from datetime import timezone, datetime
+from time import time
 from werkzeug.security import generate_password_hash, check_password_hash
 from hashlib import md5
 from flask_login import UserMixin
 import jwt
+
 
 # votes = sa.Table('vote', db.metadata,
 #                  sa.Column('voter_id', sa.Integer,
@@ -44,6 +46,7 @@ class User(UserMixin, db.Model):
     family_name: so.Mapped[str] = so.mapped_column(sa.String(60), index=True)
 
     posts: so.WriteOnlyMapped['Post'] = so.relationship(back_populates='author')
+
     # voted: so.WriteOnlyMapped['User'] = so.relationship(secondary=votes, primaryjoin=(votes.c.voter_id == id),
     #                                                     back_populates='votes')
 
@@ -74,11 +77,9 @@ class User(UserMixin, db.Model):
         """
         Function generates a token for password reset.
         """
-
-        def get_reset_password_token(self, expires_in=600):
-            return jwt.encode(
-                {'reset_password': self.id, 'exp': time() + expires_in},
-                app.config['SECRET_KEY'], algorithm='HS256')
+        return jwt.encode(
+            {'reset_password': self.id, 'exp': time() + expires_in},
+            app.config['SECRET_KEY'], algorithm='HS256')
 
     @staticmethod
     def verify_reset_password_token(token):
@@ -90,7 +91,7 @@ class User(UserMixin, db.Model):
             id = jwt.decode(token, app.config['SECRET_KEY'],
                             algorithms=['HS256'])['reset_password']
         except:
-            return
+            return None
         return db.session.get(User, id)
 
 

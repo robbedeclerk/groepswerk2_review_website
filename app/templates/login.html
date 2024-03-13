@@ -21,6 +21,8 @@
                     <p style="color: red;">{{ error }}</p>
                 {% endfor %}
                 {{ form.submit }}
+
+                <p>Forgot your password?<a href="{{ url_for('reset_password_request') }}"> Click to Reset!</a></p>
         </div>
     </div>
 
