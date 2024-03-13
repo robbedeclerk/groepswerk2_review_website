@@ -22,9 +22,9 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", "sans-serif"}
     {% if current_user.is_anonymous %}
       <a href="{{ url_for('login') }}" class="w3-bar-item w3-button">Login</a>
     {% else %}
-      <a href="{{ url_for('profile') }}" class="w3-bar-item w3-button">Profile</a>
+        <a href="{{ url_for('logout') }}" onclick="w3_close()" class="w3-bar-item w3-button">Logout</a>
+        <a href="{{ url_for('profile', user_id=current_user.id) }}" class="w3-bar-item w3-button">Profile</a>
     {% endif %}
-    <a href="{{ url_for('logout') }}" onclick="w3_close()" class="w3-bar-item w3-button">Logout</a>
     <div class="w3-padding-16"style="float:left">
         <div class="dropdown">
             <button class="dropbtn"><a href="/film/popular">Films</a></button>
@@ -51,7 +51,7 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", "sans-serif"}
       {% if current_user.is_anonymous %}
         <a href="{{ url_for('login') }}">Login</a>
       {% else %}
-        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('profile', user_id=current_user.id) }}">Profile</a>
       {% endif %}</div>
       <div class="w3-center w3-padding-16">naam van onze website</div>
     </div>
@@ -85,7 +85,7 @@ function displayResults(results) {
     results.forEach(function(result) {
       // Create a link element
       var linkElement = document.createElement("a");
-      linkElement.href = "/" + result['IsMovie'] + "/" + result['Id']; // Set the href to the movie URL
+      linkElement.href = "/" + result['Type'] + "/" + result['Id']; // Set the href to the movie URL
       linkElement.style.display = "block"; // Set display to block for a new line
 
       // Create an image element for the poster
