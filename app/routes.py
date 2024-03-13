@@ -150,7 +150,7 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     """
-    This functionmakes it possible for the user to login
+    This function makes it possible for the user to login
     """
     if current_user.is_authenticated:
         return redirect(url_for("index"))
@@ -169,7 +169,7 @@ def login():
         if not next_page or urlsplit(next_page).netloc != '':
             next_page = url_for('index')
         # If user exists and password is correct, then log the user in and redirect to homepage.
-        return redirect(url_for(next_page))
+        return redirect(next_page)
     return render_template("login.html", title="Login", form=form)
 
 
