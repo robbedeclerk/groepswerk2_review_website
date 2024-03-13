@@ -6,11 +6,10 @@ import psycopg2
 from flask_login import current_user, login_user, logout_user, login_required
 from app.forms import (LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm,
                        EditProfileForm, PostForm, EmptyForm)
-from app.models import User, Post
+from app.models import User, Post, Address
 from urllib.parse import urlsplit
 import sqlalchemy as sa
 from app.usermail import send_password_reset_email
-
 
 movie = Tmdb(True)
 serie = Tmdb(False)
@@ -33,6 +32,7 @@ def search_movies():
     else:
         return jsonify({'error': 'No title provided'})
 
+
 @app.route('/<type>/<id>')
 def search(type, id=None):
     if type == "film":
@@ -41,7 +41,7 @@ def search(type, id=None):
             movie_details = movie.get_small_details_out_single_movie(True, movie.get_data(id))
             movie_similars = movie.get_small_details_out_big_data(movie.get_similar_data(id))
             return render_template('film_profile.html', movie=movie_details, movieapi=movie, id=id,
-                                   similars=movie_similars, posts = posts)
+                                   similars=movie_similars, posts=posts)
         else:
             if id == "popular":
                 movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
@@ -63,7 +63,7 @@ def search(type, id=None):
             serie_details = serie.get_small_details_out_single_movie(False, serie.get_data(id))
             serie_similars = serie.get_small_details_out_big_data(serie.get_similar_data(id))
             return render_template('film_profile.html', movie=serie_details, movieapi=serie, id=id,
-                                   similars=serie_similars, posts = posts)
+                                   similars=serie_similars, posts=posts)
         else:
             if id == "popular":
                 movie_list = serie.get_small_details_out_big_data(serie.get_popular_data())
@@ -79,9 +79,6 @@ def search(type, id=None):
                 return render_template('index.html', movies=movie_list, movieapi=serie)
             movie_list = serie.get_small_details_out_big_data(serie.get_popular_data())
             return render_template('index.html', movies=movie_list, movieapi=serie)
-
-
-
 
 
 @app.route('/genre/<type>/popular/<int:genre_id>')
@@ -100,6 +97,7 @@ def popular(type, genre_id):
         serie_list = serie.get_small_details_out_big_data(serie.get_data_filtered_genres_on_popularity(genre_id))
         return render_template('index.html', movies=serie_list, movieapi=serie, genre=genre_id)
 
+
 @app.route('/submit_post', methods=['GET', 'POST'])
 def submit_post(movie_id, is_movie, user_id):
     form = PostForm(request.form)
@@ -107,7 +105,8 @@ def submit_post(movie_id, is_movie, user_id):
         if request.method == 'POST' and form.validate():
             # Access form data
             if form.validate_on_submit():
-                post = Post(title=form.title.data, post_message=form.content.data, rating=form.rating.data, user_id=current_user.id, movie_id=movie_id, is_movie=is_movie)
+                post = Post(title=form.title.data, post_message=form.content.data, rating=form.rating.data,
+                            user_id=current_user.id, movie_id=movie_id, is_movie=is_movie)
                 db.session.add(post)
                 db.session.commit()
                 flash('Your post is now live!')
@@ -115,6 +114,8 @@ def submit_post(movie_id, is_movie, user_id):
 
     movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
     return render_template('index.html', movie_list=movie_list, movieapi=movie)
+
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     """
@@ -124,14 +125,26 @@ def register():
         return redirect(url_for("index"))
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
+        user = User(
+            username=form.username.data,
+            email=form.email.data,
+            firstname=(form.firstname.data.capitalize()),
+            family_name=(form.family_name.data.capitalize()),
+        )
+        address = Address(
+            country=(form.country.data.capitalize()),
+            city=form.city.data,
+            postalcode=form.postalcode.data,
+            street=(form.street.data.capitalize()),
+            house_number=form.house_number.data,
+            address_suffix=form.address_suffix.data
+        )
         user.set_password(form.password.data)
-        db.session.add(user)
+        db.session.add(user, address)
         db.session.commit()
         flash('Your account has been created!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
-
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -161,6 +174,7 @@ def login():
 
 
 @app.route('/logout')
+@login_required
 def logout():
     """
     Logs the user out.
@@ -220,7 +234,7 @@ def profile(user_id=None):
         elif request.method == 'GET':
             form.username.data = current_user.username
         return render_template('profile.html', user=current_user,
-                           form=form)
+                               form=form)
     else:
         user = db.first_or_404(sa.select(User).where(User.id == user_id))
         page = request.args.get('page', 1, type=int)
@@ -231,5 +245,5 @@ def profile(user_id=None):
         prev_url = url_for('profile', user_id=user_id, page=posts.prev_num) \
             if posts.has_prev else None
         form = EmptyForm()
-        return render_template('profile.html', user=user, posts=posts.items, next_url=next_url, prev_url=prev_url, form=form)
-
+        return render_template('profile.html', user=user, posts=posts.items, next_url=next_url,
+                               prev_url=prev_url, form=form)

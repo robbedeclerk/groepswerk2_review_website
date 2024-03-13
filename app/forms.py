@@ -19,7 +19,7 @@ class RegistrationForm(FlaskForm):
     firstname = StringField('First Name', validators=[DataRequired()])
     family_name = StringField('Family Name', validators=[DataRequired()])
     country = StringField('Country', validators=[DataRequired()])
-    city = StringField('City', validators=[DataRequired()])
+    city = StringField('City', validators=[DataRequired(), ])
     postalcode = StringField('Postal Code', validators=[DataRequired()])
     street = StringField('Street', validators=[DataRequired()])
     house_number = StringField('House Number', validators=[DataRequired()])
@@ -41,7 +41,7 @@ class RegistrationForm(FlaskForm):
         Needs to be tested. This function validates if the country is in the list of countries,
         This is important for future filters of movies.
         """
-        with open('landen.txt') as landen_file:
+        with open('app/landen.txt') as landen_file:
             landen_content = landen_file.read()
             is_match = re.search(fr"\b{country.data}\b", landen_content)
         if is_match:
@@ -59,8 +59,10 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Login')
 
+
 class EmptyForm(FlaskForm):
     submit = SubmitField('Submit')
+
 
 class PostForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(min=1, max=120)])
