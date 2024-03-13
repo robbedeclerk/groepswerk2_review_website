@@ -21,6 +21,7 @@
                     <p style="color: red;">{{ error }}</p>
                 {% endfor %}
                 {{ form.submit }}
+                <p>Don't have an account? <a href="{{ url_for('register') }}">Register</a></p>
         </div>
     </div>
 
