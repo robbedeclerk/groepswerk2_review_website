@@ -1,33 +1,28 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<div class="register">
-        <h1>Log in to your account</h1>
-        <p>Enter your credentials.</p>
+    <div class="register">
+
         <hr>
+        <div><h1>Log in to your account</h1>
+            <form method="post" action="">
+                {{ form.hidden_tag() }}
 
-        <form method="post" action="">
-            {{ form.hidden_tag() }}
 
-            <div>
+                <p>Enter your credentials.</p>
                 {{ form.username.label }}
                 {{ form.username }}
                 {% for error in form.username.errors %}
                     <p style="color: red;">{{ error }}</p>
                 {% endfor %}
-            </div>
-            </div>
-            <div>
                 {{ form.password.label }}
                 {{ form.password }}
                 {% for error in form.password.errors %}
                     <p style="color: red;">{{ error }}</p>
                 {% endfor %}
-            </div>
-            <div>
                 {{ form.submit }}
-
-            </div>
+        </div>
     </div>
+
 
 {% endblock %}
