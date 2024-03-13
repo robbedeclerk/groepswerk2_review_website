@@ -67,15 +67,17 @@ h3, p {
     font-size: 14px;
 }
 
-.search-results {
+.searchResults {
     position: absolute;
-    top: 100%;
-    left: 0;
-    width: 10%;
+    top: 0;  
+    right: 0;
+    width: 100%;
     max-height: 200px;
     overflow-y: auto;
     border: 1px solid #edf2fb;
     background-color: #edf2fb;
+    margin-top: 5px;
+    text-align: left;
 }
 /* You can add more styles as needed */
 
