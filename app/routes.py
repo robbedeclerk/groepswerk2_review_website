@@ -33,15 +33,19 @@ def search_movies():
         return jsonify({'error': 'No title provided'})
 
 
-@app.route('/<type>/<id>')
+@app.route('/<type>/<id>', methods=['GET', 'POST'])
 def search(type, id=None):
     if type == "film":
         if id.isnumeric():
             posts = db.session.execute(sa.select(Post).where(Post.movie_id == id, Post.is_movie == True)).fetchall()
             movie_details = movie.get_small_details_out_single_movie(True, movie.get_data(id))
             movie_similars = movie.get_small_details_out_big_data(movie.get_similar_data(id))
+            form = PostForm()
+            if form.validate_on_submit():
+                submit_post(id, True, current_user.id)
+
             return render_template('film_profile.html', movie=movie_details, movieapi=movie, id=id,
-                                   similars=movie_similars, posts=posts)
+                                   similars=movie_similars, posts=posts, form=form)
         else:
             if id == "popular":
                 movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
@@ -62,8 +66,12 @@ def search(type, id=None):
             posts = db.session.execute(sa.select(Post).where(Post.movie_id == id, Post.is_movie == False)).fetchall()
             serie_details = serie.get_small_details_out_single_movie(False, serie.get_data(id))
             serie_similars = serie.get_small_details_out_big_data(serie.get_similar_data(id))
+            form = PostForm()
+            if form.validate_on_submit():
+                submit_post(id, False, current_user.id)
+
             return render_template('film_profile.html', movie=serie_details, movieapi=serie, id=id,
-                                   similars=serie_similars, posts=posts)
+                                   similars=serie_similars, posts=posts, form=form)
         else:
             if id == "popular":
                 movie_list = serie.get_small_details_out_big_data(serie.get_popular_data())
@@ -105,8 +113,8 @@ def submit_post(movie_id, is_movie, user_id):
         if request.method == 'POST' and form.validate():
             # Access form data
             if form.validate_on_submit():
-                post = Post(title=form.title.data, post_message=form.content.data, rating=form.rating.data,
-                            user_id=current_user.id, movie_id=movie_id, is_movie=is_movie)
+                post = Post(post_message=form.post_message.data, rating=form.rating.data,
+                            user_id=current_user.id, movie_id=movie_id, is_movie=is_movie, upvote=1, downvote=0)
                 db.session.add(post)
                 db.session.commit()
                 flash('Your post is now live!')

@@ -61,11 +61,11 @@ class LoginForm(FlaskForm):
 
 
 class EmptyForm(FlaskForm):
+
     submit = SubmitField('Submit')
 
 
 class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired(), Length(min=1, max=120)])
     post_message = TextAreaField('Post Message')
     rating = IntegerField('Rating [0-10]', validators=[DataRequired(), NumberRange(min=0, max=10)])
     submit = SubmitField('Submit')
