@@ -15,17 +15,16 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", "sans-serif"}
 
 <header>
   <nav class="w3-sidebar w3-bar-block w3-card w3-top w3-xlarge w3-animate-left" style="display:none;z-index:2;width:20%;min-width:200px;background-color:#edf2fb;" id="mySidebar">
-   <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button">Close Menu</a>
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button">Close Menu</a>
     <input type="text" style="float: left;background-color: #edf2fb;" id="searchInput" placeholder="Search">
     <div id="searchResults" class="search-results"></div>
     <a href="{{ url_for('index')}}" onclick="w3_close()" class="w3-bar-item w3-button">home</a>
-    <a href="{{ url_for('login') }}" onclick="w3_close()" class="w3-bar-item w3-button">login</a>
-    <a href="{{ url_for('index')}}" onclick="w3_close()" class="w3-bar-item w3-button">Home</a>
-     {% if current_user.isanonymous %}
-    <a href="{{ url_for('login') }}" onclick="w3_close()" class="w3-bar-item w3-button">Login</a>
-     {% else %}
+    {% if current_user.is_anonymous %}
+      <a href="{{ url_for('login') }}" class="w3-bar-item w3-button">Login</a>
+    {% else %}
+      <a href="{{ url_for('profile') }}" class="w3-bar-item w3-button">Profile</a>
+    {% endif %}
     <a href="{{ url_for('logout') }}" onclick="w3_close()" class="w3-bar-item w3-button">Logout</a>
-     {% endif %}
     <div class="w3-padding-16"style="float:left">
         <div class="dropdown">
             <button class="dropbtn"><a href="/film/popular">Films</a></button>
@@ -48,7 +47,12 @@ body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", "sans-serif"}
   <div class="w3-top">
     <div class="w3-xlarge" style="max-width:95%;margin:auto">
       <div class="w3-button w3-padding-16" style='float:left;' onclick="w3_open()">☰</div>
-      <div class="w3-right w3-padding-16"><a href="{{ url_for('login') }}">profile</a></div>
+      <div class="w3-right w3-padding-16">  
+      {% if current_user.is_anonymous %}
+        <a href="{{ url_for('login') }}">Login</a>
+      {% else %}
+        <a href="{{ url_for('profile') }}">Profile</a>
+      {% endif %}</div>
       <div class="w3-center w3-padding-16">naam van onze website</div>
     </div>
   </div>
@@ -120,7 +124,7 @@ function clearResults() {
 .dropdown {
       position: relative;
       display: inline-block;
-<<<<<<< HEAD
+/* <<<<<<< HEAD */
 
   }
   .dropbtn{
