@@ -1,119 +1,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width"/>
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='cssmaps/styles.css')}}"/>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
-<style>
-body,h1,h2,h3,h4,h5,h6 {font-family: "Karma", "sans-serif"}
-.w3-bar-block .w3-bar-item {padding:20px}
-</style>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='cssmaps/styles.css') }}"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Karma">
+    <style>
+        body, h1, h2, h3, h4, h5, h6 {
+            font-family: "Karma", "sans-serif"
+        }
+
+        .w3-bar-block .w3-bar-item {
+            padding: 20px
+        }
+    </style>
 </head>
+<body>
+<!-- Sidebar-->
+<nav class="w3-sidebar w3-bar-block w3-card w3-top w3-xlarge w3-animate-left"
+     style="display:none;z-index:2;width:40%;min-width:300px" id="mySidebar">
+    <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button">Close Menu</a>
+    <input type="text" id="searchInput" placeholder="Search">
+    <div id="searchResults" class="search-results"></div>
+    <a href="{{ url_for('index') }}" onclick="w3_close()" class="w3-bar-item w3-button">home</a>
+    <a href="{{ url_for('login') }}" onclick="w3_close()" class="w3-bar-item w3-button">login</a>
+    <div class="w3-padding-16" style="float:left">
+        <div class="dropdown">
+            <button class="dropbtn"><a href="/film/popular">Films</a></button>
+            <div class="dropdown-content">
+                <div role="menuitem"><a href="/film/popular">Populair</a></div>
+                <div role="menuitem"><a href="/film/now-playing">Nu in de bioscoop</a></div>
+                <div role="menuitem"><a href="/film/top-rated">Best beoordeeld</a></div>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="dropbtn"><a href="/serie/popular">Serie</a></button>
+            <div class="dropdown-content">
+                <div role="menuitem"><a href="/serie/popular">Populair</a></div>
+                <div role="menuitem"><a href="/serie/now-playing">Nu in de bioscoop</a></div>
+                <div role="menuitem"><a href="/serie/top-rated">Best beoordeeld</a></div>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="w3-top">
+    <div class="w3-white w3-xlarge" style="max-width:1200px;margin:auto">
+        <div class="w3-button w3-padding-16 w3-left" onclick="w3_open()">☰</div>
+        <div class="w3-right w3-padding-16">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                {% if current_user.is_anonymous %}
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{{ url_for('login') }}">Login</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page"
+                           href="{{ url_for('profile', user_id=current_user.id) }}">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="{{ url_for('logout') }}">Logout</a>
+                    </li></ul>
+                {% endif %}</div>
+            <div class="w3-center w3-padding-16">naam van onze website</div>
+    </div>
+    {% block content %}{% endblock %}
+
+    <script>
+        document.getElementById("searchInput").addEventListener("input", function () {
+            var searchText = this.value.trim();
+            if (searchText !== '') {
+                fetch('{{ url_for("search_movies") }}?title=' + searchText)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data); // For debugging, you can remove this line
+                        // Handle the received data and update the search results
+                        displayResults(data);
+                    })
+                    .catch(error => console.error('Error:', error));
+            } else {
+                clearResults();
+            }
+        });
+
+        function displayResults(results) {
+            var resultsContainer = document.getElementById("searchResults");
+            resultsContainer.innerHTML = ''; // Clear previous results
+            if (results.length === 0) {
+                resultsContainer.innerHTML = '<div>No results found.</div>'; // Show message if no results
+            } else {
+                results.forEach(function (result) {
+                    // Create a link element
+                    var linkElement = document.createElement("a");
+                    linkElement.href = "/" + result['IsMovie'] + "/" + result['Id']; // Set the href to the movie URL
+                    linkElement.style.display = "block"; // Set display to block for a new line
+
+                    // Create an image element for the poster
+                    var posterElement = document.createElement("img");
+                    posterElement.src = result['Poster']; // Set the source of the image
+                    posterElement.alt = result['Title']; // Set the alt text of the image
+                    posterElement.style.width = "60px"; // Adjust width as needed
+
+                    // Create a span element for the title
+                    var titleElement = document.createElement("span");
+                    titleElement.textContent = result['Title']; // Set the text content of the span
+
+                    // Append the image and title to the link element
+                    linkElement.appendChild(posterElement);
+                    linkElement.appendChild(titleElement);
+
+                    // Append the link element to the results container
+                    resultsContainer.appendChild(linkElement);
+                });
+            }
+        }
 
 
-<script>
-document.getElementById("searchInput").addEventListener("input", function() {
-  var searchText = this.value.trim();
-  if (searchText !== '') {
-    fetch('{{ url_for("search_movies") }}?title=' + searchText)
-      .then(response => response.json())
-      .then(data => {
-        console.log(data); // For debugging, you can remove this line
-        // Handle the received data and update the search results
-        displayResults(data);
-      })
-      .catch(error => console.error('Error:', error));
-  } else {
-    clearResults();
-  }
-});
-
-function displayResults(results) {
-  var resultsContainer = document.getElementById("searchResults");
-  resultsContainer.innerHTML = ''; // Clear previous results
-  if (results.length === 0) {
-    resultsContainer.innerHTML = '<div>No results found.</div>'; // Show message if no results
-  } else {
-    results.forEach(function(result) {
-      // Create a link element
-      var linkElement = document.createElement("a");
-      linkElement.href = "/" + result['IsMovie'] + "/" + result['Id']; // Set the href to the movie URL
-      linkElement.style.display = "block"; // Set display to block for a new line
-
-      // Create an image element for the poster
-      var posterElement = document.createElement("img");
-      posterElement.src = result['Poster']; // Set the source of the image
-      posterElement.alt = result['Title']; // Set the alt text of the image
-      posterElement.style.width = "60px"; // Adjust width as needed
-
-      // Create a span element for the title
-      var titleElement = document.createElement("span");
-      titleElement.textContent = result['Title']; // Set the text content of the span
-
-      // Append the image and title to the link element
-      linkElement.appendChild(posterElement);
-      linkElement.appendChild(titleElement);
-
-      // Append the link element to the results container
-      resultsContainer.appendChild(linkElement);
-    });
-  }
-}
-
-
-function clearResults() {
-  var resultsContainer = document.getElementById("searchResults");
-  resultsContainer.innerHTML = ''; // Clear results
-}
-</script>
+        function clearResults() {
+            var resultsContainer = document.getElementById("searchResults");
+            resultsContainer.innerHTML = ''; // Clear results
+        }
+    </script>
 
 </body>
 </html>
 <style>
-  .dropdown {
-      position: relative;
-      display: inline-block;
-    
-  }
-  .dropbtn{
-    background-color: #edf2fb;
-    color: black;
-    padding: 16px;
-    border: black;
-    
+    .dropdown {
+        position: relative;
+        display: inline-block;
 
-  }
-  .dropbtn a{
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-  .dropdown-content{
-    display: none;
-    position: absolute;
-    background-color: #edf2fb;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-  }
-  .dropdown-content a{
-  color: black;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-  .dropdown-content a:hover {background-color: #edf2fb}
+    }
 
-  /* Show the dropdown menu on hover */
-  .dropdown:hover .dropdown-content {
-  display: block;
-}
-  .dropdown:hover .dropbtn {
-  background-color: #edf2fb;
-}
+    .dropbtn {
+        background-color: #edf2fb;
+        color: black;
+        padding: 16px;
+        border: black;
+
+
+    }
+
+    .dropbtn a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #edf2fb;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+    }
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+    .dropdown-content a:hover {
+        background-color: #edf2fb
+    }
+
+    /* Show the dropdown menu on hover */
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+
+    .dropdown:hover .dropbtn {
+        background-color: #edf2fb;
+    }
 </style>
 
-{% block content %}{% endblock %}
+
