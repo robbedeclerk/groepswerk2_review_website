@@ -231,7 +231,7 @@ def reset_password(token):
 
 @app.route('/profile/<user_id>', methods=['GET', 'POST'])
 @login_required
-def profile(user_id=None):
+def profile(user_id):
     if user_id is None:
         form = EditProfileForm(current_user.username)
         if form.validate_on_submit():
