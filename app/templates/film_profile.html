@@ -27,8 +27,8 @@
                         <strong>Post ID:</strong> {{ post[0].id }}<br>
                         <strong>Message:</strong> {{ post[0].post_message }}<br>
                         <strong>Rating:</strong> {{ post[0].rating }}<br>
-                        <strong>Upvotes:</strong> {{ post[0].upvote }}<br>
-                        <strong>Downvotes:</strong> {{ post[0].downvote }}<br>
+                        <strong>Upvotes:</strong> {{ post[0].upvote_count() }}<br>
+                        <strong>Downvotes:</strong> {{ post[0].downvote_count() }}<br>
                         <strong>Time of Posting:</strong> {{ post[0].time_of_posting }}<br>
                         <strong>Movie ID:</strong> {{ post[0].movie_id }}<br>
                         <strong>Is Movie:</strong> {{ post[0].is_movie }}<br>

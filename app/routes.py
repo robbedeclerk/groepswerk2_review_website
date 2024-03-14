@@ -42,7 +42,7 @@ def search(type, id=None):
             movie_similars = movie.get_small_details_out_big_data(movie.get_similar_data(id))
             form = PostForm()
             if form.validate_on_submit():
-                post = Post(post_message=form.post_message.data, rating=form.rating.data, author=current_user, movie_id=id, is_movie=True, upvote=1, downvote=0)
+                post = Post(post_message=form.post_message.data, rating=form.rating.data, author=current_user, movie_id=id, is_movie=True)
                 db.session.add(post)
                 db.session.commit()
                 return redirect(url_for('search', type=type, id=id))
@@ -71,7 +71,7 @@ def search(type, id=None):
             form = PostForm()
             if form.validate_on_submit():
                 post = Post(post_message=form.post_message.data, rating=form.rating.data, author=current_user,
-                            movie_id=id, is_movie=False, upvote=1, downvote=0)
+                            movie_id=id, is_movie=False)
                 db.session.add(post)
                 db.session.commit()
                 return redirect(url_for('search', type=type, id=id))
@@ -263,3 +263,14 @@ def profile(user_id):
         form = EmptyForm()
         return render_template('profile.html', user=user, posts=posts.items, next_url=next_url,
                                prev_url=prev_url, form=form)
+
+@login_required
+@app.route('/upvote/<post_id>', methods=['POST'])
+def upvote(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author == current_user:
+        flash('You cannot upvote your own post!')
+        return redirect(url_for('index'))
+    current_user.upvote(post)
+    db.session.commit()
+    return redirect(url_for('index'))
