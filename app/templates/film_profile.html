@@ -1,138 +1,125 @@
 {% extends "base.html" %}
 {% import "bootstrap_wtf.html" as wtf %}
-{% block content%}
+{% block content %}
 
-<div class="w3-center" style="margin-top: 200px;text-align:center">
-    <img src="{{ movie['Poster'] }}" alt="poster movie" style="width:30%">
-    <h3>{{ movie['Title'] }}</h3>
-    <p>{{ movie['Overview'] }}</p>
-    <p>{{ movie['Release_date'] }}</p>
-    <p>{{ movie['Runtime'] }}</p>
+    <div class="w3-center" style="margin-top: 200px;text-align:center">
+        <img src="{{ movie['Poster'] }}" alt="poster movie" style="width:30%">
+        <h3>{{ movie['Title'] }}</h3>
+        <p>{{ movie['Overview'] }}</p>
+        <p>{{ movie['Release_date'] }}</p>
+        <p>{{ movie['Runtime'] }}</p>
         <p>
-        {% for genre in movie['Genre'] %}
-        <a href="{{ url_for('popular', type=movie['Type'], genre_id=genre['id']) }}">|{{ genre['name'] }}|</a>
-        {% endfor %}
-            </p>
-    <p>rating movie</p>
-    {% if form %}
-    {{ wtf.quick_form(form) }}
-    {% endif %}
-{#hier moet de form komen om een post te bloggen#}
-{#    <form method='post' action="{{ url_for('submit_post') }}">#}
-{#            {{form.hidden_tag}}#}
-{#            <label for="username">Username:</label>#}
-{#            {{ form.username(class="form-control", placeholder="Enter your username") }}#}
-{##}
-{#            <label for="password">Password:</label>#}
-{#            {{ form.password(class="form-control", placeholder="Enter your password") }}#}
-{##}
-{#            <div class="form-check">#}
-{#                {{ form.remember_me(class="form-check-input") }}#}
-{#                <label class="form-check-label" for="remember_me">Remember Me</label>#}
-{#            </div>#}
-{##}
-{#            <button type="submit" class="btn btn-primary">Login</button>#}
-{#        </form>#}
-    <div class="posts">
+            {% for genre in movie['Genre'] %}
+                <a href="{{ url_for('popular', type=movie['Type'], genre_id=genre['id']) }}">|{{ genre['name'] }}|</a>
+            {% endfor %}
+        </p>
+        <p>rating movie</p>
+        {% if current_user.is_authenticated %}
+            {{ wtf.quick_form(form) }}
+        {% else %}
+            <p>You have to be logged in to post</p>
+            <a href="{{ url_for('login', next=request.url) }}">Login</a>
+        {% endif %}
+        <div class="posts">
             {% if posts %}
-        {% for post in posts %}
-            <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
-                <strong>Post ID:</strong> {{ post[0].id }}<br>
-                <strong>Message:</strong> {{ post[0].post_message }}<br>
-                <strong>Rating:</strong> {{ post[0].rating }}<br>
-                <strong>Upvotes:</strong> {{ post[0].upvote }}<br>
-                <strong>Downvotes:</strong> {{ post[0].downvote }}<br>
-                <strong>Time of Posting:</strong> {{ post[0].time_of_posting }}<br>
-                <strong>Movie ID:</strong> {{ post[0].movie_id }}<br>
-                <strong>Is Movie:</strong> {{ post[0].is_movie }}<br>
-                <strong>User ID:</strong> {{ post[0].user_id }}<br>
-                <!-- Add any additional post details you want to display -->
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>No posts available.</p>
-    {% endif %}
-    </div>
-    <div class="similar-movies">
-        {% for movieB in similars %}
-        <div class="similar-movie">
-            <a href="{{ url_for('search', id=movieB['Id'], type= movie['Type']) }}">
-                <img src={{ movieB['Poster'] }} alt="{{ movieB['Title'] }}" style="width:100%">
-            </a>
-            <h3>{{ movieB['Title'] }}</h3>
-            <p>rating movie</p>
+                {% for post in posts %}
+                    <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                        <strong>Post ID:</strong> {{ post[0].id }}<br>
+                        <strong>Message:</strong> {{ post[0].post_message }}<br>
+                        <strong>Rating:</strong> {{ post[0].rating }}<br>
+                        <strong>Upvotes:</strong> {{ post[0].upvote_count() }}<br>
+                        <strong>Downvotes:</strong> {{ post[0].downvote_count() }}<br>
+                        <strong>Time of Posting:</strong> {{ post[0].time_of_posting }}<br>
+                        <strong>Movie ID:</strong> {{ post[0].movie_id }}<br>
+                        <strong>Is Movie:</strong> {{ post[0].is_movie }}<br>
+                        <strong>User ID:</strong> {{ post[0].user_id }}<br>
+                        <!-- Add any additional post details you want to display -->
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No posts available.</p>
+            {% endif %}
         </div>
-        {% endfor %}
-    </div>
+        <div class="similar-movies">
+            {% for movieB in similars %}
+                <div class="similar-movie">
+                    <a href="{{ url_for('search', id=movieB['Id'], type= movie['Type']) }}">
+                        <img src={{ movieB['Poster'] }} alt="{{ movieB['Title'] }}" style="width:100%">
+                    </a>
+                    <h3>{{ movieB['Title'] }}</h3>
+                    <p>rating movie</p>
+                </div>
+            {% endfor %}
+        </div>
         <div class="navigation">
-        <button id="prevBtn"><<</button>
-        <button id="nextBtn">>>/button>
+            <button id="prevBtn"><<</button>
+            <button id="nextBtn">>>/button>
+        </div>
     </div>
-</div>
-</body>
+    </body>
 
-<!-- CSS Styles for Smaller Movies -->
-<style>
-    .similar-movie {
-        display: flex;
-        width: 12%;
-        margin: 2px;
-        text-align: right;
-    }
-</style>
-<script>
-    var currentIndex = 0;
-    var similarMovies = document.querySelectorAll('.similar-movie');
-    var totalMovies = similarMovies.length;
-
-    // Initially hide the "Previous" button if there are no previous items
-    if (currentIndex === 0) {
-        document.getElementById('prevBtn').style.display = 'none';
-    }
-
-    document.getElementById('prevBtn').addEventListener('click', function() {
-        if (currentIndex > 0) {
-            currentIndex -= 5;
-            showHideMovies();
-            // Show the "Next" button when navigating to previous items
-            document.getElementById('nextBtn').style.display = 'inline-block';
+    <!-- CSS Styles for Smaller Movies -->
+    <style>
+        .similar-movie {
+            display: flex;
+            width: 12%;
+            margin: 2px;
+            text-align: right;
         }
-        // Hide the "Previous" button if there are no previous items after navigation
+    </style>
+    <script>
+        var currentIndex = 0;
+        var similarMovies = document.querySelectorAll('.similar-movie');
+        var totalMovies = similarMovies.length;
+
+        // Initially hide the "Previous" button if there are no previous items
         if (currentIndex === 0) {
             document.getElementById('prevBtn').style.display = 'none';
         }
-    });
 
-    document.getElementById('nextBtn').addEventListener('click', function() {
-        if (currentIndex + 5 < totalMovies) {
-            currentIndex += 5;
-            showHideMovies();
-            // Show the "Previous" button when navigating to next items
-            document.getElementById('prevBtn').style.display = 'inline-block';
-        }
-    });
+        document.getElementById('prevBtn').addEventListener('click', function () {
+            if (currentIndex > 0) {
+                currentIndex -= 5;
+                showHideMovies();
+                // Show the "Next" button when navigating to previous items
+                document.getElementById('nextBtn').style.display = 'inline-block';
+            }
+            // Hide the "Previous" button if there are no previous items after navigation
+            if (currentIndex === 0) {
+                document.getElementById('prevBtn').style.display = 'none';
+            }
+        });
 
-    function showHideMovies() {
-        for (var i = 0; i < totalMovies; i++) {
-            if (i >= currentIndex && i < currentIndex + 5) {
-                similarMovies[i].style.display = 'inline-block';
-            } else {
-                similarMovies[i].style.display = 'none';
+        document.getElementById('nextBtn').addEventListener('click', function () {
+            if (currentIndex + 5 < totalMovies) {
+                currentIndex += 5;
+                showHideMovies();
+                // Show the "Previous" button when navigating to next items
+                document.getElementById('prevBtn').style.display = 'inline-block';
+            }
+        });
+
+        function showHideMovies() {
+            for (var i = 0; i < totalMovies; i++) {
+                if (i >= currentIndex && i < currentIndex + 5) {
+                    similarMovies[i].style.display = 'inline-block';
+                } else {
+                    similarMovies[i].style.display = 'none';
+                }
             }
         }
-    }
 
-    // Initially show first 5 movies
-    showHideMovies();
-</script>
-<script>
-    // Script to open and close sidebar
-    function w3_open() {
-        document.getElementById("mySidebar").style.display = "block";
-    }
+        // Initially show first 5 movies
+        showHideMovies();
+    </script>
+    <script>
+        // Script to open and close sidebar
+        function w3_open() {
+            document.getElementById("mySidebar").style.display = "block";
+        }
 
-    function w3_close() {
-        document.getElementById("mySidebar").style.display = "none";
-    }
-</script>
+        function w3_close() {
+            document.getElementById("mySidebar").style.display = "none";
+        }
+    </script>
 {% endblock %}
