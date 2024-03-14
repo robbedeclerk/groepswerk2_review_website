@@ -42,8 +42,10 @@ def search(type, id=None):
             movie_similars = movie.get_small_details_out_big_data(movie.get_similar_data(id))
             form = PostForm()
             if form.validate_on_submit():
-                submit_post(id, True, current_user.id)
-
+                post = Post(post_message=form.post_message.data, rating=form.rating.data, author=current_user, movie_id=id, is_movie=True, upvote=1, downvote=0)
+                db.session.add(post)
+                db.session.commit()
+                return redirect(url_for('search', type=type, id=id))
             return render_template('film_profile.html', movie=movie_details, movieapi=movie, id=id,
                                    similars=movie_similars, posts=posts, form=form)
         else:
@@ -68,8 +70,11 @@ def search(type, id=None):
             serie_similars = serie.get_small_details_out_big_data(serie.get_similar_data(id))
             form = PostForm()
             if form.validate_on_submit():
-                submit_post(id, False, current_user.id)
-
+                post = Post(post_message=form.post_message.data, rating=form.rating.data, author=current_user,
+                            movie_id=id, is_movie=False, upvote=1, downvote=0)
+                db.session.add(post)
+                db.session.commit()
+                return redirect(url_for('search', type=type, id=id))
             return render_template('film_profile.html', movie=serie_details, movieapi=serie, id=id,
                                    similars=serie_similars, posts=posts, form=form)
         else:
@@ -105,9 +110,9 @@ def popular(type, genre_id):
         serie_list = serie.get_small_details_out_big_data(serie.get_data_filtered_genres_on_popularity(genre_id))
         return render_template('index.html', movies=serie_list, movieapi=serie, genre=genre_id)
 
-
+@login_required
 @app.route('/submit_post', methods=['GET', 'POST'])
-def submit_post(movie_id, is_movie, user_id):
+def submit_post(movie_id, is_movie):
     form = PostForm(request.form)
     if current_user.is_authenticated:
         if request.method == 'POST' and form.validate():
@@ -160,9 +165,12 @@ def login():
     """
     This function makes it possible for the user to login
     """
+    # If the user is already logged in, he gets redirected to homepage.
     if current_user.is_authenticated:
         return redirect(url_for("index"))
-        # If the user is already logged in, he gets redirected to homepage.
+    if request.method == 'GET':
+        if 'next' in request.args:
+            session['next'] = request.args.get('next')
     form = LoginForm()
     if form.validate_on_submit():
         user = db.session.scalar(sa.select(User).where(
@@ -170,14 +178,14 @@ def login():
         # db.session.scalar() will return the user object if it exists, or None if it does not.
         if user is None or not user.check_password(form.password.data):
             flash("Invalid username or password!")
-            return redirect(url_for("login"))
+            return redirect(url_for("login", next=request.args.get('next')))
         # .scalar() returned None or login failed on password check redirect to the login again.
         login_user(user, remember=form.remember_me.data)
-        next_page = request.args.get('next')
-        if not next_page or urlsplit(next_page).netloc != '':
-            next_page = url_for('index')
-        # If user exists and password is correct, then log the user in and redirect to homepage.
-        return redirect(next_page)
+        next_url = session.pop('next', None)
+        if next_url:
+            return redirect(next_url)
+        else:
+            return redirect(url_for('index'))
     return render_template("login.html", title="Login", form=form)
 
 
