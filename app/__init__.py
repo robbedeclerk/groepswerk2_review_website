@@ -14,4 +14,4 @@ login.login_view = 'login'
 mail = Mail(app)
 
 
-from app import routes, models, new_tmdb_api, usermail
+from app import routes, models, new_tmdb_api, email

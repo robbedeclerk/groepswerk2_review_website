@@ -9,7 +9,7 @@ from app.forms import (LoginForm, RegistrationForm, ResetPasswordRequestForm, Re
 from app.models import User, Post, Address
 from urllib.parse import urlsplit
 import sqlalchemy as sa
-from app.usermail import send_password_reset_email
+from app.email import send_password_reset_email
 
 movie = Tmdb(True)
 serie = Tmdb(False)
@@ -42,7 +42,8 @@ def search(type, id=None):
             movie_similars = movie.get_small_details_out_big_data(movie.get_similar_data(id))
             form = PostForm()
             if form.validate_on_submit():
-                post = Post(post_message=form.post_message.data, rating=form.rating.data, author=current_user, movie_id=id, is_movie=True)
+                post = Post(post_message=form.post_message.data, rating=form.rating.data, author=current_user,
+                            movie_id=id, is_movie=True)
                 db.session.add(post)
                 db.session.commit()
                 return redirect(url_for('search', type=type, id=id))
@@ -109,6 +110,7 @@ def popular(type, genre_id):
     elif type == "serie":
         serie_list = serie.get_small_details_out_big_data(serie.get_data_filtered_genres_on_popularity(genre_id))
         return render_template('index.html', movies=serie_list, movieapi=serie, genre=genre_id)
+
 
 @login_required
 @app.route('/submit_post', methods=['GET', 'POST'])
@@ -215,7 +217,7 @@ def reset_password_request():
         # If the user address exists, the email will be sent.
         flash("We have send an email with instructions to reset your password!")
         return redirect(url_for('login'))
-    return render_template('email/reset_password_request.html', title='Reset Password', form=form)
+    return render_template('reset_password_request.html', title='Reset Password', form=form)
 
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
@@ -234,7 +236,7 @@ def reset_password(token):
         db.session.commit()
         flash('Your password has been reset.')
         return redirect(url_for('login'))
-    return render_template('reset_password.html', form=form, title='Edit Profile')
+    return render_template('email/reset_password.html', form=form, title='Edit Profile')
 
 
 @app.route('/profile/<user_id>', methods=['GET', 'POST'])
@@ -263,6 +265,7 @@ def profile(user_id):
         form = EmptyForm()
         return render_template('profile.html', user=user, posts=posts.items, next_url=next_url,
                                prev_url=prev_url, form=form)
+
 
 @login_required
 @app.route('/upvote/<post_id>', methods=['POST'])
