@@ -75,7 +75,7 @@ class ResetPasswordRequestForm(FlaskForm):
     """
     Request to try and reset password
     """
-    email = StringField('Email', validators=[DataRequired(), Email()])
+    email = EmailField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Submit')
 
 
