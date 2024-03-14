@@ -1,6 +1,6 @@
 from flask import request
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField, EmailField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length, NumberRange
 import sqlalchemy as sa
 from app.models import User, Address, Post
@@ -13,7 +13,7 @@ class RegistrationForm(FlaskForm):
     Registration form for creating new users.
     """
     username = StringField('Username', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
+    email = EmailField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
     confirm_password = PasswordField('Password', validators=[DataRequired(), EqualTo('password')])
     firstname = StringField('First Name', validators=[DataRequired()])
@@ -22,7 +22,7 @@ class RegistrationForm(FlaskForm):
     city = StringField('City', validators=[DataRequired(), ])
     postalcode = StringField('Postal Code', validators=[DataRequired()])
     street = StringField('Street', validators=[DataRequired()])
-    house_number = StringField('House Number', validators=[DataRequired()])
+    house_number = IntegerField('House Number', validators=[DataRequired()])
     address_suffix = StringField('Address Suffix')
     submit = SubmitField('Register')
 
@@ -96,7 +96,7 @@ class EditProfileForm(FlaskForm):
     city = StringField('City', validators=[DataRequired()])
     postalcode = StringField('Postal Code', validators=[DataRequired()])
     street = StringField('Street', validators=[DataRequired()])
-    house_number = StringField('House Number', validators=[DataRequired()])
+    house_number = IntegerField('House Number', validators=[DataRequired()])
     address_suffix = StringField('Address suffix')
     address = StringField('Address', validators=[DataRequired()])
     username = StringField('Username', validators=[DataRequired()])
