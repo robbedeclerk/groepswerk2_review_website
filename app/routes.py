@@ -37,7 +37,8 @@ def search_movies():
 def search(type, id=None):
     if type == "film":
         if id.isnumeric():
-            posts = db.session.execute(sa.select(Post, Post.id).where(Post.movie_id == id, Post.is_movie == True)).fetchall()
+            posts = db.session.execute(
+                sa.select(Post, Post.id).where(Post.movie_id == id, Post.is_movie == True)).fetchall()
             movie_details = movie.get_small_details_out_single_movie(True, movie.get_data(id))
             movie_similars = movie.get_small_details_out_big_data(movie.get_similar_data(id))
             form = PostForm()
@@ -95,36 +96,6 @@ def search(type, id=None):
             return render_template('index.html', movies=movie_list, movieapi=serie)
 
 
-@app.route('/films/top-rated', methods=['GET', 'POST'])
-def movie_top_rated():
-    top_rated_movie = movie.get_small_details_out_big_data(movie.get_top_rated_data())
-    return render_template('index.html', movies=top_rated_movie)
-
-
-@app.route('/film/popular', methods=["GET", "POST"])
-def film_popular():
-    popular_movies = movie.get_small_details_out_big_data(movie.get_popular_data())
-    return render_template("index.html", movies=popular_movies)
-
-
-@app.route('/film/now-playing', methods=["GET", "POST"])
-def film_now_playing():
-    now_playing_movies = movie.get_small_details_out_big_data(movie.get_now_playing_data())
-    return render_template("index.html", movies=now_playing_movies)
-
-
-@app.route('/series/top-rated', methods=['GET', 'POST'])
-def series_top_rated():
-    top_rated_series = serie.get_small_details_out_big_data(serie.get_top_rated_data())
-    return render_template("index.html", series=top_rated_series)
-
-@app.route('/series/now-playing', methods=['GET', 'POST'])
-def series_now_playing():
-    now_playing_series = serie.get_small_details_out_big_data(serie.get_now_playing_data())
-    return render_template("index.html", series=now_playing_series)
-
-
-
 @app.route('/genre/<type>/popular/<int:genre_id>')
 def popular(type, genre_id):
     if type not in ["film", "serie"]:
@@ -140,6 +111,8 @@ def popular(type, genre_id):
     elif type == "serie":
         serie_list = serie.get_small_details_out_big_data(serie.get_data_filtered_genres_on_popularity(genre_id))
         return render_template('index.html', movies=serie_list, movieapi=serie, genre=genre_id)
+
+
 
 
 @login_required
@@ -344,6 +317,7 @@ def profile():
             form.address_suffix.data = address.address_suffix
 
     return render_template('profile.html', title='Edit Profile', form=form, user=current_user)
+
 
 @login_required
 @app.route('/upvote/<int:post_id>', methods=['POST'])
