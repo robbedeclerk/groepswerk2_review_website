@@ -10,7 +10,7 @@
             {% for movie in movies %}
                 <div class="w3-quarter" style="padding: 16px;">
                     <a href="{{ url_for('search', id=movie['Id'], type=movie['Type']) }}">
-                        <img src="{{ movie['Poster'] }}" alt="{{ movie['Title'] }}" style="width:100%">
+                        <img src="{{ movie['Poster'] }}" alt="{{ movie['Title'] }}" style="width:auto;height:auto">
                     </a>
                     <h3>{{ movie['Title'] }}</h3>
                     <p>rating movie1</p>

@@ -66,7 +66,7 @@ class EmptyForm(FlaskForm):
 
 
 class PostForm(FlaskForm):
-    post_message = TextAreaField('Post Message')
+    post_message = TextAreaField('Post Message', render_kw={'style': 'width: device'})
     rating = IntegerField('Rating [0-10]', validators=[DataRequired(), NumberRange(min=0, max=10)])
     submit = SubmitField('Submit')
 
@@ -98,7 +98,7 @@ class EditProfileForm(FlaskForm):
     street = StringField('Street', validators=[DataRequired()])
     house_number = IntegerField('House Number', validators=[DataRequired()])
     address_suffix = StringField('Address suffix')
-    address = StringField('Address', validators=[DataRequired()])
+    # address = StringField('Address', validators=[DataRequired()])
     username = StringField('Username', validators=[DataRequired()])
 
     def __init__(self, original_username, *args, **kwargs):
