@@ -9,10 +9,13 @@ from app.forms import (LoginForm, RegistrationForm, ResetPasswordRequestForm, Re
 from app.models import User, Post, Address
 from urllib.parse import urlsplit
 import sqlalchemy as sa
-from app.email import send_password_reset_email
+from app.usermail import send_password_reset_email
 
 movie = Tmdb(True)
 serie = Tmdb(False)
+
+
+
 
 
 @app.route('/')
@@ -26,7 +29,7 @@ def index():
 def search_movies():
     title = request.args.get('title')
     if title:
-        results = movie.get_5_Titles_for_both(title)
+        results = movie.get_x_Titles_for_both(title, 5)
         sorted_movie_list = sorted(results, key=lambda x: x['Popularity'], reverse=True)
         return jsonify(sorted_movie_list)
     else:
@@ -37,7 +40,8 @@ def search_movies():
 def search(type, id=None):
     if type == "film":
         if id.isnumeric():
-            posts = db.session.execute(sa.select(Post, Post.id).where(Post.movie_id == id, Post.is_movie == True)).fetchall()
+            posts = db.session.execute(
+                sa.select(Post, Post.id).where(Post.movie_id == id, Post.is_movie == True)).fetchall()
             movie_details = movie.get_small_details_out_single_movie(True, movie.get_data(id))
             movie_similars = movie.get_small_details_out_big_data(movie.get_similar_data(id))
             form = PostForm()
@@ -66,7 +70,8 @@ def search(type, id=None):
             return render_template('index.html', movies=movie_list, movieapi=movie)
     elif type == "serie":
         if id.isnumeric():
-            posts = db.session.execute(sa.select(Post, Post.id).where(Post.movie_id == id, Post.is_movie == False)).fetchall()
+            posts = db.session.execute(
+                sa.select(Post, Post.id).where(Post.movie_id == id, Post.is_movie == False)).fetchall()
             serie_details = serie.get_small_details_out_single_movie(False, serie.get_data(id))
             serie_similars = serie.get_small_details_out_big_data(serie.get_similar_data(id))
             form = PostForm()
@@ -118,11 +123,11 @@ def series_top_rated():
     top_rated_series = serie.get_small_details_out_big_data(serie.get_top_rated_data())
     return render_template("index.html", series=top_rated_series)
 
+
 @app.route('/series/now-playing', methods=['GET', 'POST'])
 def series_now_playing():
     now_playing_series = serie.get_small_details_out_big_data(serie.get_now_playing_data())
     return render_template("index.html", series=now_playing_series)
-
 
 
 @app.route('/genre/<type>/popular/<int:genre_id>')
@@ -359,6 +364,7 @@ def profile():
             form.address_suffix.data = address.address_suffix
 
     return render_template('profile.html', title='Edit Profile', form=form, user=current_user)
+
 
 @login_required
 @app.route('/upvote/<int:post_id>', methods=['POST'])
