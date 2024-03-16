@@ -193,48 +193,33 @@ def register():
 
 
 @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     # """
-#     # This function makes it possible for the user to login
-#     # """
-#     # # If the user is already logged in, he gets redirected to homepage.
-#     # if current_user.is_authenticated:
-#     #     return redirect(url_for("index"))
-#     # if request.method == 'GET':
-#     #     if 'next' in request.args:
-#     #         session['next'] = request.args.get('next')
-#     # form = LoginForm()
-#     # if form.validate_on_submit():
-#     #     user = db.session.scalar(sa.select(User).where(
-#     #         User.username == form.username.data))
-#     #     # db.session.scalar() will return the user object if it exists, or None if it does not.
-#     #     if user is None or not user.check_password(form.password.data):
-#     #         flash("Invalid username or password!")
-#     #         return redirect(url_for("login", next=request.args.get('next')))
-#     #     # .scalar() returned None or login failed on password check redirect to the login again.
-#     #     login_user(user, remember=form.remember_me.data)
-#     #     next_url = session.pop('next', None)
-#     #     if next_url:
-#     #         return redirect(next_url)
-#     #     else:
-#     #         return redirect(url_for('index'))
-#     # return render_template("login.html", title="Login", form=form)
 def login():
+    """
+    This function makes it possible for the user to login
+    """
+    # If the user is already logged in, he gets redirected to homepage.
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for("index"))
+    if request.method == 'GET':
+        if 'next' in request.args:
+            session['next'] = request.args.get('next')
     form = LoginForm()
     if form.validate_on_submit():
-        user = db.session.scalar(
-            sa.select(User).where(User.username == form.username.data))
+        user = db.session.scalar(sa.select(User).where(
+            User.username == form.username.data))
+        # db.session.scalar() will return the user object if it exists, or None if it does not.
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
-            return redirect(url_for('login'))
+            flash("Invalid username or password!")
+            return redirect(url_for("login", next=request.args.get('next')))
+        # .scalar() returned None or login failed on password check redirect to the login again.
         login_user(user, remember=form.remember_me.data)
-        next_page = request.args.get('next')
-        if not next_page or urlsplit(next_page).netloc != '':
-            next_page = url_for('index')
-        return redirect(next_page)
-    return render_template('login.html', title='Sign In', form=form)
+        next_url = session.pop('next', None)
+        if next_url:
+            return redirect(next_url)
+        else:
+            return redirect(url_for('index'))
+    return render_template("login.html", title="Login", form=form)
+
 
 
 @app.route('/logout')
