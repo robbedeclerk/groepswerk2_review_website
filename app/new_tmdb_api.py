@@ -59,6 +59,7 @@ class Tmdb:
         for genre in self.genres["genres"]:
             if genre["id"] == id:
                 return genre["name"]
+
     # Fetching data
     @cached(cache={})
     def get_trending_data(self):
@@ -124,6 +125,7 @@ class Tmdb:
         if response.status_code == 200:
             data = response.json()
             return data
+
     # Other utility functions
 
     @cached(cache={})
@@ -243,3 +245,22 @@ class Tmdb:
         return new_details
 
 
+def make_faker_list():
+    """Make a list of small details out of big data"""
+    movie_id_list = []
+    serie_id_list = []
+
+    movie = Tmdb(True)
+    serie = Tmdb(False)
+
+    movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
+    for each in movie_list:
+        movieBLa = {'Id': each['Id'], 'Type': each['Type']}
+        movie_id_list.append(movieBLa)
+
+    serie_list = serie.get_small_details_out_big_data(serie.get_popular_data())
+    for each in serie_list:
+        serieBLa = {'Id': each['Id'], 'Type': each['Type']}
+        serie_id_list.append(serieBLa)
+    new_id_list = movie_id_list + serie_id_list
+    return new_id_list
