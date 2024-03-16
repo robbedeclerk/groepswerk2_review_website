@@ -20,35 +20,8 @@
             <p>family name: {{ user.family_name }}</p>
             </div>
         
-        <div class = "info_change">
-            <from action="/change_email" method="post">
-                <label for="new_email">new email</label>
-                <input type="email" id="'new_email" name="new_email" required>
-                <button type="button" class="btn btn-primary"style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
-                Change Email</button>
-            </from>
-            <form action="/change_username" method="post">
-                <label for="new_username">New Username:</label>
-                <input type="text" id="new_username" name="new_username" required>
-                <button type="button" class="btn btn-primary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
-                Change Username</button>            
-            </form>
-            
-            <form action="/change_name" method="post">
-                <label for="new_name">new name</label>
-                <input type="text" id="'new_name" name="new_name" required>
-                <button type="button" class="btn btn-primary"style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
-                change name</button>
-            </form>
-
-            <form action="/change_family_name" method="post">
-                <label for="new_family_name">new name</label>
-                <input type="text" id="'new_family_name" name="new_family_name" required>
-                <button type="button" class="btn btn-primary"style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
-                Custom button</button>
-            </form>
-                </div>
         </div>
+        <a href="{{ url_for('edit_profile', user_id=current_user.id) }}">Edit Profile</a>
     </section>
 
     <section class="reviews">

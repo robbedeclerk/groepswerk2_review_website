@@ -277,3 +277,31 @@ def upvote(post_id):
     current_user.upvote(post)
     db.session.commit()
     return redirect(url_for('index'))
+
+
+# to go to edit page
+
+@app.route('/edit_profile/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def edit_profile(user_id):
+    print("User ID:", user_id)
+    if user_id is None:
+        form = EditProfileForm(original_username=current_user.username)
+        if form.validate_on_submit():
+            current_user.username = form.username.data
+            db.session.commit()
+            flash('Your changes have been saved.')
+            return redirect(url_for('edit_profile', user_id=current_user.id))
+        elif request.method == 'GET':
+            form.username.data = current_user.username
+    else:
+        user = User.query.get(user_id)
+
+    if 'form' not in locals():
+        form = EditProfileForm(original_username=current_user.username)
+
+    return render_template('edit_profile.html', user=current_user, form=form)
+
+
+
+
