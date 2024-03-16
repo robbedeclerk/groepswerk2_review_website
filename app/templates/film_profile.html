@@ -26,20 +26,22 @@
             {% if posts %}
                 {% for post in posts %}
                     <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                    {% if current_user.is_authenticated %}
                         <form action="{{ url_for('upvote', post_id=post.id) }}" method="post">
                             <button type="submit"><i class="fas fa-arrow-up"></i></button>
                         </form>
                         <form action="{{ url_for('downvote', post_id=post.id) }}" method="post">
                             <button type="submit"><i class="fas fa-arrow-down"></i></button>
                         </form>
+                    {% endif %}
                         <strong class="badge badge-primary text-wrap">Post ID:</strong>
                         <p>{{ post[0].id }}</p>
                         <strong class="badge badge-primary text-wrap">Message:</strong>
                         <p>{{ post[0].post_message }}</p>
                         <strong class="badge badge-primary text-wrap">Rating:</strong>
                         <p>{{ post[0].rating }}</p>
-                        {#                        <strong>Upvotes:</strong> {{ post[0].upvote_count() }}<br>#}
-                        {#                        <strong>Downvotes:</strong> {{ post[0].downvote_count() }}<br>#}
+                        <strong>Upvotes:</strong> {{ post[0].upvote_count() }}<br>
+                        <strong>Downvotes:</strong> {{ post[0].downvote_count() }}<br>
                         <p class="badge badge-primary text-wrap">Time of Posting:</p>
                         <p>{{ post[0].time_of_posting }}</p>
                         <strong class="badge badge-primary text-wrap">Movie ID:</strong>

@@ -37,7 +37,7 @@ def search_movies():
 def search(type, id=None):
     if type == "film":
         if id.isnumeric():
-            posts = db.session.execute(sa.select(Post).where(Post.movie_id == id, Post.is_movie == True)).fetchall()
+            posts = db.session.execute(sa.select(Post, Post.id).where(Post.movie_id == id, Post.is_movie == True)).fetchall()
             movie_details = movie.get_small_details_out_single_movie(True, movie.get_data(id))
             movie_similars = movie.get_small_details_out_big_data(movie.get_similar_data(id))
             form = PostForm()
@@ -66,7 +66,7 @@ def search(type, id=None):
             return render_template('index.html', movies=movie_list, movieapi=movie)
     elif type == "serie":
         if id.isnumeric():
-            posts = db.session.execute(sa.select(Post).where(Post.movie_id == id, Post.is_movie == False)).fetchall()
+            posts = db.session.execute(sa.select(Post, Post.id).where(Post.movie_id == id, Post.is_movie == False)).fetchall()
             serie_details = serie.get_small_details_out_single_movie(False, serie.get_data(id))
             serie_similars = serie.get_small_details_out_big_data(serie.get_similar_data(id))
             form = PostForm()
