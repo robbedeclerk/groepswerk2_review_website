@@ -159,7 +159,58 @@ h3, p {
 
 
 /* profile css stuff */
-.profile{
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.profile h1 {
+    text-align: center;
+}
+
+.profile h2 {
+    text-align: center;
+}
+
+.profile_picture {
+    display: inline-block;
+    margin: 0 auto;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: #333; /*to see the shape of the profilepicture*/
+}
+
+.bio h3, .bio h4 {
+    display: inline-block;
+    margin: 15px;
+}
+
+.bio h3 {
+    text-align: center;
+}
+
+.bio h4 {
+    text-align: center;
+}
+
+.info, .info_change {
+    display: inline-flex;
+    flex-direction: column;
+    margin: 15px;
+    text-align: center;
+}
+
+/* edit profiel page css stuff */
+.edit_profile{
     * {
         margin: 0;
         padding: 0
@@ -249,8 +300,6 @@ h3, p {
         background-color: #ccc
     }
 }
-
-
 
 
 /* login css stuff */

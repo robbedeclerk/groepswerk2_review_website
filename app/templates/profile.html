@@ -2,44 +2,60 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="profile">
-    <div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
-        <div class="card p-4"> 
-        <div class=" image d-flex flex-column justify-content-center align-items-center">
+    <body>
+        <h1>Welcome to your profile!</h1>
+        <h2>you are logged in as {{ user.username }}</h2>
+    </div>
+
+    <div class="profile_picture">
+        <img src="{{ user.avatar }}" alt="Profile Picture">
+    </div>
+        <div class="bio">
+            <h3>profile info</h3><h4>change email or username</h4>
+        </div>
+            <div class = "info">
+            <p>username: {{ user.username }}</p>
+            <p>email: {{ user.email }}</p>
+            <p>name: {{ user.firstname }}</p>
+            <p>family name: {{ user.family_name }}</p>
+            </div>
         
-            <button class="btn btn-secondary">
-                <img src="https://i.imgur.com/wvxPV9S.png" height="100" width="100" />
-            </button> 
-        
-                <span class="name mt-3">{{ user.username }}</span> 
-                <span class="email">{{ user.email }}</span> 
-                <span class="firstname">{{ user.firstname }}</span> 
-                <span class="family_name">{{ user.family_name }}</span>
-                <span class="change_info">change info</span>
-                
-                <div class="info_change">
-                    <from action="/change_email" method="post">
-                        <label for="new_email">new email</label>
-                        <input type="email" id="'new_email" name="new_email" required>
-                        <button class="btn1 btn-dark">submit</button>
-                    </from>
-                    <form action="/change_username" method="post">
-                        <label for="new_username">New Username:</label>
-                        <input type="text" id="new_username" name="new_username" required>
-                        <button class="btn1 btn-dark">submit</button>
-                    </from>
-                    <form action="/change_name" method="post">
-                        <label for="new_name">new name</label>
-                        <input type="text" id="'new_name" name="new_name" required>
-                        <button class="btn1 btn-dark">submit</button>
-                    </from>
-                    <form action="/change_family_name" method="post">
-                        <label for="new_family_name">new name</label>
-                        <input type="text" id="'new_family_name" name="new_family_name" required>
-                        <button class="btn1 btn-dark">submit</button>
-                    </from>
+        <div class = "info_change">
+            <from action="/change_email" method="post">
+                <label for="new_email">new email</label>
+                <input type="email" id="'new_email" name="new_email" required>
+                <button type="button" class="btn btn-primary"style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                Change Email</button>
+            </from>
+            <form action="/change_username" method="post">
+                <label for="new_username">New Username:</label>
+                <input type="text" id="new_username" name="new_username" required>
+                <button type="button" class="btn btn-primary" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                Change Username</button>            
+            </form>
+            
+            <form action="/change_name" method="post">
+                <label for="new_name">new name</label>
+                <input type="text" id="'new_name" name="new_name" required>
+                <button type="button" class="btn btn-primary"style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                change name</button>
+            </form>
+
+            <form action="/change_family_name" method="post">
+                <label for="new_family_name">new name</label>
+                <input type="text" id="'new_family_name" name="new_family_name" required>
+                <button type="button" class="btn btn-primary"style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;">
+                Custom button</button>
+            </form>
                 </div>
-        </div> 
         </div>
-        </div>
+    </section>
+
+    <section class="reviews">
+        <h5>reviews</h5>
+        <ul>
+        </ul>
+    </section>
+    </body>
 </div>
 {%endblock%}

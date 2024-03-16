@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="edit_profile">
+    <div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
+        <div class="card p-4"> 
+        <div class=" image d-flex flex-column justify-content-center align-items-center">
+        
+            <button class="btn btn-secondary">
+                <img src="https://i.imgur.com/wvxPV9S.png" height="100" width="100" />
+            </button> 
+        
+                <span class="name mt-3">{{ user.username }}</span> 
+                <span class="email">{{ user.email }}</span> 
+                <span class="firstname">{{ user.firstname }}</span> 
+                <span class="family_name">{{ user.family_name }}</span>
+                <span class="change_info">change info</span>
+                
+                <div class="info_change">
+                    <from action="/change_email" method="post">
+                        <label for="new_email">new email</label>
+                        <input type="email" id="'new_email" name="new_email" required>
+                        <button class="btn1 btn-dark">submit</button>
+                    </from>
+                    <form action="/change_username" method="post">
+                        <label for="new_username">New Username:</label>
+                        <input type="text" id="new_username" name="new_username" required>
+                        <button class="btn1 btn-dark">submit</button>
+                    </from>
+                    <form action="/change_name" method="post">
+                        <label for="new_name">new name</label>
+                        <input type="text" id="'new_name" name="new_name" required>
+                        <button class="btn1 btn-dark">submit</button>
+                    </from>
+                    <form action="/change_family_name" method="post">
+                        <label for="new_family_name">new name</label>
+                        <input type="text" id="'new_family_name" name="new_family_name" required>
+                        <button class="btn1 btn-dark">submit</button>
+                    </from>
+                </div>
+        </div> 
+        </div>
+        </div>
+</div>
+{%endblock%}
