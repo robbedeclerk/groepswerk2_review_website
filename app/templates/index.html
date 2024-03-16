@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
     <body>
     <section class="section">
@@ -8,12 +8,11 @@
                     {% for movie in row %}
                         <div class="col">
                             <div class="card">
-                                <a href="{{ url_for('search', id=movie['popular'], type=movie['film']) }}">
+                                <a href="{{ url_for('search', id=movie['Id'], type=movie['Type']) }}">
                                     <img src="{{ movie['Poster'] }}" class="card-img-top" alt="{{ movie['Title'] }}">
                                 </a>
                                 <div class="card-body">
-                                    <h5 class="card-title text-wrap">{{ movie['Title'] }}</h5>
-
+                                    <h5 class="card-title">{{ movie['Title'] }}</h5>
                                 </div>
                             </div>
                         </div>
@@ -24,4 +23,3 @@
     </section>
     </body>
 {% endblock %}
-
