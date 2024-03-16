@@ -159,54 +159,95 @@ h3, p {
 
 
 /* profile css stuff */
-body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    text-align: center;
-}
-
-.profile {
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-}
-
-.profile h1 {
-    text-align: center;
-}
-
-.profile h2 {
-    text-align: center;
-}
-
-.profile_picture {
-    display: inline-block;
-    margin: 0 auto;
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    background-color: #333; /*to see the shape of the profilepicture*/
-}
-
-.bio h3, .bio h4 {
-    display: inline-block;
-    margin: 15px;
-}
-
-.bio h3 {
-    text-align: center;
-}
-
-.bio h4 {
-    text-align: center;
-}
-
-.info, .info_change {
-    display: inline-flex;
-    flex-direction: column;
-    margin: 15px;
-    text-align: center;
+.profile{
+    * {
+        margin: 0;
+        padding: 0
+    }
+    
+    body {
+        background-color: #000
+    }
+    
+    .card {
+        width: 400px;
+        background-color: #efefef;
+        border: none;
+        cursor: pointer;
+        transition: all 0.5s;
+    }
+    
+    .image img {
+        transition: all 0.5s
+    }
+    
+    .card:hover .image img {
+        transform: scale(1.5)
+    }
+    
+    .btn {
+        height: 140px;
+        width: 140px;
+        border-radius: 50%
+    }
+    
+    .name {
+        font-size: 22px;
+        font-weight: bold
+    }
+    
+    .email {
+        font-size: 14px;
+        font-weight: 600
+    }
+    
+    .firstname {
+        font-size: 14px;
+        font-weight: 600
+    }
+    
+    .famely_name {
+        font-size: 14px;
+        font-weight: 600
+    }
+    
+    .change_info {
+        font-size: 22px;
+        font-weight: bold
+    }
+    
+    .btn1 {
+        height: 20px;
+        width: auto;
+        border: none;
+        background-color: #acd8e6;
+        color: #aeaeae;
+        font-size: 15px
+    }
+    
+    .text span {
+        font-size: 13px;
+        color: #545454;
+        font-weight: 500
+    }
+    
+    .icons i {
+        font-size: 19px
+    }
+    
+    hr .new1 {
+        border: 1px solid
+    }
+    
+    .join {
+        font-size: 14px;
+        color: #a0a0a0;
+        font-weight: bold
+    }
+    
+    .date {
+        background-color: #ccc
+    }
 }
 
 
