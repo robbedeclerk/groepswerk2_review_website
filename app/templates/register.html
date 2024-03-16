@@ -1,75 +1,408 @@
 {% extends "base.html" %}
-{% block content%}
+{% block content %}
+    <div class="register">
+        <h1>Register</h1>
+        <p>Please fill in this form to create an account.</p>
+        <hr>
 
-        <div class="register">
-            <h1>Register</h1>
-            <p>Please fill in this form to create an account.</p>
-            <hr>
+        <form method="post" action="">
+            {{ form.hidden_tag() }}
 
-            <form method="post" action="">
-                {{ form.hidden_tag() }}
-            
-                <div>
-                    {{ form.username.label }}
-                    {{ form.username }}
-                    {% for error in form.username.errors %}
-                        <p style="color: red;">{{ error }}</p>
-                    {% endfor %}
-                </div>
-                <div>
-                    {{ form.email.label }}
-                    {{ form.email }}
-                    {% for error in form.email.errors %}
-                        <p style="color: red;">{{ error }}</p>
-                    {% endfor %}
-                </div>
-                <div>
-                    {{ form.password.label }}
-                    {{ form.password }}
-                    {% for error in form.password.errors %}
-                        <p style="color: red;">{{ error }}</p>
-                    {% endfor %}
-                </div>
-                <div>
-                    {{ form.confirm_password.label }}
-                    {{ form.confirm_password }}
-                    {% for error in form.confirm_password.errors %}
-                        <p style="color: red;">{{ error }}</p>
-                    {% endfor %}
-                </div>
-                <div>
-                    {{ form.firstname.label }}
-                    {{ form.firstname }}
-                    {% for error in form.firstname.errors %}
-                        <p style="color: red;">{{ error }}</p>
-                    {% endfor %}
-                </div>
-                <div>
-                    {{ form.family_name.label }}
-                    {{ form.family_name }}
-                    {% for error in form.family_name.errors %}
-                        <p style="color: red;">{{ error }}</p>
-                    {% endfor %}
-                </div>
-                <div>
-                    {{ form.country.label }}
-                    {{ form.country }}
-                    {% for error in form.country.errors %}
-                        <p style="color: red;">{{ error }}</p>
-                    {% endfor %}
-                </div>
-                <div>
-                    {{ form.submit }}
-                </div>
-            </form>
-            <p>By creating an account you agree to our <a href="/html_folder/assets/terms_privacy.txt">Terms & Privacy</a>.</p>
-            <button type="submit" class="registerbtn">Register</button>
-        </div>
-        <div class="signin">
-            <p>Already have an account? <a href="login.html">Sign in</a>.</p>
-        </div>
-        <div>
-            <p>want to return to home press <a href="main.html">here.</a></p>
-        </div>
+            <div>
+                {{ form.username.label }}
+                {{ form.username }}
+                {% for error in form.username.errors %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.email.label }}
+                {{ form.email }}
+                {% for error in form.email.errors %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.password.label }}
+                {{ form.password }}
+                {% for error in form.password.errors %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.confirm_password.label }}
+                {{ form.confirm_password }}
+                {% for error in form.confirm_password.errors %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.firstname.label }}
+                {{ form.firstname }}
+                {% for error in form.firstname.errors %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <div>
+                {{ form.family_name.label }}
+                {{ form.family_name }}
+                {% for error in form.family_name.errors %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endfor %}
+            <div>
+                {{ form.country.label }}
+                {{ form.country }}
+                {% for error in form.country.errors %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+             <div>
+                {{ form.city.label }}
+                {{ form.city }}
+                {% for error in form.city.errors %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+             <div>
+                {{ form.postalcode.label }}
+                {{ form.postalcode }}
+                {% for error in form.postalcode.errors %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+             <div>
+                {{ form.street.label }}
+                {{ form.street }}
+                {% for error in form.street.errors %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+             <div>
+                {{ form.house_number.label }}
+                {{ form.house_number }}
+                {% for error in form.house_number.errors %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+             <div>
+                {{ form.address_suffix.label }}
+                {{ form.address_suffix }}
+                {% for error in form.address_suffix.errors %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endfor %}
+            </div>
+
+{#            <div class="dropdown-countries">#}
+{#                <div class="select">#}
+{#                    <div>#}
+{#                        <span class="selected">Afganistan</span>#}
+{#                        <img src="http://purecatamphetamine.github.io/country-flag-icons/3x2/AF.svg"/>#}
+{#                    </div>#}
+{#                    <div class="caret"></div>#}
+{#                </div>#}
+{#                <ul class="menu">#}
+{#                    <!-- Country names and Country Code -->#}
+{#                    <li data-val="AF">Afghanistan</li>#}
+{#                    <li data-val="AX">Aland Islands</li>#}
+{#                    <li data-val="AL">Albania</li>#}
+{#                    <li data-val="DZ">Algeria</li>#}
+{#                    <li data-val="AS">American Samoa</li>#}
+{#                    <li data-val="AD">Andorra</li>#}
+{#                    <li data-val="AO">Angola</li>#}
+{#                    <li data-val="AI">Anguilla</li>#}
+{#                    <li data-val="AQ">Antarctica</li>#}
+{#                    <li data-val="AG">Antigua and Barbuda</li>#}
+{#                    <li data-val="AR">Argentina</li>#}
+{#                    <li data-val="AM">Armenia</li>#}
+{#                    <li data-val="AW">Aruba</li>#}
+{#                    <li data-val="AU">Australia</li>#}
+{#                    <li data-val="AT">Austria</li>#}
+{#                    <li data-val="AZ">Azerbaijan</li>#}
+{#                    <li data-val="BS">Bahamas</li>#}
+{#                    <li data-val="BH">Bahrain</li>#}
+{#                    <li data-val="BD">Bangladesh</li>#}
+{#                    <li data-val="BB">Barbados</li>#}
+{#                    <li data-val="BY">Belarus</li>#}
+{#                    <li data-val="BE">Belgium</li>#}
+{#                    <li data-val="BZ">Belize</li>#}
+{#                    <li data-val="BJ">Benin</li>#}
+{#                    <li data-val="BM">Bermuda</li>#}
+{#                    <li data-val="BT">Bhutan</li>#}
+{#                    <li data-val="BO">Bolivia</li>#}
+{#                    <li data-val="BQ">Bonaire, Sint Eustatius and Saba</li>#}
+{#                    <li data-val="BA">Bosnia and Herzegovina</li>#}
+{#                    <li data-val="BW">Botswana</li>#}
+{#                    <li data-val="BV">Bouvet Island</li>#}
+{#                    <li data-val="BR">Brazil</li>#}
+{#                    <li data-val="IO">British Indian Ocean Territory</li>#}
+{#                    <li data-val="BN">Brunei Darussalam</li>#}
+{#                    <li data-val="BG">Bulgaria</li>#}
+{#                    <li data-val="BF">Burkina Faso</li>#}
+{#                    <li data-val="BI">Burundi</li>#}
+{#                    <li data-val="KH">Cambodia</li>#}
+{#                    <li data-val="CM">Cameroon</li>#}
+{#                    <li data-val="CA">Canada</li>#}
+{#                    <li data-val="CV">Cape Verde</li>#}
+{#                    <li data-val="KY">Cayman Islands</li>#}
+{#                    <li data-val="CF">Central African Republic</li>#}
+{#                    <li data-val="TD">Chad</li>#}
+{#                    <li data-val="CL">Chile</li>#}
+{#                    <li data-val="CN">China</li>#}
+{#                    <li data-val="CX">Christmas Island</li>#}
+{#                    <li data-val="CC">Cocos (Keeling) Islands</li>#}
+{#                    <li data-val="CO">Colombia</li>#}
+{#                    <li data-val="KM">Comoros</li>#}
+{#                    <li data-val="CG">Congo</li>#}
+{#                    <li data-val="CD">Congo, Democratic Republic of the Congo</li>#}
+{#                    <li data-val="CK">Cook Islands</li>#}
+{#                    <li data-val="CR">Costa Rica</li>#}
+{#                    <li data-val="CI">Cote D'Ivoire</li>#}
+{#                    <li data-val="HR">Croatia</li>#}
+{#                    <li data-val="CU">Cuba</li>#}
+{#                    <li data-val="CW">Curacao</li>#}
+{#                    <li data-val="CY">Cyprus</li>#}
+{#                    <li data-val="CZ">Czech Republic</li>#}
+{#                    <li data-val="DK">Denmark</li>#}
+{#                    <li data-val="DJ">Djibouti</li>#}
+{#                    <li data-val="DM">Dominica</li>#}
+{#                    <li data-val="DO">Dominican Republic</li>#}
+{#                    <li data-val="EC">Ecuador</li>#}
+{#                    <li data-val="EG">Egypt</li>#}
+{#                    <li data-val="SV">El Salvador</li>#}
+{#                    <li data-val="GQ">Equatorial Guinea</li>#}
+{#                    <li data-val="ER">Eritrea</li>#}
+{#                    <li data-val="EE">Estonia</li>#}
+{#                    <li data-val="ET">Ethiopia</li>#}
+{#                    <li data-val="FK">Falkland Islands (Malvinas)</li>#}
+{#                    <li data-val="FO">Faroe Islands</li>#}
+{#                    <li data-val="FJ">Fiji</li>#}
+{#                    <li data-val="FI">Finland</li>#}
+{#                    <li data-val="FR">France</li>#}
+{#                    <li data-val="GF">French Guiana</li>#}
+{#                    <li data-val="PF">French Polynesia</li>#}
+{#                    <li data-val="TF">French Southern Territories</li>#}
+{#                    <li data-val="GA">Gabon</li>#}
+{#                    <li data-val="GM">Gambia</li>#}
+{#                    <li data-val="GE">Georgia</li>#}
+{#                    <li data-val="DE">Germany</li>#}
+{#                    <li data-val="GH">Ghana</li>#}
+{#                    <li data-val="GI">Gibraltar</li>#}
+{#                    <li data-val="GR">Greece</li>#}
+{#                    <li data-val="GL">Greenland</li>#}
+{#                    <li data-val="GD">Grenada</li>#}
+{#                    <li data-val="GP">Guadeloupe</li>#}
+{#                    <li data-val="GU">Guam</li>#}
+{#                    <li data-val="GT">Guatemala</li>#}
+{#                    <li data-val="GG">Guernsey</li>#}
+{#                    <li data-val="GN">Guinea</li>#}
+{#                    <li data-val="GW">Guinea-Bissau</li>#}
+{#                    <li data-val="GY">Guyana</li>#}
+{#                    <li data-val="HT">Haiti</li>#}
+{#                    <li data-val="HM">Heard Island and Mcdonald Islands</li>#}
+{#                    <li data-val="VA">Holy See (Vatican City State)</li>#}
+{#                    <li data-val="HN">Honduras</li>#}
+{#                    <li data-val="HK">Hong Kong</li>#}
+{#                    <li data-val="HU">Hungary</li>#}
+{#                    <li data-val="IS">Iceland</li>#}
+{#                    <li data-val="IN">India</li>#}
+{#                    <li data-val="ID">Indonesia</li>#}
+{#                    <li data-val="IR">Iran, Islamic Republic of</li>#}
+{#                    <li data-val="IQ">Iraq</li>#}
+{#                    <li data-val="IE">Ireland</li>#}
+{#                    <li data-val="IM">Isle of Man</li>#}
+{#                    <li data-val="IL">Israel</li>#}
+{#                    <li data-val="IT">Italy</li>#}
+{#                    <li data-val="JM">Jamaica</li>#}
+{#                    <li data-val="JP">Japan</li>#}
+{#                    <li data-val="JE">Jersey</li>#}
+{#                    <li data-val="JO">Jordan</li>#}
+{#                    <li data-val="KZ">Kazakhstan</li>#}
+{#                    <li data-val="KE">Kenya</li>#}
+{#                    <li data-val="KI">Kiribati</li>#}
+{#                    <li data-val="KP">Korea, Democratic People's Republic of</li>#}
+{#                    <li data-val="KR">Korea, Republic of</li>#}
+{#                    <li data-val="XK">Kosovo</li>#}
+{#                    <li data-val="KW">Kuwait</li>#}
+{#                    <li data-val="KG">Kyrgyzstan</li>#}
+{#                    <li data-val="LA">Lao People's Democratic Republic</li>#}
+{#                    <li data-val="LV">Latvia</li>#}
+{#                    <li data-val="LB">Lebanon</li>#}
+{#                    <li data-val="LS">Lesotho</li>#}
+{#                    <li data-val="LR">Liberia</li>#}
+{#                    <li data-val="LY">Libyan Arab Jamahiriya</li>#}
+{#                    <li data-val="LI">Liechtenstein</li>#}
+{#                    <li data-val="LT">Lithuania</li>#}
+{#                    <li data-val="LU">Luxembourg</li>#}
+{#                    <li data-val="MO">Macao</li>#}
+{#                    <li data-val="MK">Macedonia, the Former Yugoslav Republic of</li>#}
+{#                    <li data-val="MG">Madagascar</li>#}
+{#                    <li data-val="MW">Malawi</li>#}
+{#                    <li data-val="MY">Malaysia</li>#}
+{#                    <li data-val="MV">Maldives</li>#}
+{#                    <li data-val="ML">Mali</li>#}
+{#                    <li data-val="MT">Malta</li>#}
+{#                    <li data-val="MH">Marshall Islands</li>#}
+{#                    <li data-val="MQ">Martinique</li>#}
+{#                    <li data-val="MR">Mauritania</li>#}
+{#                    <li data-val="MU">Mauritius</li>#}
+{#                    <li data-val="YT">Mayotte</li>#}
+{#                    <li data-val="MX">Mexico</li>#}
+{#                    <li data-val="FM">Micronesia, Federated States of</li>#}
+{#                    <li data-val="MD">Moldova, Republic of</li>#}
+{#                    <li data-val="MC">Monaco</li>#}
+{#                    <li data-val="MN">Mongolia</li>#}
+{#                    <li data-val="ME">Montenegro</li>#}
+{#                    <li data-val="MS">Montserrat</li>#}
+{#                    <li data-val="MA">Morocco</li>#}
+{#                    <li data-val="MZ">Mozambique</li>#}
+{#                    <li data-val="MM">Myanmar</li>#}
+{#                    <li data-val="NA">Namibia</li>#}
+{#                    <li data-val="NR">Nauru</li>#}
+{#                    <li data-val="NP">Nepal</li>#}
+{#                    <li data-val="NL">Netherlands</li>#}
+{#                    <li data-val="AN">Netherlands Antilles</li>#}
+{#                    <li data-val="NC">New Caledonia</li>#}
+{#                    <li data-val="NZ">New Zealand</li>#}
+{#                    <li data-val="NI">Nicaragua</li>#}
+{#                    <li data-val="NE">Niger</li>#}
+{#                    <li data-val="NG">Nigeria</li>#}
+{#                    <li data-val="NU">Niue</li>#}
+{#                    <li data-val="NF">Norfolk Island</li>#}
+{#                    <li data-val="MP">Northern Mariana Islands</li>#}
+{#                    <li data-val="NO">Norway</li>#}
+{#                    <li data-val="OM">Oman</li>#}
+{#                    <li data-val="PK">Pakistan</li>#}
+{#                    <li data-val="PW">Palau</li>#}
+{#                    <li data-val="PS">Palestinian Territory, Occupied</li>#}
+{#                    <li data-val="PA">Panama</li>#}
+{#                    <li data-val="PG">Papua New Guinea</li>#}
+{#                    <li data-val="PY">Paraguay</li>#}
+{#                    <li data-val="PE">Peru</li>#}
+{#                    <li data-val="PH">Philippines</li>#}
+{#                    <li data-val="PN">Pitcairn</li>#}
+{#                    <li data-val="PL">Poland</li>#}
+{#                    <li data-val="PT">Portugal</li>#}
+{#                    <li data-val="PR">Puerto Rico</li>#}
+{#                    <li data-val="QA">Qatar</li>#}
+{#                    <li data-val="RE">Reunion</li>#}
+{#                    <li data-val="RO">Romania</li>#}
+{#                    <li data-val="RU">Russian Federation</li>#}
+{#                    <li data-val="RW">Rwanda</li>#}
+{#                    <li data-val="BL">Saint Barthelemy</li>#}
+{#                    <li data-val="SH">Saint Helena</li>#}
+{#                    <li data-val="KN">Saint Kitts and Nevis</li>#}
+{#                    <li data-val="LC">Saint Lucia</li>#}
+{#                    <li data-val="MF">Saint Martin</li>#}
+{#                    <li data-val="PM">Saint Pierre and Miquelon</li>#}
+{#                    <li data-val="VC">Saint Vincent and the Grenadines</li>#}
+{#                    <li data-val="WS">Samoa</li>#}
+{#                    <li data-val="SM">San Marino</li>#}
+{#                    <li data-val="ST">Sao Tome and Principe</li>#}
+{#                    <li data-val="SA">Saudi Arabia</li>#}
+{#                    <li data-val="SN">Senegal</li>#}
+{#                    <li data-val="RS">Serbia</li>#}
+{#                    <li data-val="CS">Serbia and Montenegro</li>#}
+{#                    <li data-val="SC">Seychelles</li>#}
+{#                    <li data-val="SL">Sierra Leone</li>#}
+{#                    <li data-val="SG">Singapore</li>#}
+{#                    <li data-val="SX">Sint Maarten</li>#}
+{#                    <li data-val="SK">Slovakia</li>#}
+{#                    <li data-val="SI">Slovenia</li>#}
+{#                    <li data-val="SB">Solomon Islands</li>#}
+{#                    <li data-val="SO">Somalia</li>#}
+{#                    <li data-val="ZA">South Africa</li>#}
+{#                    <li data-val="GS">South Georgia and the South Sandwich Islands</li>#}
+{#                    <li data-val="SS">South Sudan</li>#}
+{#                    <li data-val="ES">Spain</li>#}
+{#                    <li data-val="LK">Sri Lanka</li>#}
+{#                    <li data-val="SD">Sudan</li>#}
+{#                    <li data-val="SR">Suriname</li>#}
+{#                    <li data-val="SJ">Svalbard and Jan Mayen</li>#}
+{#                    <li data-val="SZ">Swaziland</li>#}
+{#                    <li data-val="SE">Sweden</li>#}
+{#                    <li data-val="CH">Switzerland</li>#}
+{#                    <li data-val="SY">Syrian Arab Republic</li>#}
+{#                    <li data-val="TW">Taiwan, Province of China</li>#}
+{#                    <li data-val="TJ">Tajikistan</li>#}
+{#                    <li data-val="TZ">Tanzania, United Republic of</li>#}
+{#                    <li data-val="TH">Thailand</li>#}
+{#                    <li data-val="TL">Timor-Leste</li>#}
+{#                    <li data-val="TG">Togo</li>#}
+{#                    <li data-val="TK">Tokelau</li>#}
+{#                    <li data-val="TO">Tonga</li>#}
+{#                    <li data-val="TT">Trinidad and Tobago</li>#}
+{#                    <li data-val="TN">Tunisia</li>#}
+{#                    <li data-val="TR">Turkey</li>#}
+{#                    <li data-val="TM">Turkmenistan</li>#}
+{#                    <li data-val="TC">Turks and Caicos Islands</li>#}
+{#                    <li data-val="TV">Tuvalu</li>#}
+{#                    <li data-val="UG">Uganda</li>#}
+{#                    <li data-val="UA">Ukraine</li>#}
+{#                    <li data-val="AE">United Arab Emirates</li>#}
+{#                    <li data-val="GB">United Kingdom</li>#}
+{#                    <li data-val="US">United States</li>#}
+{#                    <li data-val="UM">United States Minor Outlying Islands</li>#}
+{#                    <li data-val="UY">Uruguay</li>#}
+{#                    <li data-val="UZ">Uzbekistan</li>#}
+{#                    <li data-val="VU">Vanuatu</li>#}
+{#                    <li data-val="VE">Venezuela</li>#}
+{#                    <li data-val="VN">Viet Nam</li>#}
+{#                    <li data-val="VG">Virgin Islands, British</li>#}
+{#                    <li data-val="VI">Virgin Islands, U.s.</li>#}
+{#                    <li data-val="WF">Wallis and Futuna</li>#}
+{#                    <li data-val="EH">Western Sahara</li>#}
+{#                    <li data-val="YE">Yemen</li>#}
+{#                    <li data-val="ZM">Zambia</li>#}
+{#                    <li data-val="ZW">Zimbabwe</li>#}
+{#                </ul>#}
+{#            </div>#}
+            <div>
+                {{ form.submit }}
+            </div>
+        </form>
+        <p>By creating an account you agree to our <a href="/html_folder/assets/terms_privacy.txt">Terms & Privacy</a>.
+        </p>
+{#        <button type="submit" class="registerbtn">Register</button>#}
+    </div>
+    <div class="signin">
+        <p>Already have an account? <a href="{{ url_for('login') }}">Sign in</a>.</p>
+    </div>
+    <div>
+        <p>want to return to home press <a href="{{ url_for('index') }}">here.</a></p>
+    </div>
+    <script>const select = document.querySelector('.select');
+const caret = document.querySelector('.caret');
+const menu = document.querySelector('.menu');
+const options = document.querySelector('.selected');
+const flag = document.querySelector('.flag');
+//add a click event to the select element
+select.addEventListener('click', () => {
+    //add the clicked select styles to the select element
+    select.classList.toggle('select-clicked');
+    //add the rotate styles to the select element
+    caret.classList.toggle('caret-rotate');
+    //add the open style to the menu element
+    menu.classList.toggle('menu-open');
+});
+//loop through all option elements
+options.forEach(option => {
+    //add a click event to the option element
+    option.addEventListener('click', () => {
+        //change selected inner text to clicked option inner text
+        selected.innerText = option.innerText;
+        //change flag icon
+        flag.src = `http://purecatamphetamine.github.io/country-flag-icons/3x2/${option.dataset.val}.svg`;
+        //add the clicked select styles to the select element
+        select.classList.remove('select-clicked');
+        caret.classList.remove('caret-rotate');
+        menu.classList.remove('menu-open');
+        //remove active class from all option elements
+        options.forEach(option => {
+            option.classList.remove('active');
+        });
+        option.classList.add('active');
+    });
+});
+</script>
 {% endblock %}
-</div>
+

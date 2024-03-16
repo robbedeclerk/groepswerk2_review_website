@@ -1,97 +1,133 @@
 {% extends "base.html" %}
-{% block content%}
-<div class="w3-center" style="margin-top: 200px;text-align:center">
-    <img src="{{ movie['Poster'] }}" alt="poster movie" style="width:30%">
-    <h3>{{ movie['Title'] }}</h3>
-    <p>{{ movie['Overview'] }}</p>
-    <p>{{ movie['Release_date'] }}</p>
-    <p>{{ movie['Runtime'] }}</p>
+{% import "bootstrap_wtf.html" as wtf %}
+{% block content %}
+<hr>
+    <div class="w3-center">
+        <img src="{{ movie['Poster'] }}" alt="poster movie" style="width:auto">
+        <h3>{{ movie['Title'] }}</h3>
+        <p>{{ movie['Overview'] }}</p>
+        <p>{{ movie['Release_date'] }}</p>
+        <p>{{ movie['Runtime'] }}</p>
         <p>
-        {% for genre in movie['Genre'] %}
-        <a href="{{ url_for('popular', type=movie['Type'], genre_id=genre['id']) }}">|{{ genre['name'] }}|</a>
-        {% endfor %}
-            </p>
-    <p>rating movie</p>
-    <div class="similar-movies">
-        {% for movieB in similars %}
-        <div class="similar-movie">
-            <a href="{{ url_for('search', id=movieB['Id'], type= movie['Type']) }}">
-                <img src={{ movieB['Poster'] }} alt="{{ movieB['Title'] }}" style="width:100%">
-            </a>
-            <h3>{{ movieB['Title'] }}</h3>
-            <p>rating movie</p>
+            {% for genre in movie['Genre'] %}
+                <a class="badge badge-primary text-wrap" href="{{ url_for('popular', type=movie['Type'], genre_id=genre['id']) }}">|{{ genre['name'] }}|</a>
+            {% endfor %}
+        </p>
+        <h3>rating movie</h3><br>
+        {% if current_user.is_authenticated %}
+            <div>{{ wtf.quick_form(form) }}</div>>
+        {% else %}
+            <p>You have to be logged in to post</p>
+            <a href="{{ url_for('login', next=request.url) }}">Login</a>
+        {% endif %}
+        <div class="container-lg">
+            {% if posts %}
+                {% for post in posts %}
+                    <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                        <strong class="badge badge-primary text-wrap">Post ID:</strong>
+                        <p>{{ post[0].id }}</p>
+                        <strong class="badge badge-primary text-wrap">Message:</strong>
+                        <p>{{ post[0].post_message }}</p>
+                        <strong class="badge badge-primary text-wrap">Rating:</strong>
+                        <p>{{ post[0].rating }}</p>
+                        {#                        <strong>Upvotes:</strong> {{ post[0].upvote_count() }}<br>#}
+                        {#                        <strong>Downvotes:</strong> {{ post[0].downvote_count() }}<br>#}
+                        <p class="badge badge-primary text-wrap">Time of Posting:</p>
+                        <p>{{ post[0].time_of_posting }}</p>
+                        <strong class="badge badge-primary text-wrap">Movie ID:</strong>
+                        <p>{{ post[0].movie_id }}</p>
+                        <strong class="badge badge-primary text-wrap">Is Movie:</strong>
+                        <p>{{ post[0].is_movie }}</p>
+                        <strong class="badge badge-primary text-wrap">User ID:</strong>
+                        <p>{{ post[0].user_id }}</p>
+                        <!-- Add any additional post details you want to display -->
+
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No posts available.</p>
+            {% endif %}
         </div>
-        {% endfor %}
-    </div>
+        <div class="similar-movies">
+            {% for movieB in similars %}
+                <div class="similar-movie">
+                    <a href="{{ url_for('search', id=movieB['Id'], type= movie['Type']) }}">
+                        <img src={{ movieB['Poster'] }} alt="{{ movieB['Title'] }}" style="width:100%">
+                    </a>
+                    <h3>{{ movieB['Title'] }}</h3>
+                    <p>rating movie</p>
+                </div>
+            {% endfor %}
+        </div>
         <div class="navigation">
-        <button id="prevBtn"><<</button>
-        <button id="nextBtn">>>/button>
+            <button id="prevBtn"><<</button>
+            <button id="nextBtn">>>/button>
+        </div>
     </div>
-</div>
-</body>
+    </body>
 
-<!-- CSS Styles for Smaller Movies -->
-<style>
-    .similar-movie {
-        display: flex;
-        width: 12%;
-        margin: 2px;
-        text-align: right;
-    }
-</style>
-<script>
-    var currentIndex = 0;
-    var similarMovies = document.querySelectorAll('.similar-movie');
-    var totalMovies = similarMovies.length;
-
-    // Initially hide the "Previous" button if there are no previous items
-    if (currentIndex === 0) {
-        document.getElementById('prevBtn').style.display = 'none';
-    }
-
-    document.getElementById('prevBtn').addEventListener('click', function() {
-        if (currentIndex > 0) {
-            currentIndex -= 5;
-            showHideMovies();
-            // Show the "Next" button when navigating to previous items
-            document.getElementById('nextBtn').style.display = 'inline-block';
+    <!-- CSS Styles for Smaller Movies -->
+    <style>
+        .similar-movie {
+            display: flex;
+            width: 12%;
+            margin: 2px;
+            text-align: right;
         }
-        // Hide the "Previous" button if there are no previous items after navigation
+    </style>
+    <script>
+        var currentIndex = 0;
+        var similarMovies = document.querySelectorAll('.similar-movie');
+        var totalMovies = similarMovies.length;
+
+        // Initially hide the "Previous" button if there are no previous items
         if (currentIndex === 0) {
             document.getElementById('prevBtn').style.display = 'none';
         }
-    });
 
-    document.getElementById('nextBtn').addEventListener('click', function() {
-        if (currentIndex + 5 < totalMovies) {
-            currentIndex += 5;
-            showHideMovies();
-            // Show the "Previous" button when navigating to next items
-            document.getElementById('prevBtn').style.display = 'inline-block';
-        }
-    });
+        document.getElementById('prevBtn').addEventListener('click', function () {
+            if (currentIndex > 0) {
+                currentIndex -= 5;
+                showHideMovies();
+                // Show the "Next" button when navigating to previous items
+                document.getElementById('nextBtn').style.display = 'inline-block';
+            }
+            // Hide the "Previous" button if there are no previous items after navigation
+            if (currentIndex === 0) {
+                document.getElementById('prevBtn').style.display = 'none';
+            }
+        });
 
-    function showHideMovies() {
-        for (var i = 0; i < totalMovies; i++) {
-            if (i >= currentIndex && i < currentIndex + 5) {
-                similarMovies[i].style.display = 'inline-block';
-            } else {
-                similarMovies[i].style.display = 'none';
+        document.getElementById('nextBtn').addEventListener('click', function () {
+            if (currentIndex + 5 < totalMovies) {
+                currentIndex += 5;
+                showHideMovies();
+                // Show the "Previous" button when navigating to next items
+                document.getElementById('prevBtn').style.display = 'inline-block';
+            }
+        });
+
+        function showHideMovies() {
+            for (var i = 0; i < totalMovies; i++) {
+                if (i >= currentIndex && i < currentIndex + 5) {
+                    similarMovies[i].style.display = 'inline-block';
+                } else {
+                    similarMovies[i].style.display = 'none';
+                }
             }
         }
-    }
 
-    // Initially show first 5 movies
-    showHideMovies();
-</script>
-<script>
-    // Script to open and close sidebar
-    function w3_open() {
-        document.getElementById("mySidebar").style.display = "block";
-    }
+        // Initially show first 5 movies
+        showHideMovies();
+    </script>
+    <script>
+        // Script to open and close sidebar
+        function w3_open() {
+            document.getElementById("mySidebar").style.display = "block";
+        }
 
-    function w3_close() {
-        document.getElementById("mySidebar").style.display = "none";
-    }
-</script>
+        function w3_close() {
+            document.getElementById("mySidebar").style.display = "none";
+        }
+    </script>
 {% endblock %}

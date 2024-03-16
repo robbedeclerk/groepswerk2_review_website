@@ -243,17 +243,3 @@ class Tmdb:
         return new_details
 
 
-
-# movie = Tmdb(True)
-# movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
-# for each in movie_list:
-#     print(each["Id"])
-
-
-
-
-
-
-
-
-

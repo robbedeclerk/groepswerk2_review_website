@@ -1,41 +1,32 @@
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>  
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width"/>
-    <link rel="stylesheet" type="text/css" href="/cssmaps/styles.css"/>  -->
-
-
 {% extends "base.html" %}
-{% block content%}
 
-<div class="login">
-    <body> 
-        <h1>name website</h1>
-        <h2>enter your loging details</h2>
-        <form method='post' action="{{ url_for('login') }}">
-            {{form.hidden_tag}}
-            <label for="username">Username:</label>
-            {{ form.username(class="form-control", placeholder="Enter your username") }}
-    
-            <label for="password">Password:</label>
-            {{ form.password(class="form-control", placeholder="Enter your password") }}
-    
-            <div class="form-check">
-                {{ form.remember_me(class="form-check-input") }}
-                <label class="form-check-label" for="remember_me">Remember Me</label>
-            </div>
-    
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
-        <p> 
-            forgot password? <a href="{{ url_for('reset_password_request')}}">ask new pasword here</a>
-        </p>
-        <p>Not registered?<a href="{{ url_for('register')}}">Create an account</a></p>
-        <div>
-            <p>want to return to home press <a href="{{ url_for('index')}}">here.</a></p>
-        </div> 
-    </body>
-</div>
-</html>
+{% block content %}
+    <div class="register">
+
+        <hr>
+        <div><h1>Log in to your account</h1>
+            <form method="post" action="">
+                {{ form.hidden_tag() }}
+
+
+                <p>Enter your credentials.</p>
+                {{ form.username.label }}
+                {{ form.username }}
+                {% for error in form.username.errors %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endfor %}
+                {{ form.password.label }}
+                {{ form.password }}
+                {% for error in form.password.errors %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endfor %}
+                {{ form.submit }}
+
+                <p>Forgot your password?<a href="{{ url_for('reset_password_request') }}"> Click to Reset!</a></p>
+                <p>Create account?<a href="{{ url_for('register') }}"> Click to Register!</a></p>
+            </form>
+        </div>
+    </div>
+
+
 {% endblock %}

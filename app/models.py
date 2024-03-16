@@ -2,21 +2,31 @@ from app import app, db, login
 from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from datetime import timezone, datetime, time
+from sqlalchemy.orm import sessionmaker, relationship
+from datetime import timezone, datetime
+from time import time
 from werkzeug.security import generate_password_hash, check_password_hash
 from hashlib import md5
 from flask_login import UserMixin
 import jwt
 
 
+
 @login.user_loader
 def load_user(id):
     """
     This function is used to load the user object from the database.
-    The decorater indicates that the function is a callback for a user,
+    The decorator indicates that the function is a callback for a user,
     it retrieves the user from the database session based on the provided id.
     """
     return db.session.get(User, int(id))
+
+
+def get_posts(movie_id, is_movie):
+    """
+    This function gets all posts for a specific movie or user.
+    """
+    return db.session.query(Post).filter(Post.movie_id == movie_id, Post.is_movie == is_movie)
 
 
 class User(UserMixin, db.Model):
@@ -30,7 +40,11 @@ class User(UserMixin, db.Model):
     firstname: so.Mapped[str] = so.mapped_column(sa.String(60))
     family_name: so.Mapped[str] = so.mapped_column(sa.String(60), index=True)
 
-    posts: so.WriteOnlyMapped['Post'] = so.relationship(back_populates='author')
+    posts: so.WriteOnlyMapped['Post'] = so.relationship('Post', back_populates='author')
+    # voted_posts: so.WriteOnlyMapped['Voted'] = so.relationship('Voted', back_populates='user')  # Add this line
+
+    # voted: so.WriteOnlyMapped['User'] = so.relationship(secondary=votes, primaryjoin=(votes.c.voter_id == id),
+    #                                                     back_populates='votes')
 
     def __repr__(self):
         """
@@ -49,22 +63,24 @@ class User(UserMixin, db.Model):
         Checks if the password is correct.
         """
         return check_password_hash(self.password_hash, password)
-
+    # def vote_post(self, post_id, upvote):
+    #     if upvote:
+    #         db.session.add(Voted(user_id=self.id, post_id=post_id, upvote=True))
+    #     else:
+    #         db.session.add(Voted(user_id=self.id, post_id=post_id, upvote=False))
     def avatar(self, size):
         """Generate avatar link"""
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
         return f'https://www.gravatar.com/avatar/{digest}?d=identicon&s={size}'
-    
+
     def get_reset_password_token(self, expires_in=600):
         """
         Function generates a token for password reset.
         """
+        return jwt.encode(
+            {'reset_password': self.id, 'exp': time() + expires_in},
+            app.config['SECRET_KEY'], algorithm='HS256')
 
-        def get_reset_password_token(self, expires_in=600):
-            return jwt.encode(
-                {'reset_password': self.id, 'exp': time() + expires_in},
-                app.config['SECRET_KEY'], algorithm='HS256')
-    
     @staticmethod
     def verify_reset_password_token(token):
         """
@@ -75,7 +91,7 @@ class User(UserMixin, db.Model):
             id = jwt.decode(token, app.config['SECRET_KEY'],
                             algorithms=['HS256'])['reset_password']
         except:
-            return
+            return None
         return db.session.get(User, id)
 
 
@@ -105,18 +121,20 @@ class Post(db.Model):
     The posts table in the postgress database.
     """
     id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
+    # title: so.Mapped[str] = so.mapped_column(sa.String(120))
     post_message: so.Mapped[str] = so.mapped_column(sa.Text)
     rating: so.Mapped[int] = so.mapped_column(
         sa.Integer)  # While implementing in the code we have to add min =0 and max = 10
-    upvote: so.Mapped[int] = so.mapped_column(sa.Integer)  # implement thumb up count.
-    downvote: so.Mapped[int] = so.mapped_column(sa.Integer)  # implement thumbs down count.
-    time_of_posting: so.Mapped[datetime] = so.mapped_column(
-        index=True,
-        default=lambda: datetime.now(timezone.utc)
-    )
+
+    # upvote: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=True)  # implement thumb up count.
+    # downvote: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=True)  # implement thumbs down count.
+    time_of_posting: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
+    movie_id: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=True)
+    is_movie: so.Mapped[bool] = so.mapped_column(sa.Boolean, nullable=True)
     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)
 
     author: so.Mapped[User] = so.relationship(back_populates='posts')
+    # voted_users: so.WriteOnlyMapped['Voted'] = so.relationship('Voted', back_populates='post')  # Add this line
 
     def __repr__(self):
         """
@@ -125,6 +143,30 @@ class Post(db.Model):
         return (f"The post contains: "
                 f"{self.post_message}, "
                 f"{self.rating}, "
-                f"{self.upvote}, "
-                f"{self.downvote}, "
+                f"{self.upvote_count()}, "
+                f"{self.downvote_count()}, "
                 f"{self.time_of_posting}")
+
+    # def upvote_count(self):
+    #     return db.session.query(Voted).filter(Voted.post_id == self.id, Voted.upvote == True).count()
+    # def downvote_count(self):
+    #     return db.session.query(Voted).filter(Voted.post_id == self.id, Voted.upvote == False).count()
+
+
+# class Voted(db.Model):
+#     """
+#     The voted table in the postgress database.
+#     """
+#     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True, primary_key=True)
+#     post_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(Post.id), index=True, primary_key=True)
+#     upvote: so.Mapped[bool] = so.mapped_column(sa.Boolean, nullable=False)
+#
+#     user: so.Mapped[User] = so.relationship(User, back_populates='voted_posts')
+#     post: so.Mapped[Post] = so.relationship(Post, back_populates='voted_users')
+#
+#
+#     def __repr__(self):
+#         """
+#         Function defines string representation of the voted object.
+#         """
+#         return f"The user has voted for the post: {self.user_id}, {self.post_id}, {self.upvote}"
