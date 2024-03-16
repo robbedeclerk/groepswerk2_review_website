@@ -37,7 +37,7 @@ def search_movies():
 def search(type, id=None):
     if type == "film":
         if id.isnumeric():
-            posts = db.session.execute(sa.select(Post).where(Post.movie_id == id, Post.is_movie == True)).fetchall()
+            posts = db.session.execute(sa.select(Post, Post.id).where(Post.movie_id == id, Post.is_movie == True)).fetchall()
             movie_details = movie.get_small_details_out_single_movie(True, movie.get_data(id))
             movie_similars = movie.get_small_details_out_big_data(movie.get_similar_data(id))
             form = PostForm()
@@ -66,7 +66,7 @@ def search(type, id=None):
             return render_template('index.html', movies=movie_list, movieapi=movie)
     elif type == "serie":
         if id.isnumeric():
-            posts = db.session.execute(sa.select(Post).where(Post.movie_id == id, Post.is_movie == False)).fetchall()
+            posts = db.session.execute(sa.select(Post, Post.id).where(Post.movie_id == id, Post.is_movie == False)).fetchall()
             serie_details = serie.get_small_details_out_single_movie(False, serie.get_data(id))
             serie_similars = serie.get_small_details_out_big_data(serie.get_similar_data(id))
             form = PostForm()
@@ -345,13 +345,55 @@ def profile():
 
     return render_template('profile.html', title='Edit Profile', form=form, user=current_user)
 
-# @login_required
-# @app.route('/upvote/<post_id>', methods=['POST'])
-# def upvote(post_id):
-#     post = Post.query.get_or_404(post_id)
-#     if post.author == current_user:
-#         flash('You cannot upvote your own post!')
-#         return redirect(url_for('index'))
-#     current_user.upvote(post)
-#     db.session.commit()
-#     return redirect(url_for('index'))
+@login_required
+@app.route('/upvote/<int:post_id>', methods=['POST'])
+def upvote(post_id):
+    post = Post.query.get_or_404(post_id)
+
+    # Check if the user has already upvoted the post
+    if current_user not in post.upvoters:
+
+        # Add the user's ID to the list of upvoters
+        current_user.upvote_post(post)
+
+        # Commit the changes to the database
+        db.session.commit()
+
+        flash('Post upvoted successfully!', 'success')
+    else:
+        post.upvoters.remove(current_user)
+        db.session.commit()
+
+        flash('You have removed your upvote!', 'danger')
+    if post.is_movie:
+        type = 'film'
+    else:
+        type = 'serie'
+    return redirect(url_for('search', type=type, id=post.movie_id))
+
+
+@login_required
+@app.route('/downvote/<int:post_id>', methods=['POST'])
+def downvote(post_id):
+    post = Post.query.get_or_404(post_id)
+
+    # Check if the user has already downvoted the post
+    if current_user not in post.downvoters:
+
+        # Add the user's ID to the list of upvoters
+        current_user.downvote_post(post)
+
+        # Commit the changes to the database
+        db.session.commit()
+
+        flash('Post downvoted successfully!', 'success')
+    else:
+        post.downvoters.remove(current_user)
+        db.session.commit()
+
+        flash('You have removed your downvote!', 'danger')
+    if post.is_movie:
+        type = 'film'
+    else:
+        type = 'serie'
+    return redirect(url_for('search', type=type, id=post.movie_id))

@@ -59,6 +59,7 @@ class Tmdb:
         for genre in self.genres["genres"]:
             if genre["id"] == id:
                 return genre["name"]
+
     # Fetching data
     @cached(cache={})
     def get_trending_data(self):
@@ -124,6 +125,7 @@ class Tmdb:
         if response.status_code == 200:
             data = response.json()
             return data
+
     # Other utility functions
 
     @cached(cache={})
@@ -243,38 +245,22 @@ class Tmdb:
         return new_details
 
 
+def make_faker_list():
+    """Make a list of small details out of big data"""
+    movie_id_list = []
+    serie_id_list = []
 
+    movie = Tmdb(True)
+    serie = Tmdb(False)
 
-#
-#
-# movie_id_list = []
-# movie = Tmdb(True)
-# movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
-# for each in movie_list:
-#     movieBLa = {'id': each['Id'], 'Type': each['Type']}
-#     movie_id_list.append(movieBLa)
-#
-# serie_id_list = []
-# serie = Tmdb(False)
-# serie_list = serie.get_small_details_out_big_data(serie.get_popular_data())
-# for each in serie_list:
-#     serieBLa = {'Id': each['Id'], 'Type': each['Type']}
-#     serie_id_list.append(serieBLa)
-#
-#
-#
-# print(movie_id_list)
-# print(serie_id_list)
-# new_id_list = movie_id_list + serie_id_list
-# print(new_id_list)
-#
-#
-# from faker import Faker
-# fake = Faker()
-#
-# choice = fake.random.choices(new_id_list, k=1)
-# print(choice[0]['Type'])
-# print(choice[0]['Id'])
-#
+    movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
+    for each in movie_list:
+        movieBLa = {'Id': each['Id'], 'Type': each['Type']}
+        movie_id_list.append(movieBLa)
 
-
+    serie_list = serie.get_small_details_out_big_data(serie.get_popular_data())
+    for each in serie_list:
+        serieBLa = {'Id': each['Id'], 'Type': each['Type']}
+        serie_id_list.append(serieBLa)
+    new_id_list = movie_id_list + serie_id_list
+    return new_id_list
