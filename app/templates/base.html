@@ -44,179 +44,81 @@
                             Movies</a></li>
                         <li><p class="dropdown-divider"></p></li>
                         <li>
-                            <a class="dropdown-item" href=>Genres &raquo;</a>
+                            <a class="dropdown-item" href="#">Genres &raquo;</a>
                             <ul class="dropdown-menu dropdown-submenu">
+                                {% for genre in movie_tmdb.genres.genres %}
+                                    <li>
+                                        <a class="dropdown-item"
+                                           href="{{ url_for('popular', type='film', genre_id=genre.id) }}">{{ genre.name }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </li></ul>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+                               aria-expanded="false">
+                                Series
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href={{ url_for('search', id='popular', type='serie') }}>Popular
+                                    Series</a></li>
+                                <li><a class="dropdown-item"
+                                       href={{ url_for('search', id='now-playing', type='serie') }}>New
+                                    Series</a></li>
+                                <li><a class="dropdown-item" href={{ url_for('search', id='top-rated', type='serie') }}>Top
+                                    Rated Series</a></li>
+                                <li><a class="dropdown-item" href={{ url_for('search', id='trending', type='serie') }}>Trending
+                                    Series</a></li>
+                                <li><p class="dropdown-divider"></p></li>
                                 <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='film', genre_id=28) }}>Action</a>
+                                    <a class="dropdown-item" href="#">Genres &raquo;</a>
+                                    <ul class="dropdown-menu dropdown-submenu">
+                                        {% for genre in serie_tmdb.genres.genres %}
+                                            <li>
+                                                <a class="dropdown-item"
+                                                   href="{{ url_for('popular', type='serie', genre_id=genre.id) }}">{{ genre.name }}</a>
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
                                 </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='film', genre_id=12) }}>Adventure</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='film', genre_id=16) }}>Animation</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='film', genre_id=35) }}>Comedy</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='film', genre_id=80) }}>Crime</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='film', genre_id=99) }}>Documentary</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='film', genre_id=18) }}>Drama</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='film', genre_id=14) }}>Fantasy</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='film', genre_id=36) }}>History</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='film', genre_id=27) }}>Horror</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='film', genre_id=10402) }}>Music</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='film', genre_id=9648) }}>Mystery</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='film', genre_id=10749) }}>Romance</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='film', genre_id=878) }}>Science
-                                        Fiction</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='film', genre_id=53) }}>Thriller</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='film', genre_id=10752) }}>War</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='film', genre_id=37) }}>Western</a>
-                                </li>
-
                             </ul>
                         </li>
                     </ul>
-                </li>
+        </div>
+
+        <div>
+            <form class="d-flex ms-auto" role="search">
+                <input class="form-control me-2" type="search"
+                       style="float: left;background-color: #edf2fb;"
+                       id="searchInput" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
                        aria-expanded="false">
-                        Series
+                        <div id="searchResults"></div>
+                        Account
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href={{ url_for('search', id='popular', type='serie') }}>Popular
-                            Series</a></li>
-                        <li><a class="dropdown-item" href={{ url_for('search', id='now-playing', type='serie') }}>New
-                            Series</a></li>
-                        <li><a class="dropdown-item" href={{ url_for('search', id='top-rated', type='serie') }}>Top
-                            Rated Series</a></li>
-                        <li><a class="dropdown-item" href={{ url_for('search', id='trending', type='serie') }}>Trending
-                            Series</a></li>
-                        <li><p class="dropdown-divider"></p></li>
-                        <li>
-                            <a class="dropdown-item" href=>Genres &raquo;</a>
-                            <ul class="dropdown-menu dropdown-submenu">
-                                <li>
-                                    <a class="dropdown-item"
-                                       href={{ url_for('popular', type='serie', genre_id=10759) }}>Action &
-                                        Adventure</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='serie', genre_id=16) }}>Animation</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='serie', genre_id=35) }}>Comedy</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='serie', genre_id=80) }}>Crime</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='serie', genre_id=99) }}>Documentary</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='serie', genre_id=18) }}>Drama</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item"
-                                       href={{ url_for('popular', type='serie', genre_id=10751) }}>Family</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item"
-                                       href={{ url_for('popular', type='serie', genre_id=10762) }}>Kids</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='serie', genre_id=9648) }}>Mystery</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item"
-                                       href={{ url_for('popular', type='serie', genre_id=10763) }}>News</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item"
-                                       href={{ url_for('popular', type='serie', genre_id=10764) }}>Reality</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item"
-                                       href={{ url_for('popular', type='serie', genre_id=10765) }}>Sci-Fi & Fantasy</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item"
-                                       href={{ url_for('popular', type='serie', genre_id=10766) }}>Soap</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item"
-                                       href={{ url_for('popular', type='serie', genre_id=10767) }}>Talk</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item"
-                                       href={{ url_for('popular', type='serie', genre_id=10768) }}>War & Politics</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href={{ url_for('popular', type='serie', genre_id=37) }}>Western</a>
-                                </li>
-
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
+                        {% if current_user.is_anonymous %}
+                            <li><a class="dropdown-item" href={{ url_for('login') }}>Login</a></li>
+                        {% else %}
+                            <li class="nav-item">
+                                <a class="nav-link" href={{ url_for('logout') }}>Logout</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href={{ url_for('profile') }}>Edit Profile</a>
+                            </li>
+                            </ul>{% endif %}</li>
             </ul>
-            <div>
-                <form class="d-flex ms-auto" role="search">
-                    <input class="form-control me-2" type="search" style="float: left;background-color: #edf2fb;"
-                           id="searchInput" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
-            </div>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
-                           aria-expanded="false">
-                            <div id="searchResults"></div>
-                            Account
-                        </a>
-                        <ul class="dropdown-menu">
-                            {% if current_user.is_anonymous %}
-                                <li><a class="dropdown-item" href={{ url_for('login') }}>Login</a></li>
-                            {% else %}
-                                <li class="nav-item">
-                                    <a class="nav-link" href={{ url_for('logout') }}>Logout</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href={{ url_for('profile') }}>Edit Profile</a>
-                                </li>
-                            {% endif %}</li>
-                </ul>
 
-
-            </div>
 
         </div>
+
+    </div>
     </div>
 </nav>
 

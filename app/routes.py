@@ -9,12 +9,15 @@ from app.forms import (LoginForm, RegistrationForm, ResetPasswordRequestForm, Re
 from app.models import User, Post, Address
 from urllib.parse import urlsplit
 import sqlalchemy as sa
-from app.email import send_password_reset_email
+from app.usermail import send_password_reset_email
 
 movie = Tmdb(True)
 serie = Tmdb(False)
 
 
+@app.context_processor
+def inject_movie():
+    return dict(movie_tmdb=movie, serie_tmdb=serie)
 @app.route('/')
 @app.route('/index')
 def index():
