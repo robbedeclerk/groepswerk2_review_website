@@ -87,7 +87,7 @@
         </div>
 
         <div>
-            <form class="d-flex ms-auto" role="search">
+            <form id="searchForm" class="d-flex ms-auto" role="search">
                 <input class="form-control me-2" type="search"
                        style="float: left;background-color: #edf2fb;"
                        id="searchInput" placeholder="Search" aria-label="Search">
@@ -130,61 +130,8 @@
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
 
-<script>
-    document.getElementById("searchInput").addEventListener("input", function () {
-        var searchText = this.value.trim();
-        if (searchText !== '') {
-            fetch('{{ url_for("search_movies") }}?title=' + searchText)
-                .then(response => response.json())
-                .then(data => {
-                    console.log(data); // For debugging, you can remove this line
-                    // Handle the received data and update the search results
-                    displayResults(data);
-                })
-                .catch(error => console.error('Error:', error));
-        } else {
-            clearResults();
-        }
-    });
 
-    function displayResults(results) {
-        var resultsContainer = document.getElementById("searchResults");
-        resultsContainer.innerHTML = ''; // Clear previous results
-        if (results.length === 0) {
-            resultsContainer.innerHTML = '<div>No results found.</div>'; // Show message if no results
-        } else {
-            results.forEach(function (result) {
-                // Create a link element
-                var linkElement = document.createElement("a");
-                linkElement.href = "/" + result['Type'] + "/" + result['Id']; // Set the href to the movie URL
-                linkElement.style.display = "block"; // Set display to block for a new line
-
-                // Create an image element for the poster
-                var posterElement = document.createElement("img");
-                posterElement.src = result['Poster']; // Set the source of the image
-                posterElement.alt = result['Title']; // Set the alt text of the image
-                posterElement.style.width = "60px"; // Adjust width as needed
-
-                // Create a span element for the title
-                var titleElement = document.createElement("span");
-                titleElement.textContent = result['Title']; // Set the text content of the span
-
-                // Append the image and title to the link element
-                linkElement.appendChild(posterElement);
-                linkElement.appendChild(titleElement);
-
-                // Append the link element to the results container
-                resultsContainer.appendChild(linkElement);
-            });
-        }
-    }
-
-
-    function clearResults() {
-        var resultsContainer = document.getElementById("searchResults");
-        resultsContainer.innerHTML = ''; // Clear results
-    }
-</script>
+{% block content %}{% endblock %}
 
 </body>
 </html>
@@ -245,6 +192,68 @@
 </style>
 
 
-{% block content %}{% endblock %}
-</body>
-</html>
+<script>
+    document.getElementById("searchInput").addEventListener("input", function () {
+    var searchText = this.value.trim();
+    if (searchText !== '') {
+        fetch('{{ url_for("search_movies") }}?title=' + searchText)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data); // For debugging, you can remove this line
+                // Handle the received data and update the search results
+                displayResults(data);
+            })
+            .catch(error => console.error('Error:', error));
+    } else {
+        clearResults();
+    }
+});
+
+function displayResults(results) {
+    var resultsContainer = document.getElementById("searchResults");
+    resultsContainer.innerHTML = ''; // Clear previous results
+    if (results.length === 0) {
+        resultsContainer.innerHTML = '<div>No results found.</div>'; // Show message if no results
+    } else {
+        results.forEach(function (result) {
+            // Create a link element
+            var linkElement = document.createElement("a");
+            linkElement.href = "/" + result['Type'] + "/" + result['Id']; // Set the href to the movie URL
+            linkElement.style.display = "block"; // Set display to block for a new line
+
+            // Create an image element for the poster
+            var posterElement = document.createElement("img");
+            posterElement.src = result['Poster']; // Set the source of the image
+            posterElement.alt = result['Title']; // Set the alt text of the image
+            posterElement.style.width = "60px"; // Adjust width as needed
+
+            // Create a span element for the title
+            var titleElement = document.createElement("span");
+            titleElement.textContent = result['Title']; // Set the text content of the span
+
+            // Append the image and title to the link element
+            linkElement.appendChild(posterElement);
+            linkElement.appendChild(titleElement);
+
+            // Append the link element to the results container
+            resultsContainer.appendChild(linkElement);
+        });
+    }
+}
+
+function clearResults() {
+    var resultsContainer = document.getElementById("searchResults");
+    resultsContainer.innerHTML = ''; // Clear results
+}
+
+// Add event listener to the submit button
+document.getElementById("searchForm").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent default form submission
+    var searchText = document.getElementById("searchInput").value.trim();
+    if (searchText !== '') {
+        // Navigate to the search URL
+        window.location.href = '{{ url_for("search_title") }}?title=' + searchText;
+    }
+});
+
+</script>
