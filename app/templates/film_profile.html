@@ -3,15 +3,15 @@
 {% block content %}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <hr>
-    <div class="w3-center">
-        <img src="{{ movie['Poster'] }}" alt="poster movie" style="width:auto">
+    <div class="container">
+        <img src="{{ movie['Poster'] }}" alt="poster movie" style="width:30%">
         <h3>{{ movie['Title'] }}</h3>
         <p>{{ movie['Overview'] }}</p>
         <p>{{ movie['Release_date'] }}</p>
         <p>{{ movie['Runtime'] }}</p>
         <p>
             {% for genre in movie['Genre'] %}
-                <a class="badge badge-primary text-wrap"
+                <a class="badge text-bg-primary text-wrap"
                    href="{{ url_for('popular', type=movie['Type'], genre_id=genre['id']) }}">|{{ genre['name'] }}|</a>
             {% endfor %}
         </p>
