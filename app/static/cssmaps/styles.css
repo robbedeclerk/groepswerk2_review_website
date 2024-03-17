@@ -181,13 +181,9 @@ body {
 }
 
 .profile_picture {
-    display: inline-block;
-    margin: 0 auto;
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    background-color: #333; /*to see the shape of the profilepicture*/
-}
+    height: auto;
+    width: auto;
+ } 
 
 .bio h3, .bio h4 {
     display: inline-block;

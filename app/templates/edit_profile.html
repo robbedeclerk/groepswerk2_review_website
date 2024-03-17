@@ -6,36 +6,50 @@
         <div class=" image d-flex flex-column justify-content-center align-items-center">
         
             <button class="btn btn-secondary">
-                <img src="https://i.imgur.com/wvxPV9S.png" height="100" width="100" />
+                <img src="{{ user.avatar(300) }}" alt="Profile Picture" height="100" width="100" />
             </button> 
-        
-                <span class="name mt-3">{{ user.username }}</span> 
-                <span class="email">{{ user.email }}</span> 
-                <span class="firstname">{{ user.firstname }}</span> 
-                <span class="family_name">{{ user.family_name }}</span>
-                <span class="change_info">change info</span>
                 
                 <div class="info_change">
-                    <from action="/change_email" method="post">
-                        <label for="new_email">new email</label>
-                        <input type="email" id="'new_email" name="new_email" required>
-                        <button class="btn1 btn-dark">submit</button>
-                    </from>
-                    <form action="/change_username" method="post">
-                        <label for="new_username">New Username:</label>
-                        <input type="text" id="new_username" name="new_username" required>
-                        <button class="btn1 btn-dark">submit</button>
-                    </from>
                     <form action="/change_name" method="post">
                         <label for="new_name">new name</label>
                         <input type="text" id="'new_name" name="new_name" required>
                         <button class="btn1 btn-dark">submit</button>
-                    </from>
+                    </form>
                     <form action="/change_family_name" method="post">
                         <label for="new_family_name">new name</label>
                         <input type="text" id="'new_family_name" name="new_family_name" required>
                         <button class="btn1 btn-dark">submit</button>
-                    </from>
+                    </form>
+                    <form action="/change_country" method="post">
+                        <label for="new_country">new country</label>
+                        <input type="text" id="'new_country" name="new_country" required>
+                        <button class="btn1 btn-dark">submit</button>
+                    </form>
+                    <form action="/change_city" method="post">
+                        <label for="new_city">new city</label>
+                        <input type="text" id="'new_city" name="new_city" required>
+                        <button class="btn1 btn-dark">submit</button>
+                    </form>
+                    <form action="/change_postalcode" method="post">
+                        <label for="new_postalcode">new postalcode</label>
+                        <input type="text" id="'new_postalcode" name="new_postalcode" required>
+                        <button class="btn1 btn-dark">submit</button>
+                    </form>
+                    <form action="/change_street" method="post">
+                        <label for="new_street">new street</label>
+                        <input type="text" id="'new_street" name="new_street" required>
+                        <button class="btn1 btn-dark">submit</button>
+                    </form>
+                    <form action="/change_house_number" method="post">
+                        <label for="new_house_number">new street</label>
+                        <input type="text" id="'new_house_number" name="new_house_number" required>
+                        <button class="btn1 btn-dark">submit</button>
+                    </form>
+                    <form action="/change_address_suffix" method="post">
+                        <label for="new_address_suffix">new address suffix</label>
+                        <input type="text" id="'new_address_suffix" name="new_address_suffix" required>
+                        <button class="btn1 btn-dark">submit</button>
+                    </form>
                 </div>
         </div> 
         </div>
