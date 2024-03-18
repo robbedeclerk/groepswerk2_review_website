@@ -272,7 +272,3 @@ def make_faker_list():
     new_id_list = movie_id_list + serie_id_list
     return new_id_list
 
-movie = Tmdb(True)
-print(movie.get_popular_data())
-print(movie.get_popular_data(page=2))
-print(stringify_page(2))

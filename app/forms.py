@@ -66,8 +66,8 @@ class EmptyForm(FlaskForm):
 
 
 class PostForm(FlaskForm):
-    post_message = TextAreaField('Post Message', render_kw={'style': 'width: device'})
-    rating = IntegerField('Rating [0-10]', validators=[DataRequired(), NumberRange(min=0, max=10)])
+    post_message = TextAreaField('Post review', render_kw={'style': 'width: device'})
+    rating = IntegerField('Rating [0-10]', validators=[DataRequired(), NumberRange(min=0, max=10)], render_kw={'style': 'width: 70px'})
     submit = SubmitField('Submit')
 
 

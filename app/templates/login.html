@@ -1,32 +1,35 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <div class="register">
-
-        <hr>
-        <div><h1>Log in to your account</h1>
-            <form method="post" action="">
-                {{ form.hidden_tag() }}
-
-
-                <p>Enter your credentials.</p>
-                {{ form.username.label }}
-                {{ form.username }}
-                {% for error in form.username.errors %}
-                    <p style="color: red;">{{ error }}</p>
-                {% endfor %}
-                {{ form.password.label }}
-                {{ form.password }}
-                {% for error in form.password.errors %}
-                    <p style="color: red;">{{ error }}</p>
-                {% endfor %}
-                {{ form.submit }}
-
-                <p>Forgot your password?<a href="{{ url_for('reset_password_request') }}"> Click to Reset!</a></p>
-                <p>Create account?<a href="{{ url_for('register') }}"> Click to Register!</a></p>
-            </form>
-        </div>
-    </div>
+{#    <div class="register">#}
+{##}
+{#        <hr>#}
+{#        <div><h1>Log in to your account</h1>#}
+{#            <form method="post" action="">#}
+{#                {{ form.hidden_tag() }}#}
+{##}
+{##}
+{#                <p>Enter your credentials.</p>#}
+{#                {{ form.username.label }}#}
+{#                {{ form.username }}#}
+{#                {% for error in form.username.errors %}#}
+{#                    <p style="color: red;">{{ error }}</p>#}
+{#                {% endfor %}#}
+{#                {{ form.password.label }}#}
+{#                {{ form.password }}#}
+{#                {% for error in form.password.errors %}#}
+{#                    <p style="color: red;">{{ error }}</p>#}
+{#                {% endfor %}#}
+{#                {{ form.submit }}#}
+{##}
+{#                <p>Forgot your password?<a href="{{ url_for('reset_password_request') }}"> Click to Reset!</a></p>#}
+{#                <p>Create account?<a href="{{ url_for('register') }}"> Click to Register!</a></p>#}
+{#            </form>#}
+{#        </div>#}
+{#    </div>#}
+    {% import 'bootstrap_wtf.html'as wtf %}
+    <h4>Sign In!</h4>
+    {{ wtf.quick_form(form) }}
 
 
 {% endblock %}

@@ -18,6 +18,9 @@ serie = Tmdb(False)
 
 
 
+@app.context_processor
+def inject_movie():
+    return dict(movie_tmdb=movie, serie_tmdb=serie)
 @app.route('/')
 @app.route('/index')
 def index():
@@ -31,10 +34,20 @@ def search_movies():
     if title:
         results = movie.get_x_Titles_for_both(title, 5)
         sorted_movie_list = sorted(results, key=lambda x: x['Popularity'], reverse=True)
-        return jsonify(sorted_movie_list)
+        return sorted_movie_list
     else:
-        return jsonify({'error': 'No title provided'})
+        return {'error': 'No title provided'}
 
+@app.route('/search_title/')
+def search_title():
+    title=request.args.get('title')
+    if title:
+        results = movie.get_5_Titles_for_both(title)
+        sorted_movie_list = sorted(results, key=lambda x: x['Popularity'], reverse=True)
+        return render_template('index.html', movies=sorted_movie_list, movieapi=movie)
+    else:
+        movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
+        return render_template('index.html', movies=movie_list, movieapi=movie)
 
 @app.route('/<type>/<id>', methods=['GET', 'POST'])
 def search(type, id=None):
@@ -130,6 +143,7 @@ def series_now_playing():
     return render_template("index.html", series=now_playing_series)
 
 
+
 @app.route('/genre/<type>/popular/<int:genre_id>')
 def popular(type, genre_id):
     if type not in ["film", "serie"]:
@@ -145,6 +159,8 @@ def popular(type, genre_id):
     elif type == "serie":
         serie_list = serie.get_small_details_out_big_data(serie.get_data_filtered_genres_on_popularity(genre_id))
         return render_template('index.html', movies=serie_list, movieapi=serie, genre=genre_id)
+
+
 
 
 @login_required
@@ -198,48 +214,32 @@ def register():
 
 
 @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     # """
-#     # This function makes it possible for the user to login
-#     # """
-#     # # If the user is already logged in, he gets redirected to homepage.
-#     # if current_user.is_authenticated:
-#     #     return redirect(url_for("index"))
-#     # if request.method == 'GET':
-#     #     if 'next' in request.args:
-#     #         session['next'] = request.args.get('next')
-#     # form = LoginForm()
-#     # if form.validate_on_submit():
-#     #     user = db.session.scalar(sa.select(User).where(
-#     #         User.username == form.username.data))
-#     #     # db.session.scalar() will return the user object if it exists, or None if it does not.
-#     #     if user is None or not user.check_password(form.password.data):
-#     #         flash("Invalid username or password!")
-#     #         return redirect(url_for("login", next=request.args.get('next')))
-#     #     # .scalar() returned None or login failed on password check redirect to the login again.
-#     #     login_user(user, remember=form.remember_me.data)
-#     #     next_url = session.pop('next', None)
-#     #     if next_url:
-#     #         return redirect(next_url)
-#     #     else:
-#     #         return redirect(url_for('index'))
-#     # return render_template("login.html", title="Login", form=form)
 def login():
+    """
+    This function makes it possible for the user to login
+    """
+    # If the user is already logged in, he gets redirected to homepage.
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for("index"))
+    if request.method == 'GET':
+        if 'next' in request.args:
+            session['next'] = request.args.get('next')
     form = LoginForm()
     if form.validate_on_submit():
-        user = db.session.scalar(
-            sa.select(User).where(User.username == form.username.data))
+        user = db.session.scalar(sa.select(User).where(
+            User.username == form.username.data))
+        # db.session.scalar() will return the user object if it exists, or None if it does not.
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
-            return redirect(url_for('login'))
+            flash("Invalid username or password!")
+            return redirect(url_for("login", next=request.args.get('next')))
+        # .scalar() returned None or login failed on password check redirect to the login again.
         login_user(user, remember=form.remember_me.data)
-        next_page = request.args.get('next')
-        if not next_page or urlsplit(next_page).netloc != '':
-            next_page = url_for('index')
-        return redirect(next_page)
-    return render_template('login.html', title='Sign In', form=form)
+        next_url = session.pop('next', None)
+        if next_url:
+            return redirect(next_url)
+        else:
+            return redirect(url_for('index'))
+    return render_template("login.html", title="Login", form=form)
 
 
 @app.route('/logout')
@@ -289,33 +289,6 @@ def reset_password(token):
         return redirect(url_for('login'))
     return render_template('email/reset_password.html', form=form, title='Edit Profile')
 
-
-# @app.route('/profile', methods=['GET', 'POST'])
-# @login_required
-# def profile(user_id):
-#     if user_id is None:
-#         form = EditProfileForm(current_user.username)
-#         if form.validate_on_submit():
-#             current_user.username = form.username.data
-#             db.session.commit()
-#             flash('Your changes have been saved.')
-#             return redirect(url_for('edit_profile'))
-#         elif request.method == 'GET':
-#             form.username.data = current_user.username
-#         return render_template('profile.html', user=current_user,
-#                                form=form)
-#     else:
-#         user = db.first_or_404(sa.select(User).where(User.id == user_id))
-#         page = request.args.get('page', 1, type=int)
-#         query = user.posts.select().order_by(Post.time_of_posting.desc())
-#         posts = db.paginate(query, page=page, per_page=10, error_out=False)
-#         next_url = url_for('profile', user_id=user_id, page=posts.next_num) \
-#             if posts.has_next else None
-#         prev_url = url_for('profile', user_id=user_id, page=posts.prev_num) \
-#             if posts.has_prev else None
-#         form = EmptyForm()
-#         return render_template('profile.html', user=user, posts=posts.items, next_url=next_url,
-#                                prev_url=prev_url, form=form)
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
