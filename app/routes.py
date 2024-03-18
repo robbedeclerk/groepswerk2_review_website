@@ -312,7 +312,7 @@ def change_name():
         current_user.name = new_name
         db.session.commit()  # Commit the changes to the database
         flash('Your name has been updated successfully!')
-        return redirect(url_for('edit_profile', user_id=current_user.id))  # Redirect the user to their profile page
+        return redirect(url_for('edit_profile', user_id=current_user.id))
 
 @app.route('/change_family_name', methods=['POST'])
 def change_family_name():
@@ -322,7 +322,7 @@ def change_family_name():
         current_user.family_name = new_family_name
         db.session.commit()  # Commit the changes to the database
         flash('Your family name has been updated successfully!')
-        return redirect(url_for('edit_profile', user_id=current_user.id))  # Redirect the user to their profile page
+        return redirect(url_for('edit_profile', user_id=current_user.id))
 
 @app.route('/change_country', methods=['POST'])
 def change_country():
@@ -332,54 +332,4 @@ def change_country():
         current_user.country = new_country
         db.session.commit()  # Commit the changes to the database
         flash('Your country has been updated successfully!')
-        return redirect(url_for('edit_profile', user_id=current_user.id))  # Redirect the user to their profile page
-
-@app.route('/change_city', methods=['POST'])
-def change_city():
-    if request.method == 'POST':
-        new_city = request.form.get('new_city')
-        # Assuming you have a current_user object representing the logged-in user
-        current_user.city = new_city
-        db.session.commit()  # Commit the changes to the database
-        flash('Your city has been updated successfully!')
-        return redirect(url_for('edit_profile', user_id=current_user.id))  # Redirect the user to their profile page
-
-@app.route('/change_postalcode', methods=['POST'])
-def change_postalcode():
-    if request.method == 'POST':
-        new_postalcode = request.form.get('new_postalcode')
-        # Assuming you have a current_user object representing the logged-in user
-        current_user.postalcode = new_postalcode
-        db.session.commit()  # Commit the changes to the database
-        flash('Your postalcode has been updated successfully!')
-        return redirect(url_for('edit_profile', user_id=current_user.id))  # Redirect the user to their profile page
-
-@app.route('/change_street', methods=['POST'])
-def change_street():
-    if request.method == 'POST':
-        new_street = request.form.get('new_street')
-        # Assuming you have a current_user object representing the logged-in user
-        current_user.street = new_street
-        db.session.commit()  # Commit the changes to the database
-        flash('Your street has been updated successfully!')
-        return redirect(url_for('edit_profile', user_id=current_user.id))  # Redirect the user to their profile page
-
-@app.route('/change_house_number', methods=['POST'])
-def change_house_number():
-    if request.method == 'POST':
-        new_house_number = request.form.get('new_house_number')
-        # Assuming you have a current_user object representing the logged-in user
-        current_user.house_number = new_house_number
-        db.session.commit()  # Commit the changes to the database
-        flash('Your house number has been updated successfully!')
-        return redirect(url_for('edit_profile', user_id=current_user.id))  # Redirect the user to their profile page
-
-@app.route('/change_address_suffix', methods=['POST'])
-def change_address_suffix():
-    if request.method == 'POST':
-        new_address_suffix = request.form.get('new_address_suffix')
-        # Assuming you have a current_user object representing the logged-in user
-        current_user.address_suffix = new_address_suffix
-        db.session.commit()  # Commit the changes to the database
-        flash('Your address suffix has been updated successfully!')
-        return redirect(url_for('edit_profile', user_id=current_user.id))  # Redirect the user to their profile page
+        return redirect(url_for('edit_profile', user_id=current_user.id))

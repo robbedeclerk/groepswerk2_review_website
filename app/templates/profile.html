@@ -19,13 +19,6 @@
             <p>name: {{ user.firstname }}</p>
             <p>family name: {{ user.family_name }}</p>
             <p>country: {{ address.country }}</p>
-            <p>city: {{ address.city }}</p>
-            <p>postal code: {{ address.postalcode }}</p>
-            <p>street: {{ address.street }}</p>
-            <p>house number: {{ address.house_number }}</p>
-            {% if address.address_suffix is not none%}
-            <p>address suffix: {{ address.address_suffix }}</p>
-            {% endif %}
             </div>
         
         </div>
