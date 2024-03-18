@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField, EmailField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length, NumberRange
 import sqlalchemy as sa
-from app.models import User, Address, Post
+from app.models import User, Post #adress is hier weg
 from app import db
 import re
 
@@ -19,11 +19,11 @@ class RegistrationForm(FlaskForm):
     firstname = StringField('First Name', validators=[DataRequired()])
     family_name = StringField('Family Name', validators=[DataRequired()])
     country = StringField('Country', validators=[DataRequired()])
-    city = StringField('City', validators=[DataRequired(), ])
-    postalcode = StringField('Postal Code', validators=[DataRequired()])
-    street = StringField('Street', validators=[DataRequired()])
-    house_number = IntegerField('House Number', validators=[DataRequired()])
-    address_suffix = StringField('Address Suffix')
+    # city = StringField('City', validators=[DataRequired(), ])
+    # postalcode = StringField('Postal Code', validators=[DataRequired()])
+    # street = StringField('Street', validators=[DataRequired()])
+    # house_number = IntegerField('House Number', validators=[DataRequired()])
+    # address_suffix = StringField('Address Suffix')
     submit = SubmitField('Register')
 
     def validate_username(self, username):
@@ -45,7 +45,7 @@ class RegistrationForm(FlaskForm):
             landen_content = landen_file.read()
             is_match = re.search(fr"\b{country.data}\b", landen_content)
         if is_match:
-            user = db.session.scalar(sa.select(Address).where(Address.country == country.data))
+            user = db.session.scalar(sa.select(User).where(User.country == country.data))
             if user is not None:
                 raise ValidationError('Please choose a valid country.')
 
@@ -93,13 +93,13 @@ class EditProfileForm(FlaskForm):
     Edit your profile information.
     """
     country = StringField('Country', validators=[DataRequired()])
-    city = StringField('City', validators=[DataRequired()])
-    postalcode = StringField('Postal Code', validators=[DataRequired()])
-    street = StringField('Street', validators=[DataRequired()])
-    house_number = IntegerField('House Number', validators=[DataRequired()])
-    address_suffix = StringField('Address suffix')
-    address = StringField('Address', validators=[DataRequired()])
-    username = StringField('Username', validators=[DataRequired()])
+    # city = StringField('City', validators=[DataRequired()])
+    # postalcode = StringField('Postal Code', validators=[DataRequired()])
+    # street = StringField('Street', validators=[DataRequired()])
+    # house_number = IntegerField('House Number', validators=[DataRequired()])
+    # address_suffix = StringField('Address suffix')
+    # address = StringField('Address', validators=[DataRequired()])
+    # username = StringField('Username', validators=[DataRequired()])
 
     def __init__(self, original_username, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)

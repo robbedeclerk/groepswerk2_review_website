@@ -6,7 +6,7 @@ import psycopg2
 from flask_login import current_user, login_user, logout_user, login_required
 from app.forms import (LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm,
                        EditProfileForm, PostForm, EmptyForm)
-from app.models import User, Post, Address
+from app.models import User, Post# Address is hier weg
 from urllib.parse import urlsplit
 import sqlalchemy as sa
 from app.email import send_password_reset_email
@@ -145,17 +145,18 @@ def register():
             email=form.email.data,
             firstname=(form.firstname.data.capitalize()),
             family_name=(form.family_name.data.capitalize()),
-        )
-        address = Address(
             country=(form.country.data.capitalize()),
-            city=form.city.data,
-            postalcode=form.postalcode.data,
-            street=(form.street.data.capitalize()),
-            house_number=form.house_number.data,
-            address_suffix=form.address_suffix.data
         )
+        # address = Address(
+        #     country=(form.country.data.capitalize()),
+        #     city=form.city.data,
+        #     postalcode=form.postalcode.data,
+        #     street=(form.street.data.capitalize()),
+        #     house_number=form.house_number.data,
+        #     address_suffix=form.address_suffix.data
+        # )
         user.set_password(form.password.data)
-        db.session.add(user, address)
+        db.session.add(user)#address is er uit gehaald hier
         db.session.commit()
         flash('Your account has been created!')
         return redirect(url_for('login'))
@@ -255,7 +256,7 @@ def profile(user_id):
                                form=form)
     else:
         user = db.first_or_404(sa.select(User).where(User.id == user_id))
-        address = Address.query.filter_by(user_id=user_id).first()
+        # address = Address.query.filter_by(user_id=user_id).first()
         page = request.args.get('page', 1, type=int)
         query = user.posts.select().order_by(Post.time_of_posting.desc())
         posts = db.paginate(query, page=page, per_page=10, error_out=False)
@@ -264,8 +265,8 @@ def profile(user_id):
         prev_url = url_for('profile', user_id=user_id, page=posts.prev_num) \
             if posts.has_prev else None
         form = EmptyForm()
-        return render_template('profile.html', user=user,address=address, posts=posts.items, next_url=next_url,
-                               prev_url=prev_url, form=form)
+        return render_template('profile.html', user=user,posts=posts.items, next_url=next_url,
+                               prev_url=prev_url, form=form)#address=address is eruit gehaald
 
 
 @login_required
@@ -297,12 +298,12 @@ def edit_profile(user_id):
             form.username.data = current_user.username
     else:
         user = User.query.get(user_id)
-        address = Address.query.filter_by(user_id=user_id).first()
+        # address = Address.query.filter_by(user_id=user_id).first()
 
     if 'form' not in locals():
         form = EditProfileForm(original_username=current_user.username)
 
-    return render_template('edit_profile.html', user=current_user, address=address, form=form)
+    return render_template('edit_profile.html', user=current_user, form=form) #address=address, is er uit gehaald
 
 @app.route('/change_name', methods=['POST'])
 def change_name():
