@@ -15,21 +15,25 @@ movie = Tmdb(True)
 serie = Tmdb(False)
 
 
+
+
+
 @app.context_processor
 def inject_movie():
     return dict(movie_tmdb=movie, serie_tmdb=serie)
 @app.route('/')
 @app.route('/index')
 def index():
-    movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
-    return render_template('index.html', title='Homepage', movies=movie_list, movieapi=movie)
+    page = request.args.get('page', 1, type=int)
+    movie_list = movie.get_small_details_out_big_data(movie.get_popular_data(page))
+    return render_template('index.html', title='Homepage', movies=movie_list, current_page=page)
 
 
 @app.route('/search_movies')
 def search_movies():
     title = request.args.get('title')
     if title:
-        results = movie.get_5_Titles_for_both(title)
+        results = movie.get_10_Titles_for_both(title, 1)
         sorted_movie_list = sorted(results, key=lambda x: x['Popularity'], reverse=True)
         return sorted_movie_list
     else:
@@ -39,12 +43,15 @@ def search_movies():
 def search_title():
     title=request.args.get('title')
     if title:
-        results = movie.get_5_Titles_for_both(title)
+        page = request.args.get('page', 1, type=int)
+        results = movie.get_10_Titles_for_both(title, page)
         sorted_movie_list = sorted(results, key=lambda x: x['Popularity'], reverse=True)
-        return render_template('index.html', movies=sorted_movie_list, movieapi=movie)
+        return render_template('index.html', movies=sorted_movie_list, current_page=page)
     else:
-        movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
-        return render_template('index.html', movies=movie_list, movieapi=movie)
+        page = request.args.get('page', 1, type=int)
+        movie_list = movie.get_small_details_out_big_data(movie.get_popular_data(page))
+        return render_template('index.html', title='Homepage', movies=movie_list, current_page=page)
+
 
 @app.route('/<type>/<id>', methods=['GET', 'POST'])
 def search(type, id=None):
@@ -65,19 +72,24 @@ def search(type, id=None):
                                    similars=movie_similars, posts=posts, form=form)
         else:
             if id == "popular":
-                movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
-                return render_template('index.html', movies=movie_list, movieapi=movie)
+                page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
+                movie_list = movie.get_small_details_out_big_data(movie.get_popular_data(page))
+                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
             elif id == "top-rated":
-                movie_list = movie.get_small_details_out_big_data(movie.get_top_rated_data())
-                return render_template('index.html', movies=movie_list, movieapi=movie)
+                page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
+                movie_list = movie.get_small_details_out_big_data(movie.get_top_rated_data(page))
+                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
             elif id == "trending":
-                movie_list = movie.get_small_details_out_big_data(movie.get_trending_data())
-                return render_template('index.html', movies=movie_list, movieapi=movie)
+                page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
+                movie_list = movie.get_small_details_out_big_data(movie.get_trending_data(page))
+                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
             elif id == "now-playing":
-                movie_list = movie.get_small_details_out_big_data(movie.get_now_playing_data())
-                return render_template('index.html', movies=movie_list, movieapi=movie)
+                page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
+                movie_list = movie.get_small_details_out_big_data(movie.get_now_playing_data(page))
+                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
             movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
-            return render_template('index.html', movies=movie_list, movieapi=movie)
+            page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
+            return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
     elif type == "serie":
         if id.isnumeric():
             posts = db.session.execute(
@@ -95,36 +107,38 @@ def search(type, id=None):
                                    similars=serie_similars, posts=posts, form=form)
         else:
             if id == "popular":
-                movie_list = serie.get_small_details_out_big_data(serie.get_popular_data())
-                return render_template('index.html', movies=movie_list, movieapi=serie)
+                page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
+                movie_list = serie.get_small_details_out_big_data(serie.get_popular_data(page))
+                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
             elif id == "top-rated":
-                movie_list = serie.get_small_details_out_big_data(serie.get_top_rated_data())
-                return render_template('index.html', movies=movie_list, movieapi=serie)
+                page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
+                movie_list = serie.get_small_details_out_big_data(serie.get_top_rated_data(page))
+                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
             elif id == "trending":
-                movie_list = serie.get_small_details_out_big_data(serie.get_trending_data())
-                return render_template('index.html', movies=movie_list, movieapi=serie)
+                page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
+                movie_list = serie.get_small_details_out_big_data(serie.get_trending_data(page))
+                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
             elif id == "now-playing":
-                movie_list = serie.get_small_details_out_big_data(serie.get_now_playing_data())
-                return render_template('index.html', movies=movie_list, movieapi=serie)
-            movie_list = serie.get_small_details_out_big_data(serie.get_popular_data())
-            return render_template('index.html', movies=movie_list, movieapi=serie)
+                page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
+                movie_list = serie.get_small_details_out_big_data(serie.get_now_playing_data(page))
+                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
+            page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
+            movie_list = serie.get_small_details_out_big_data(serie.get_popular_data(page))
+            return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
 
 
 @app.route('/genre/<type>/popular/<int:genre_id>')
 def popular(type, genre_id):
+    page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
     if type not in ["film", "serie"]:
-        return render_template('index.html', movies=movie.get_small_details_out_big_data(movie.get_popular_data()),
-                               movieapi=movie)
+        return render_template('index.html', movies=movie.get_small_details_out_big_data(movie.get_popular_data(page)),
+                               current_page=page)
     if type == "film":
-        movie_list = movie.get_small_details_out_big_data(movie.get_data_filtered_genres_on_popularity(genre_id))
-        print('Test')
-        print(f"Type: {type}, Genre ID: {genre_id}")
-        print(f"{movie.get_small_details_out_big_data(movie.get_data_filtered_genres_on_popularity(genre_id))}")
-
-        return render_template('index.html', movies=movie_list, movieapi=movie, genre=genre_id)
+        movie_list = movie.get_small_details_out_big_data(movie.get_data_filtered_genres_on_popularity(genre_id, page=page))
+        return render_template('index.html', movies=movie_list, type=type, genre=genre_id, current_page=page)
     elif type == "serie":
-        serie_list = serie.get_small_details_out_big_data(serie.get_data_filtered_genres_on_popularity(genre_id))
-        return render_template('index.html', movies=serie_list, movieapi=serie, genre=genre_id)
+        serie_list = serie.get_small_details_out_big_data(serie.get_data_filtered_genres_on_popularity(genre_id, page=page))
+        return render_template('index.html', movies=serie_list, type=type, genre=genre_id, current_page=page)
 
 
 
@@ -144,8 +158,8 @@ def submit_post(movie_id, is_movie):
                 flash('Your post is now live!')
                 return redirect(url_for('index'))
 
-    movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
-    return render_template('index.html', movie_list=movie_list, movieapi=movie)
+    movie_list = movie.get_small_details_out_big_data(movie.get_popular_data(1))
+    return render_template('index.html', movie_list=movie_list, movieapi=movie, page=1)
 
 
 @app.route('/register', methods=['GET', 'POST'])
