@@ -9,12 +9,15 @@ from app.forms import (LoginForm, RegistrationForm, ResetPasswordRequestForm, Re
 from app.models import User, Post, Address
 from urllib.parse import urlsplit
 import sqlalchemy as sa
-from app.email import send_password_reset_email
+from app.usermail import send_password_reset_email
 
 movie = Tmdb(True)
 serie = Tmdb(False)
 
 
+@app.context_processor
+def inject_movie():
+    return dict(movie_tmdb=movie, serie_tmdb=serie)
 @app.route('/')
 @app.route('/index')
 def index():
@@ -28,10 +31,20 @@ def search_movies():
     if title:
         results = movie.get_5_Titles_for_both(title)
         sorted_movie_list = sorted(results, key=lambda x: x['Popularity'], reverse=True)
-        return jsonify(sorted_movie_list)
+        return sorted_movie_list
     else:
-        return jsonify({'error': 'No title provided'})
+        return {'error': 'No title provided'}
 
+@app.route('/search_title/')
+def search_title():
+    title=request.args.get('title')
+    if title:
+        results = movie.get_5_Titles_for_both(title)
+        sorted_movie_list = sorted(results, key=lambda x: x['Popularity'], reverse=True)
+        return render_template('index.html', movies=sorted_movie_list, movieapi=movie)
+    else:
+        movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
+        return render_template('index.html', movies=movie_list, movieapi=movie)
 
 @app.route('/<type>/<id>', methods=['GET', 'POST'])
 def search(type, id=None):

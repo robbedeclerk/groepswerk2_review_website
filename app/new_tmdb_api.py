@@ -264,3 +264,4 @@ def make_faker_list():
         serie_id_list.append(serieBLa)
     new_id_list = movie_id_list + serie_id_list
     return new_id_list
+
