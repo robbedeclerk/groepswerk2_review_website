@@ -53,37 +53,38 @@
                                     </li>
                                 {% endfor %}
                             </ul>
-                        </li></ul>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
-                               aria-expanded="false">
-                                Series
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href={{ url_for('search', id='popular', type='serie') }}>Popular
-                                    Series</a></li>
-                                <li><a class="dropdown-item"
-                                       href={{ url_for('search', id='now-playing', type='serie') }}>New
-                                    Series</a></li>
-                                <li><a class="dropdown-item" href={{ url_for('search', id='top-rated', type='serie') }}>Top
-                                    Rated Series</a></li>
-                                <li><a class="dropdown-item" href={{ url_for('search', id='trending', type='serie') }}>Trending
-                                    Series</a></li>
-                                <li><p class="dropdown-divider"></p></li>
-                                <li>
-                                    <a class="dropdown-item" href="#">Genres &raquo;</a>
-                                    <ul class="dropdown-menu dropdown-submenu">
-                                        {% for genre in serie_tmdb.genres.genres %}
-                                            <li>
-                                                <a class="dropdown-item"
-                                                   href="{{ url_for('popular', type='serie', genre_id=genre.id) }}">{{ genre.name }}</a>
-                                            </li>
-                                        {% endfor %}
-                                    </ul>
-                                </li>
+                        </li>
+                    </ul>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        Series
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href={{ url_for('search', id='popular', type='serie') }}>Popular
+                            Series</a></li>
+                        <li><a class="dropdown-item"
+                               href={{ url_for('search', id='now-playing', type='serie') }}>New
+                            Series</a></li>
+                        <li><a class="dropdown-item" href={{ url_for('search', id='top-rated', type='serie') }}>Top
+                            Rated Series</a></li>
+                        <li><a class="dropdown-item" href={{ url_for('search', id='trending', type='serie') }}>Trending
+                            Series</a></li>
+                        <li><p class="dropdown-divider"></p></li>
+                        <li>
+                            <a class="dropdown-item" href="#">Genres &raquo;</a>
+                            <ul class="dropdown-menu dropdown-submenu">
+                                {% for genre in serie_tmdb.genres.genres %}
+                                    <li>
+                                        <a class="dropdown-item"
+                                           href="{{ url_for('popular', type='serie', genre_id=genre.id) }}">{{ genre.name }}</a>
+                                    </li>
+                                {% endfor %}
                             </ul>
                         </li>
                     </ul>
+                </li>
+            </ul>
         </div>
 
         <div>
@@ -107,10 +108,10 @@
                             <li><a class="dropdown-item" href={{ url_for('login') }}>Login</a></li>
                         {% else %}
                             <li class="nav-item">
-                                <a class="nav-link" href={{ url_for('logout') }}>Logout</a>
+                                <a class="nav-link" href={{ url_for('profile') }}>Edit Profile</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href={{ url_for('profile') }}>Edit Profile</a>
+                                <a class="nav-link" href={{ url_for('logout') }}>Logout</a>
                             </li>
                             </ul>{% endif %}</li>
             </ul>
@@ -118,7 +119,6 @@
 
         </div>
 
-    </div>
     </div>
 </nav>
 
@@ -194,66 +194,66 @@
 
 <script>
     document.getElementById("searchInput").addEventListener("input", function () {
-    var searchText = this.value.trim();
-    if (searchText !== '') {
-        fetch('{{ url_for("search_movies") }}?title=' + searchText)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data); // For debugging, you can remove this line
-                // Handle the received data and update the search results
-                displayResults(data);
-            })
-            .catch(error => console.error('Error:', error));
-    } else {
-        clearResults();
+        var searchText = this.value.trim();
+        if (searchText !== '') {
+            fetch('{{ url_for("search_movies") }}?title=' + searchText)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data); // For debugging, you can remove this line
+                    // Handle the received data and update the search results
+                    displayResults(data);
+                })
+                .catch(error => console.error('Error:', error));
+        } else {
+            clearResults();
+        }
+    });
+
+    function displayResults(results) {
+        var resultsContainer = document.getElementById("searchResults");
+        resultsContainer.innerHTML = ''; // Clear previous results
+        if (results.length === 0) {
+            resultsContainer.innerHTML = '<div>No results found.</div>'; // Show message if no results
+        } else {
+            results.forEach(function (result) {
+                // Create a link element
+                var linkElement = document.createElement("a");
+                linkElement.href = "/" + result['Type'] + "/" + result['Id']; // Set the href to the movie URL
+                linkElement.style.display = "block"; // Set display to block for a new line
+
+                // Create an image element for the poster
+                var posterElement = document.createElement("img");
+                posterElement.src = result['Poster']; // Set the source of the image
+                posterElement.alt = result['Title']; // Set the alt text of the image
+                posterElement.style.width = "60px"; // Adjust width as needed
+
+                // Create a span element for the title
+                var titleElement = document.createElement("span");
+                titleElement.textContent = result['Title']; // Set the text content of the span
+
+                // Append the image and title to the link element
+                linkElement.appendChild(posterElement);
+                linkElement.appendChild(titleElement);
+
+                // Append the link element to the results container
+                resultsContainer.appendChild(linkElement);
+            });
+        }
     }
-});
 
-function displayResults(results) {
-    var resultsContainer = document.getElementById("searchResults");
-    resultsContainer.innerHTML = ''; // Clear previous results
-    if (results.length === 0) {
-        resultsContainer.innerHTML = '<div>No results found.</div>'; // Show message if no results
-    } else {
-        results.forEach(function (result) {
-            // Create a link element
-            var linkElement = document.createElement("a");
-            linkElement.href = "/" + result['Type'] + "/" + result['Id']; // Set the href to the movie URL
-            linkElement.style.display = "block"; // Set display to block for a new line
-
-            // Create an image element for the poster
-            var posterElement = document.createElement("img");
-            posterElement.src = result['Poster']; // Set the source of the image
-            posterElement.alt = result['Title']; // Set the alt text of the image
-            posterElement.style.width = "60px"; // Adjust width as needed
-
-            // Create a span element for the title
-            var titleElement = document.createElement("span");
-            titleElement.textContent = result['Title']; // Set the text content of the span
-
-            // Append the image and title to the link element
-            linkElement.appendChild(posterElement);
-            linkElement.appendChild(titleElement);
-
-            // Append the link element to the results container
-            resultsContainer.appendChild(linkElement);
-        });
+    function clearResults() {
+        var resultsContainer = document.getElementById("searchResults");
+        resultsContainer.innerHTML = ''; // Clear results
     }
-}
 
-function clearResults() {
-    var resultsContainer = document.getElementById("searchResults");
-    resultsContainer.innerHTML = ''; // Clear results
-}
-
-// Add event listener to the submit button
-document.getElementById("searchForm").addEventListener("submit", function(event) {
-    event.preventDefault(); // Prevent default form submission
-    var searchText = document.getElementById("searchInput").value.trim();
-    if (searchText !== '') {
-        // Navigate to the search URL
-        window.location.href = '{{ url_for("search_title") }}?title=' + searchText;
-    }
-});
+    // Add event listener to the submit button
+    document.getElementById("searchForm").addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent default form submission
+        var searchText = document.getElementById("searchInput").value.trim();
+        if (searchText !== '') {
+            // Navigate to the search URL
+            window.location.href = '{{ url_for("search_title") }}?title=' + searchText;
+        }
+    });
 
 </script>
