@@ -9,7 +9,8 @@
                         <div class="col">
                             <div class="card">
                                 <a href="{{ url_for('search', id=movie['Id'], type=movie['Type']) }}">
-                                    <img src="{{ movie['Poster'] }}" class="card-img-top" alt="{{ movie['Title'] }}">
+                                    <img src="{{ movie['Poster'] }}" class="card-img-top"
+                                         alt="{{ movie['Title'] }}">
                                 </a>
                                 <div class="card-body">
                                     <h5 class="card-title">{{ movie['Title'] }}</h5>
@@ -21,5 +22,26 @@
             </div>
         </div>
     </section>
+    <div>
+        {% if current_page > 1 %}
+            {% if request.endpoint == 'popular' %}
+                <a href="{{ url_for(request.endpoint, genre_id=genre, type=type, page=current_page - 1) }}">Previous</a>
+            {% elif request.endpoint == 'search' %}
+                <a href="{{ url_for(request.endpoint, id=id, type=type, page=current_page - 1) }}">Previous</a>
+            {% else %}
+                <a href="{{ url_for(request.endpoint, page=current_page - 1) }}">Previous</a>
+            {% endif %}
+        {% endif %}
+        Page {{ current_page }}
+        {% if movies|length == 20 %}
+            {% if request.endpoint == 'popular' %}
+                <a href="{{ url_for(request.endpoint, genre_id=genre, type=type, page=current_page + 1) }}">Next</a>
+            {% elif request.endpoint == 'search' %}
+                    <a href="{{ url_for('search', id=id, type=type, page=current_page + 1) }}">Next</a>
+            {% else %}
+                <a href="{{ url_for(request.endpoint, page=current_page + 1) }}">Next</a>
+            {% endif %}
+        {% endif %}
+    </div>
     </body>
 {% endblock %}

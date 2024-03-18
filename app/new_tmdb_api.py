@@ -217,20 +217,25 @@ class Tmdb:
             }
         return movie_info
 
-    def get_x_Titles_for_both(self, title, x_titles):
-        """x_titles can not be higher then 20"""
+    def get_10_Titles_for_both(self, title, page=1):
+        if page % 2 == 0:
+            start_result = 10
+            end_result = 20
+            page_cor = page // 2
+        else:
+            start_result = 0
+            end_result = 10
+            page_cor = page // 2 + page % 2
         print("Fetching data...")
         film_details = []
         serie_details = []
-        url = f"https://api.themoviedb.org/3/search/tv?query={title}&include_adult=true&language=en-US&page=1"
-        url2 = f"https://api.themoviedb.org/3/search/movie?query={title}&include_adult=true&language=en-US&page=1"
+        url = f"https://api.themoviedb.org/3/search/tv?query={title}&include_adult=true&language=en-US&{stringify_page(page_cor)}"
+        url2 = f"https://api.themoviedb.org/3/search/movie?query={title}&include_adult=true&language=en-US&-{stringify_page(page_cor)}"
         response = requests.get(url, headers=self.headers)
-        if x_titles > 20:
-            x_titles = 10
         if response.status_code == 200:
             print("Data fetched from API.")
             data = response.json()
-            serie_data = data['results'][0:x_titles]
+            serie_data = data['results'][start_result:end_result]
             for each in serie_data:
                 serie_details.append(self.get_small_details_out_single_data(False, each))
 
@@ -238,7 +243,7 @@ class Tmdb:
         if response.status_code == 200:
             print("Data fetched from API.")
             data = response.json()
-            film_data = data['results'][0:x_titles]
+            film_data = data['results'][start_result:end_result]
             for each in film_data:
                 film_details.append(self.get_small_details_out_single_data(True, each))
         return serie_details + film_details
@@ -271,4 +276,3 @@ def make_faker_list():
         serie_id_list.append(serieBLa)
     new_id_list = movie_id_list + serie_id_list
     return new_id_list
-
