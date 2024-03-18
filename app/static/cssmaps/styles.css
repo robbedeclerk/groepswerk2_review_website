@@ -445,3 +445,24 @@ h3, p {
 
 
 }
+/* Positioning the search results container */
+#searchResultsContainer {
+    position: absolute;
+    top: 100%; /* Position it just beneath the search bar */
+    left: 0;
+    width: 100%; /* Take up full width */
+    background-color: white; /* Optionally, set a background color */
+    z-index: 999; /* Ensure it's on top of other content */
+    display: none; /* Hide it by default */
+    border: 1px solid #ccc; /* Add border for styling */
+}
+
+/* Styling for search results */
+#searchResults {
+    padding: 10px;
+}
+
+/* Show search results when there are results */
+#searchResultsContainer.show {
+    display: block;
+}

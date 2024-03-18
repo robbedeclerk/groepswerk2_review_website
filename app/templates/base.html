@@ -14,7 +14,7 @@
 
 </head>
 
-<body class="container">
+<body class="container-fluid">
 <nav class="navbar navbar-expand-lg bg-body-tertiary font-weight-bold">
     <div class="container">
         <h1 class="navbar-brand">The Movie Score</h1>
@@ -98,7 +98,6 @@
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
                            aria-expanded="false">
-                            <div id="searchResults"></div>
                             Account
                         </a>
                         <ul class="dropdown-menu">
@@ -116,7 +115,8 @@
             </div>
         </div>
     </div>
-</nav><hr>
+</nav><div id="searchResultsContainer"><div id="searchResults"></div></div>
+<hr>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
         crossorigin="anonymous"></script>
@@ -144,36 +144,73 @@
     });
 
     function displayResults(results) {
-        var resultsContainer = document.getElementById("searchResults");
-        resultsContainer.innerHTML = ''; // Clear previous results
-        if (results.length === 0) {
-            resultsContainer.innerHTML = '<div>No results found.</div>'; // Show message if no results
-        } else {
-            results.forEach(function (result) {
-                // Create a link element
-                var linkElement = document.createElement("a");
-                linkElement.href = "/" + result['Type'] + "/" + result['Id']; // Set the href to the movie URL
-                linkElement.style.display = "block"; // Set display to block for a new line
+    var resultsContainer = document.getElementById("searchResults");
+    resultsContainer.innerHTML = ''; // Clear previous results
+    if (results.length === 0) {
+        resultsContainer.innerHTML = '<div>No results found.</div>'; // Show message if no results
+    } else {
+        results.forEach(function (result) {
+            // Create a link element
+            var linkElement = document.createElement("a");
+            linkElement.href = "/" + result['Type'] + "/" + result['Id']; // Set the href to the movie URL
+            linkElement.style.display = "block"; // Set display to block for a new line
 
-                // Create an image element for the poster
-                var posterElement = document.createElement("img");
-                posterElement.src = result['Poster']; // Set the source of the image
-                posterElement.alt = result['Title']; // Set the alt text of the image
-                posterElement.style.width = "60px"; // Adjust width as needed
+            // Create an image element for the poster
+            var posterElement = document.createElement("img");
+            posterElement.src = result['Poster']; // Set the source of the image
+            posterElement.alt = result['Title']; // Set the alt text of the image
+            posterElement.style.width = "60px"; // Adjust width as needed
 
-                // Create a span element for the title
-                var titleElement = document.createElement("span");
-                titleElement.textContent = result['Title']; // Set the text content of the span
+            // Create a span element for the title
+            var titleElement = document.createElement("span");
+            titleElement.textContent = result['Title']; // Set the text content of the span
 
-                // Append the image and title to the link element
-                linkElement.appendChild(posterElement);
-                linkElement.appendChild(titleElement);
+            // Append the image and title to the link element
+            linkElement.appendChild(posterElement);
+            linkElement.appendChild(titleElement);
 
-                // Append the link element to the results container
-                resultsContainer.appendChild(linkElement);
-            });
-        }
+            // Append the link element to the results container
+            resultsContainer.appendChild(linkElement);
+        });
     }
+    // Show the search results container
+    document.getElementById("searchResultsContainer").classList.add("show");
+}
+    {#function displayResults(results) {#}
+    {#    var resultsContainer = document.getElementById("searchResults");#}
+    {#    resultsContainer.innerHTML = ''; // Clear previous results#}
+    {#    if (results.length === 0) {#}
+    {#        resultsContainer.innerHTML = '<div>No results found.</div>'; // Show message if no results#}
+    {#    } else {#}
+    {#        results.forEach(function (result) {#}
+    {#            // Create a div element for each result#}
+    {#            var movieContainer = document.createElement("div");#}
+    {#            movieContainer.classList.add("movie");#}
+    {#            // Create a link element#}
+    {#            var linkElement = document.createElement("a");#}
+    {#            linkElement.href = "/" + result['Type'] + "/" + result['Id']; // Set the href to the movie URL#}
+    {#            linkElement.classList.add("movie-link");#}
+    {##}
+    {#            // Create an image element for the poster#}
+    {#            var posterElement = document.createElement("img");#}
+    {#            posterElement.src = result['Poster']; // Set the source of the image#}
+    {#            posterElement.alt = result['Title']; // Set the alt text of the image#}
+    {#            posterElement.classList.add("movie-poster");#}
+    {##}
+    {#            // Create a span element for the title#}
+    {#            var titleElement = document.createElement("span");#}
+    {#            titleElement.textContent = result['Title']; // Set the text content of the span#}
+    {#            titleElement.classList.add("movie-title");#}
+    {##}
+    {##}
+    {#            // Append the image and title to the link element#}
+    {#            linkElement.appendChild(posterElement);#}
+    {#            linkElement.appendChild(titleElement);#}
+    {#            movieContainer.appendChild(linkElement)#}
+    {#            resultsContainer.appendChild(movieContainer);#}
+    {#        });#}
+    {#    }#}
+
 
     function clearResults() {
         var resultsContainer = document.getElementById("searchResults");
