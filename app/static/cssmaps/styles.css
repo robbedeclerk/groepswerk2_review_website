@@ -159,49 +159,144 @@ h3, p {
 
 
 /* profile css stuff */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+
 .profile {
-    body {
-        font-family: 'Arial', sans-serif;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.profile h1 {
+    text-align: center;
+}
+
+.profile h2 {
+    text-align: center;
+}
+
+.profile_picture {
+    height: auto;
+    width: auto;
+ } 
+
+.bio h3, .bio h4 {
+    display: inline-block;
+    margin: 15px;
+}
+
+.bio h3 {
+    text-align: center;
+}
+
+.bio h4 {
+    text-align: center;
+}
+
+.info, .info_change {
+    display: inline-flex;
+    flex-direction: column;
+    margin: 15px;
+    text-align: center;
+}
+
+/* edit profiel page css stuff */
+.edit_profile{
+    * {
         margin: 0;
-        padding: 0;
+        padding: 0
     }
-
-    header {
-        background-color: #4caf50;
-        color: #fff;
-        text-align: center;
-        padding: 20px;
+    
+    body {
+        background-color: #000
     }
-
-    .profile {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 20px;
+    
+    .card {
+        width: 400px;
+        background-color: #efefef;
+        border: none;
+        cursor: pointer;
+        transition: all 0.5s;
     }
-
-    .profile img {
-        border-radius: 50%;
-        margin-right: 20px;
+    
+    .image img {
+        transition: all 0.5s
     }
-
-    .profile_info {
-        text-align: center;
-        max-width: 400px;
+    
+    .card:hover .image img {
+        transform: scale(1.5)
     }
-
-    .skills {
-        background-color: #f2f2f2;
-        padding: 20px;
+    
+    .btn {
+        height: 140px;
+        width: 140px;
+        border-radius: 50%
     }
-
-    footer {
-        background-color: #fff;
-        color: #333;
-        text-align: center;
-        padding: 10px;
+    
+    .name {
+        font-size: 22px;
+        font-weight: bold
+    }
+    
+    .email {
+        font-size: 14px;
+        font-weight: 600
+    }
+    
+    .firstname {
+        font-size: 14px;
+        font-weight: 600
+    }
+    
+    .famely_name {
+        font-size: 14px;
+        font-weight: 600
+    }
+    
+    .change_info {
+        font-size: 22px;
+        font-weight: bold
+    }
+    
+    .btn1 {
+        height: 20px;
+        width: auto;
+        border: none;
+        background-color: #acd8e6;
+        color: #aeaeae;
+        font-size: 15px
+    }
+    
+    .text span {
+        font-size: 13px;
+        color: #545454;
+        font-weight: 500
+    }
+    
+    .icons i {
+        font-size: 19px
+    }
+    
+    hr .new1 {
+        border: 1px solid
+    }
+    
+    .join {
+        font-size: 14px;
+        color: #a0a0a0;
+        font-weight: bold
+    }
+    
+    .date {
+        background-color: #ccc
     }
 }
+
 
 /* login css stuff */
 .login {

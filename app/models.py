@@ -9,6 +9,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from hashlib import md5
 from flask_login import UserMixin
 import jwt
+from hashlib import md5
 
 
 
@@ -39,6 +40,7 @@ class User(UserMixin, db.Model):
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
     firstname: so.Mapped[str] = so.mapped_column(sa.String(60))
     family_name: so.Mapped[str] = so.mapped_column(sa.String(60), index=True)
+    country: so.Mapped[str] = so.mapped_column(sa.String(55), index=True)
 
     posts: so.WriteOnlyMapped['Post'] = so.relationship('Post', back_populates='author')
     # voted_posts: so.WriteOnlyMapped['Voted'] = so.relationship('Voted', back_populates='user')  # Add this line
@@ -50,7 +52,7 @@ class User(UserMixin, db.Model):
         """
         Function defines string representation of the user object.
         """
-        return f"User: {self.username}, {self.email}, {self.password_hash}, {self.firstname}, {self.family_name}"
+        return f"User: {self.username}, {self.email}, {self.password_hash}, {self.firstname}, {self.family_name}, {self.country}"
 
     def set_password(self, password):
         """
@@ -95,25 +97,25 @@ class User(UserMixin, db.Model):
         return db.session.get(User, id)
 
 
-class Address(UserMixin, db.Model):
-    """
-    The address info of the Users stored in an other table for efficiency.
-    """
-    id: so.Mapped[int] = so.mapped_column(primary_key=True)
-    country: so.Mapped[str] = so.mapped_column(sa.String(55), index=True)
-    city: so.Mapped[str] = so.mapped_column(sa.String(85), index=True)
-    postalcode: so.Mapped[str] = so.mapped_column(sa.String(20))
-    street: so.Mapped[str] = so.mapped_column(sa.String(58))
-    house_number: so.Mapped[int] = so.mapped_column(sa.Integer)
-    address_suffix: so.Mapped[str] = so.mapped_column(sa.String(10))
-    user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)  # Linked to the User id
+# class Address(UserMixin, db.Model):
+#     """
+#     The address info of the Users stored in an other table for efficiency.
+#     """
+#     id: so.Mapped[int] = so.mapped_column(primary_key=True)
+#     country: so.Mapped[str] = so.mapped_column(sa.String(55), index=True)
+#     city: so.Mapped[str] = so.mapped_column(sa.String(85), index=True)
+#     postalcode: so.Mapped[str] = so.mapped_column(sa.String(20))
+#     street: so.Mapped[str] = so.mapped_column(sa.String(58))
+#     house_number: so.Mapped[int] = so.mapped_column(sa.Integer)
+#     address_suffix: so.Mapped[str] = so.mapped_column(sa.String(10))
+#     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)  # Linked to the User id
 
-    def __repr__(self):
-        """
-        Function defines string representation of the address object.
-        """
-        return (f'The Address is: {self.country}, {self.city}, {self.street}, '
-                f'{self.postalcode}, {self.house_number}, {self.address_suffix}')
+#     def __repr__(self):
+#         """
+#         Function defines string representation of the address object.
+#         """
+#         return (f'The Address is: {self.country}, {self.city}, {self.street}, '
+#                 f'{self.postalcode}, {self.house_number}, {self.address_suffix}')
 
 
 class Post(db.Model):

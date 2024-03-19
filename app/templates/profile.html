@@ -3,45 +3,30 @@
 {% block content %}
 <div class="profile">
     <body>
-    <header>
-        <h1>Welcome to the profile!</h1>
-        <p>you are logged in as {{ user.username }}</p>
-    </header>
+        <h1>Welcome to your profile!</h1>
+        <h2>you are logged in as {{ user.username }}</h2>
+    </div>
 
-    <section class="profile">
-        <img src="{{ user.avatar }}" alt="Profile Picture">
+    <div class="profile_picture">
+        <img src="{{ user.avatar(300) }}" alt="Profile Picture">
+    </div>
         <div class="bio">
-            <h2>profile info</h2>
+            <h3>profile info</h3><h4>change email or username</h4>
+        </div>
+            <div class = "info">
             <p>username: {{ user.username }}</p>
             <p>email: {{ user.email }}</p>
-
-            <h3>change email or username</h3>
-            <from action="/change_email" method="post">
-
-                <label for="new_email">new email</label>
-                <input type="email" id="'new_email" name="new_email" required>
-                <button type="submit">change email</button>
-                <form action="/change_username" method="post">
-
-                    <label for="new_username">New Username:</label>
-                    <input type="text" id="new_username" name="new_username" required>
-                    <button type="submit">Change Username</button>
-                </form>
-
-                <label for="new_name">new name</label>
-                <input type="text" id="'new_name" name="new_name" required>
-                <button type="submit">change name</button>
-                <form action="/change_name" method="post">
-
-                    <label for="new_family_name">new name</label>
-                    <input type="text" id="'new_family_name" name="new_family_name" required>
-                    <button type="submit">change family name</button>
-                    <form action="/change_family_name" method="post">
+            <p>name: {{ user.firstname }}</p>
+            <p>family name: {{ user.family_name }}</p>
+            <p>country: {{ user.country }}</p>
+            </div>
+        
         </div>
+        <a href="{{ url_for('edit_profile', user_id=current_user.id) }}">Edit Profile</a>
     </section>
 
     <section class="reviews">
-        <h2>reviews</h2>
+        <h5>reviews</h5>
         <ul>
         </ul>
     </section>
