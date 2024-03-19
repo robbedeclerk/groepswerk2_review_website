@@ -54,7 +54,7 @@ class LoginForm(FlaskForm):
     """
     Login form for users who want to log in.
     """
-    username = StringField('Username', validators=[DataRequired()], render_kw={'style': 'width: 25%;'})
+    username = StringField('Username', validators=[DataRequired()], render_kw={'style': 'width: 25%'})
     password = PasswordField('Password', validators=[DataRequired()], render_kw={'style': 'width: 25%;'})
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Login')

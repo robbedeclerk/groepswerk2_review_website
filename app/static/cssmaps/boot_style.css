@@ -97,13 +97,26 @@ div {
     color: white;
 }
 
-p {
-    color: white;
+.form-label {
+    color: black;
+}
+
+.form-check-label {
+    color: black;
 }
 
 
-
-
+/*.search-results {*/
+/*    position: absolute;*/
+/*    top: 100%; !* Position below the navbar *!*/
+/*    left: 0;*/
+/*    z-index: 1000; !* Ensure it's above other content *!*/
+/*    background-color: #370404; !* Set background color *!*/
+/*    max-height: 300px; !* Set a max height for overflow *!*/
+/*    overflow-y: auto; !* Enable vertical scrolling if needed *!*/
+/*    width: 100%; !* Match the width of the navbar *!*/
+/*    align-content: center;*/
+/*}*/
 
 
 

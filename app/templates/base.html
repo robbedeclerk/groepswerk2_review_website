@@ -14,7 +14,7 @@
 
 </head>
 
-<body class="container">
+<body class="container-fluid">
 <nav class="navbar navbar-expand-lg bg-body-tertiary font-weight-bold">
     <div class="container">
         <h1 class="navbar-brand">The Movie Score</h1>
@@ -144,12 +144,15 @@
     });
 
     function displayResults(results) {
-        var resultsContainer = document.getElementById("searchResults");
-        resultsContainer.innerHTML = ''; // Clear previous results
-        if (results.length === 0) {
-            resultsContainer.innerHTML = '<div>No results found.</div>'; // Show message if no results
-        } else {
-            results.forEach(function (result) {
+    var resultsContainer = document.getElementById("searchResults");
+    resultsContainer.innerHTML = ''; // Clear previous results
+    if (results.length === 0) {
+        resultsContainer.innerHTML = '<div>No results found.</div>'; // Show message if no results
+    } else {
+        var maxWidth = document.getElementById("searchInput").offsetWidth; // Get width of search input
+        resultsContainer.style.width = maxWidth + "px"; // Set width of results container
+
+        results.forEach(function (result) {
                 // Create a link element
                 var linkElement = document.createElement("a");
                 linkElement.href = "/" + result['Type'] + "/" + result['Id']; // Set the href to the movie URL
