@@ -35,6 +35,8 @@
                 <a href="{{ url_for(request.endpoint, genre_id=genre, type=type, page=current_page + 1) }}">Next</a>
             {% elif request.endpoint == 'search' %}
                     <a href="{{ url_for('search', id=id, type=type, page=current_page + 1) }}">Next</a>
+            {% elif request.endpoint == 'search_title' %}
+                    <a href="{{ url_for('search_title', title=title, page=current_page + 1) }}">Next</a>
             {% else %}
                 <a href="{{ url_for(request.endpoint, page=current_page + 1) }}">Next</a>
             {% endif %}

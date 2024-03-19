@@ -46,7 +46,7 @@ def search_title():
         page = request.args.get('page', 1, type=int)
         results = movie.get_10_Titles_for_both(title, page)
         sorted_movie_list = sorted(results, key=lambda x: x['Popularity'], reverse=True)
-        return render_template('index.html', movies=sorted_movie_list, current_page=page)
+        return render_template('index.html', movies=sorted_movie_list, current_page=page, title=title)
     else:
         page = request.args.get('page', 1, type=int)
         movie_list = movie.get_small_details_out_big_data(movie.get_popular_data(page))
