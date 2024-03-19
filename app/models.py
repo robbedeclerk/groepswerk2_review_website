@@ -47,6 +47,8 @@ class User(UserMixin, db.Model):
     password_hash: so.Mapped[Optional[str]] = so.mapped_column(sa.String(256))
     firstname: so.Mapped[str] = so.mapped_column(sa.String(60))
     family_name: so.Mapped[str] = so.mapped_column(sa.String(60), index=True)
+    country: so.Mapped[str] = so.mapped_column(sa.String(55), index=True)
+
 
     posts: so.WriteOnlyMapped['Post'] = so.relationship('Post', back_populates='author')
 

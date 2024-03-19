@@ -273,50 +273,27 @@ def reset_password(token):
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    form = EditProfileForm(current_user.username)
+    # Ensure that the form is initialized with the original username
+    form = EditProfileForm(original_username=current_user.username)
+
+    # Check if the form is submitted and validated
     if form.validate_on_submit():
-        # Update the user's profile information
-        current_user.username = form.username.data
+        # If the form is valid, update the user profile with the form data
+        current_user.firstname = form.firstname.data
+        current_user.family_name = form.family_name.data
+        current_user.country = form.country.data
+        db.session.commit()  # Commit the changes to the database
+        flash('Your changes have been saved.')  # Show a flash message to the user
+        return redirect(url_for('index'))  # Redirect the user back to the profile page
 
-        # Retrieve the user's address
-        address = Address.query.filter_by(user_id=current_user.id).first()
-        if address:
-            # Update the address fields
-            address.country = form.country.data
-            address.city = form.city.data
-            address.postalcode = form.postalcode.data
-            address.street = form.street.data
-            address.house_number = form.house_number.data
-            address.address_suffix = form.address_suffix.data
-        else:
-            # If the user doesn't have an address, create a new one
-            address = Address(
-                country=form.country.data,
-                city=form.city.data,
-                postalcode=form.postalcode.data,
-                street=form.street.data,
-                house_number=form.house_number.data,
-                address_suffix=form.address_suffix.data,
-                user_id=current_user.id
-            )
-            db.session.add(address)
-
-        db.session.commit()
-        flash('Your changes have been saved.')
-        return redirect(url_for('profile'))
+    # If it's a GET request, pre-populate the form fields with the current user data
     elif request.method == 'GET':
-        # Populate the form fields with current user's information
-        form.username.data = current_user.username
-        address = Address.query.filter_by(user_id=current_user.id).first()
-        if address:
-            form.country.data = address.country
-            form.city.data = address.city
-            form.postalcode.data = address.postalcode
-            form.street.data = address.street
-            form.house_number.data = address.house_number
-            form.address_suffix.data = address.address_suffix
+        form.firstname.data = current_user.firstname
+        form.family_name.data = current_user.family_name
+        form.country.data = current_user.country
 
-    return render_template('profile.html', title='Edit Profile', form=form, user=current_user)
+    # Render the profile template with the form
+    return render_template('profile.html', form=form)
 
 
 @login_required

@@ -92,14 +92,10 @@ class EditProfileForm(FlaskForm):
     """
     Edit your profile information.
     """
+    firstname = StringField('Firstname', validators=[DataRequired()])
+    family_name = StringField('Family_name', validators=[DataRequired()])
     country = StringField('Country', validators=[DataRequired()])
-    city = StringField('City', validators=[DataRequired()])
-    postalcode = StringField('Postal Code', validators=[DataRequired()])
-    street = StringField('Street', validators=[DataRequired()])
-    house_number = IntegerField('House Number', validators=[DataRequired()])
-    address_suffix = StringField('Address suffix')
-    # address = StringField('Address', validators=[DataRequired()])
-    username = StringField('Username', validators=[DataRequired()])
+    submit = SubmitField('Submit')
 
     def __init__(self, original_username, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)
