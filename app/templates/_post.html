@@ -1,7 +1,7 @@
     <table class="table table-hover">
         <tr>
             <td width="70px">
-                <a href="{{ url_for('user', username=post.author.username) }}">
+                <a href="{{ url_for('profile', user_id=post.author.id) }}">
                     <img src="{{ post.author.avatar(70) }}" />
                 </a>
             </td>
@@ -11,10 +11,17 @@
                         {{ post.author.username }}
                     </a>
                 {% endset %}
-                {{ _('%(username)s said %(when)s',
-                    username=user_link, when=moment(post.timestamp).fromNow()) }}
+
                 <br>
-                <span id="post{{ post.id }}">{{ post.body }}</span>
+                <span id="post{{ post.id }}">{{ post.post_message }}</span>
+                {% if post.is_movie %}
+                <img style="width: 30%" src=" {{ movie_tmdb.get_small_details_out_single_movie(post.is_movie, movie_tmdb.get_data(post.movie_id))['Poster'] }}" />
+                    {% set title = movie_tmdb.get_small_details_out_single_movie(post.is_movie, movie_tmdb.get_data(post.movie_id))['Title'] %}
+                {% else %}
+                <img style="width: 30%" src=" {{ serie_tmdb.get_small_details_out_single_movie(post.is_movie, serie_tmdb.get_data(post.movie_id))['Poster'] }}" />
+                {% set title = serie_tmdb.get_small_details_out_single_movie(post.is_movie, serie_tmdb.get_data(post.movie_id))['Title'] %}
+                {% endif %}
+                <strong><a style="hidden: true" href="{{ url_for('search', type=post.is_movie, id=post.movie_id) }}"> Movie Name: {{ title }}</a></strong>
             </td>
         </tr>
     </table>
