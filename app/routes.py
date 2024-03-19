@@ -15,12 +15,11 @@ movie = Tmdb(True)
 serie = Tmdb(False)
 
 
-
-
-
 @app.context_processor
 def inject_movie():
     return dict(movie_tmdb=movie, serie_tmdb=serie)
+
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -39,9 +38,10 @@ def search_movies():
     else:
         return {'error': 'No title provided'}
 
+
 @app.route('/search_title/')
 def search_title():
-    title=request.args.get('title')
+    title = request.args.get('title')
     if title:
         page = request.args.get('page', 1, type=int)
         results = movie.get_10_Titles_for_both(title, page)
@@ -134,13 +134,13 @@ def popular(type, genre_id):
         return render_template('index.html', movies=movie.get_small_details_out_big_data(movie.get_popular_data(page)),
                                current_page=page)
     if type == "film":
-        movie_list = movie.get_small_details_out_big_data(movie.get_data_filtered_genres_on_popularity(genre_id, page=page))
+        movie_list = movie.get_small_details_out_big_data(
+            movie.get_data_filtered_genres_on_popularity(genre_id, page=page))
         return render_template('index.html', movies=movie_list, type=type, genre=genre_id, current_page=page)
     elif type == "serie":
-        serie_list = serie.get_small_details_out_big_data(serie.get_data_filtered_genres_on_popularity(genre_id, page=page))
+        serie_list = serie.get_small_details_out_big_data(
+            serie.get_data_filtered_genres_on_popularity(genre_id, page=page))
         return render_template('index.html', movies=serie_list, type=type, genre=genre_id, current_page=page)
-
-
 
 
 @login_required
@@ -270,13 +270,10 @@ def reset_password(token):
     return render_template('email/reset_password.html', form=form, title='Edit Profile')
 
 
-@app.route('/profile', methods=['GET', 'POST'])
+@app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
-def profile():
-    # Ensure that the form is initialized with the original username
-    form = EditProfileForm(original_username=current_user.username)
-
-    # Check if the form is submitted and validated
+def edit_profile():
+    form = EditProfileForm(current_user.username)
     if form.validate_on_submit():
         # If the form is valid, update the user profile with the form data
         current_user.firstname = form.firstname.data
@@ -292,8 +289,17 @@ def profile():
         form.family_name.data = current_user.family_name
         form.country.data = current_user.country
 
-    # Render the profile template with the form
-    return render_template('profile.html', form=form)
+    # Render the posts for the current user
+    return render_template('edit_profile.html', title='Edit Profile', form=form, user=current_user)
+
+
+@app.route('/profile')
+def profile(user_id=None):
+    if user_id is None:
+        user_id = current_user.id
+    user = User.query.get_or_404(user_id)
+    posts = Post.query.filter_by(author=user).all()
+    return render_template('profile.html', title='Profile', user=user, posts=posts)
 
 
 @login_required
