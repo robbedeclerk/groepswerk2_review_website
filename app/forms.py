@@ -54,8 +54,8 @@ class LoginForm(FlaskForm):
     """
     Login form for users who want to log in.
     """
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
+    username = StringField('Username', validators=[DataRequired()], render_kw={'style': 'width: 25%'})
+    password = PasswordField('Password', validators=[DataRequired()], render_kw={'style': 'width: 25%;'})
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Login')
 
@@ -66,8 +66,13 @@ class EmptyForm(FlaskForm):
 
 
 class PostForm(FlaskForm):
+<<<<<<< HEAD
     post_message = TextAreaField('Post Message')
     rating = IntegerField('Rating [0-10]', validators=[DataRequired(), NumberRange(min=0, max=10)])
+=======
+    post_message = TextAreaField('Post review', render_kw={'style': 'width: device'})
+    rating = IntegerField('Rating [0-10]', validators=[DataRequired(), NumberRange(min=0, max=10)], render_kw={'style': 'width: 70px'})
+>>>>>>> inias_test
     submit = SubmitField('Submit')
 
 
@@ -75,7 +80,7 @@ class ResetPasswordRequestForm(FlaskForm):
     """
     Request to try and reset password
     """
-    email = EmailField('Email', validators=[DataRequired(), Email()])
+    email = EmailField('Email', validators=[DataRequired(), Email()], render_kw={'style': 'width: 25%'})
     submit = SubmitField('Submit')
 
 

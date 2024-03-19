@@ -1,0 +1,178 @@
+.dropdown-menu li {
+    position: relative;
+}
+
+.dropdown-menu .dropdown-submenu {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: -7px;
+}
+
+.dropdown-menu .dropdown-submenu-left {
+    right: 100%;
+    left: auto;
+}
+
+.dropdown-menu > li:hover > .dropdown-submenu {
+    display: block;
+}
+
+/*Verwijdert de onderlijning bij hyperlinks: bv de genres*/
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:active {
+    text-decoration: none;
+}
+
+textarea.form-control {
+    min-height: 150px;
+}
+
+.card-title {
+    color: #d9d9d9;
+}
+
+.card {
+    --bs-card-bg: #370404
+}
+
+body {
+    background-color: #bbb
+}
+
+head {
+    background-color: #bbb
+}
+
+.navbar-brand {
+    color: white !important; /* Ensure that the color remains white */
+}
+
+.navbar-brand:hover {
+    color: white !important; /* Ensure that the color remains white when hovered */
+}
+
+
+.bg-body-tertiary {
+    background-color: #370404 !important;
+}
+
+.navbar {
+    --bs-navbar-active-color: rgb(187 187 187);
+    --bs-navbar-color: rgb(187 187 187);
+    --bs-navbar-brand-hover-color: white, 1;
+        --bs-navbar-brand-color: white, 1;
+}
+
+.navbar-nav {
+    --bs-nav-link-hover-color: white;
+}
+
+.btn-outline-success {
+    --bs-btn-color: #bbbbbb;
+    --bs-btn-border-color: #970606;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #9d1414;
+    --bs-btn-hover-border-color: #ff0707;
+    --bs-btn-active-color: #fff;
+    --bs-btn-active-bg: #bbbbbb;
+    --bs-btn-active-border-color: #198754;
+    --bs-btn-disabled-color: #198754;
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: #198754;
+}
+
+div {
+    color: white;
+}
+
+.form-label {
+    color: black;
+}
+
+.form-check-label {
+    color: black;
+}
+
+
+/*.search-results {*/
+/*    position: absolute;*/
+/*    top: 100%; !* Position below the navbar *!*/
+/*    left: 0;*/
+/*    z-index: 1000; !* Ensure it's above other content *!*/
+/*    background-color: #370404; !* Set background color *!*/
+/*    max-height: 300px; !* Set a max height for overflow *!*/
+/*    overflow-y: auto; !* Enable vertical scrolling if needed *!*/
+/*    width: 100%; !* Match the width of the navbar *!*/
+/*    align-content: center;*/
+/*}*/
+
+
+
+/*Styling komt van den base hieronder*/
+
+
+/*.search-results {*/
+/*    width: 100%;*/
+/*}*/
+
+/*.dropdown {*/
+/*    position: relative;*/
+/*    display: inline-block;*/
+/*    !* <<<<<<< HEAD *!*/
+
+/*}*/
+
+/*.dropbtn {*/
+/*    background-color: #206bed;*/
+/*    color: black;*/
+/*    padding: 16px;*/
+/*    border: black;*/
+/*}*/
+
+/*.dropbtn a {*/
+/*    color: black;*/
+/*    padding: 12px 16px;*/
+/*    text-decoration: none;*/
+/*    display: block;*/
+/*}*/
+
+/*.dropdown-content {*/
+/*    display: none;*/
+/*    position: absolute;*/
+/*    background-color: #edf2fb;*/
+/*    min-width: 160px;*/
+/*    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);*/
+/*    z-index: 1;*/
+/*}*/
+
+/*.dropdown-content a {*/
+/*    color: black;*/
+/*    padding: 12px 16px;*/
+/*    text-decoration: none;*/
+/*    display: block;*/
+/*}*/
+
+/*.dropdown-content a:hover {*/
+/*    background-color: #edf2fb*/
+/*}*/
+
+/*!* Show the dropdown menu on hover *!*/
+/*.dropdown:hover .dropdown-content {*/
+/*    display: block;*/
+/*}*/
+
+/*.dropdown:hover .dropbtn {*/
+/*    background-color: #edf2fb;*/
+/*}*/

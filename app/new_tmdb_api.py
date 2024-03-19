@@ -3,6 +3,10 @@ import requests
 import json
 
 
+def stringify_page(page=1):
+    return 'page=%s' % page
+
+
 class Tmdb:
 
     def __init__(self, isMovie):
@@ -59,37 +63,38 @@ class Tmdb:
         for genre in self.genres["genres"]:
             if genre["id"] == id:
                 return genre["name"]
+
     # Fetching data
     @cached(cache={})
-    def get_trending_data(self):
+    def get_trending_data(self, page=1):
         # Fetching trending data
-        url = f"https://api.themoviedb.org/3/trending/{self.is_movie_arg()}/day?language=en-US"
+        url = f"https://api.themoviedb.org/3/trending/{self.is_movie_arg()}/day?{stringify_page(page)}&language=en-US"
         response = requests.get(url, headers=self.headers)
         if response.status_code == 200:
             data = response.json()
             return data
 
     @cached(cache={})
-    def get_top_rated_data(self):
+    def get_top_rated_data(self, page=1):
         # Fetching top rated data
-        url = f"https://api.themoviedb.org/3/{self.is_movie_arg()}/top_rated?language=en-US&page=1"
+        url = f"https://api.themoviedb.org/3/{self.is_movie_arg()}/top_rated?{stringify_page(page)}&language=en-US&page=1"
         response = requests.get(url, headers=self.headers)
         if response.status_code == 200:
             data = response.json()
             return data
 
     @cached(cache={})
-    def get_popular_data(self):
+    def get_popular_data(self, page=1):
         # Fetching popular data
-        url = f"https://api.themoviedb.org/3/{self.is_movie_arg()}/popular?language=en-US&page=1"
+        url = f"https://api.themoviedb.org/3/{self.is_movie_arg()}/popular?{stringify_page(page)}&language=en-US"
         response = requests.get(url, headers=self.headers)
         if response.status_code == 200:
             data = response.json()
             return data
 
     @cached(cache={})
-    def get_similar_data(self, id):
-        url = f"https://api.themoviedb.org/3/{self.is_movie_arg()}/{id}/similar?language=en-US&page=1"
+    def get_similar_data(self, id, page=1):
+        url = f"https://api.themoviedb.org/3/{self.is_movie_arg()}/{id}/similar?{stringify_page(page)}&language=en-US&page=1"
 
         response = requests.get(url, headers=self.headers)
         if response.status_code == 200:
@@ -97,19 +102,19 @@ class Tmdb:
             return data
 
     @cached(cache={})
-    def get_recommendation_data(self, id):
-        url = f"https://api.themoviedb.org/3/{self.is_movie_arg()}/{id}/recommendations?language=en-US&page=1"
+    def get_recommendation_data(self, id, page=1):
+        url = f"https://api.themoviedb.org/3/{self.is_movie_arg()}/{id}/recommendations?{stringify_page(page)}&language=en-US&page=1"
 
         response = requests.get(url, headers=self.headers)
         if response.status_code == 200:
             data = response.json()
             return data
 
-    def get_now_playing_data(self):
+    def get_now_playing_data(self, page=1):
         if self.isMovie:
-            url = f"https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1"
+            url = f"https://api.themoviedb.org/3/movie/now_playing?language=en-US&{stringify_page(page)}"
         else:
-            url = f"https://api.themoviedb.org/3/tv/on_the_air?language=en-US&page=1"
+            url = f"https://api.themoviedb.org/3/tv/on_the_air?language=en-US&{stringify_page(page)}"
         response = requests.get(url, headers=self.headers)
         if response.status_code == 200:
             data = response.json()
@@ -124,11 +129,12 @@ class Tmdb:
         if response.status_code == 200:
             data = response.json()
             return data
+
     # Other utility functions
 
     @cached(cache={})
-    def get_data_filtered_genres_on_popularity(self, genre_id):
-        url = f"https://api.themoviedb.org/3/discover/{self.is_movie_arg()}?sort_by=popularity.desc&with_genres={genre_id}"  # 28=Action 35=Comedy
+    def get_data_filtered_genres_on_popularity(self, genre_id, page=1):
+        url = f"https://api.themoviedb.org/3/discover/{self.is_movie_arg()}?{stringify_page(page)}&sort_by=popularity.desc&with_genres={genre_id}"  # 28=Action 35=Comedy
 
         response = requests.get(url, headers=self.headers)
         if response.status_code == 200:
@@ -137,8 +143,8 @@ class Tmdb:
             return data
 
     @cached(cache={})
-    def get_data_filtered_genres_on_release(self, genre_id):
-        url = f"https://api.themoviedb.org/3/discover/{self.is_movie_arg()}?sort_by=primary_release_date.desc&with_genres={genre_id}"
+    def get_data_filtered_genres_on_release(self, genre_id, page=1):
+        url = f"https://api.themoviedb.org/3/discover/{self.is_movie_arg()}?{stringify_page(page)}&sort_by=primary_release_date.desc&with_genres={genre_id}"
 
         response = requests.get(url, headers=self.headers)
         if response.status_code == 200:
@@ -211,17 +217,25 @@ class Tmdb:
             }
         return movie_info
 
-    def get_5_Titles_for_both(self, title):
+    def get_10_Titles_for_both(self, title, page=1):
+        if page % 2 == 0:
+            start_result = 10
+            end_result = 20
+            page_cor = page // 2
+        else:
+            start_result = 0
+            end_result = 10
+            page_cor = page // 2 + page % 2
         print("Fetching data...")
         film_details = []
         serie_details = []
-        url = f"https://api.themoviedb.org/3/search/tv?query={title}&include_adult=true&language=en-US&page=1"
-        url2 = f"https://api.themoviedb.org/3/search/movie?query={title}&include_adult=true&language=en-US&page=1"
+        url = f"https://api.themoviedb.org/3/search/tv?query={title}&include_adult=true&language=en-US&{stringify_page(page_cor)}"
+        url2 = f"https://api.themoviedb.org/3/search/movie?query={title}&include_adult=true&language=en-US&-{stringify_page(page_cor)}"
         response = requests.get(url, headers=self.headers)
         if response.status_code == 200:
             print("Data fetched from API.")
             data = response.json()
-            serie_data = data['results'][0:5]
+            serie_data = data['results'][start_result:end_result]
             for each in serie_data:
                 serie_details.append(self.get_small_details_out_single_data(False, each))
 
@@ -229,7 +243,7 @@ class Tmdb:
         if response.status_code == 200:
             print("Data fetched from API.")
             data = response.json()
-            film_data = data['results'][0:5]
+            film_data = data['results'][start_result:end_result]
             for each in film_data:
                 film_details.append(self.get_small_details_out_single_data(True, each))
         return serie_details + film_details
@@ -243,38 +257,22 @@ class Tmdb:
         return new_details
 
 
+def make_faker_list():
+    """Make a list of small details out of big data"""
+    movie_id_list = []
+    serie_id_list = []
 
+    movie = Tmdb(True)
+    serie = Tmdb(False)
 
-#
-#
-# movie_id_list = []
-# movie = Tmdb(True)
-# movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
-# for each in movie_list:
-#     movieBLa = {'id': each['Id'], 'Type': each['Type']}
-#     movie_id_list.append(movieBLa)
-#
-# serie_id_list = []
-# serie = Tmdb(False)
-# serie_list = serie.get_small_details_out_big_data(serie.get_popular_data())
-# for each in serie_list:
-#     serieBLa = {'Id': each['Id'], 'Type': each['Type']}
-#     serie_id_list.append(serieBLa)
-#
-#
-#
-# print(movie_id_list)
-# print(serie_id_list)
-# new_id_list = movie_id_list + serie_id_list
-# print(new_id_list)
-#
-#
-# from faker import Faker
-# fake = Faker()
-#
-# choice = fake.random.choices(new_id_list, k=1)
-# print(choice[0]['Type'])
-# print(choice[0]['Id'])
-#
+    movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
+    for each in movie_list:
+        movieBLa = {'Id': each['Id'], 'Type': each['Type']}
+        movie_id_list.append(movieBLa)
 
-
+    serie_list = serie.get_small_details_out_big_data(serie.get_popular_data())
+    for each in serie_list:
+        serieBLa = {'Id': each['Id'], 'Type': each['Type']}
+        serie_id_list.append(serieBLa)
+    new_id_list = movie_id_list + serie_id_list
+    return new_id_list

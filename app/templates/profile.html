@@ -1,6 +1,8 @@
 
 {% extends "base.html" %}
+{% import 'bootstrap_wtf.html' as wtf %}
 {% block content %}
+<<<<<<< HEAD
 <div class="profile">
     <body>
         <h1>Welcome to your profile!</h1>
@@ -33,3 +35,9 @@
     </body>
 </div>
 {%endblock%}
+=======
+<h4>Edit your profile</h4>
+    {{ wtf.quick_form(form) }}
+
+{% endblock %}
+>>>>>>> inias_test

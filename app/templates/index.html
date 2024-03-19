@@ -1,34 +1,44 @@
-{% extends "base.html" %}
-
+{% extends 'base.html' %}
 {% block content %}
-
-<body>
-    <!-- Content -->
-    <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px;;">
-        <!-- First row -->
-        <div class="w3-row-padding w3-padding-16 w3-center" id="movie">
-            {% for movie in movies %}
-                <div class="w3-quarter" style="padding: 16px;">
-                    <a href="{{ url_for('search', id=movie['Id'], type=movie['Type']) }}">
-                        <img src="{{ movie['Poster'] }}" alt="{{ movie['Title'] }}" style="width:auto;height:auto">
-                    </a>
-                    <h3>{{ movie['Title'] }}</h3>
-                    <p>rating movie1</p>
+    <body>
+        <section class="section">
+            <div class="container">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-4" id="movie">
+                    {% for row in movies|batch(5) %}
+                        {% for movie in row %}
+                            <div class="col mb-4 d-flex align-items-stretch"> <!-- Added 'mb-4' for margin bottom and 'd-flex align-items-stretch' for flexbox -->
+                                <div class="card w-100">
+                                    <a href="{{ url_for('search', id=movie['Id'], type=movie['Type']) }}">
+                                        <img style="container: inherit" src="{{ movie['Poster'] }}" class="card-img-top" alt="{{ movie['Title'] }}">
+                                    </a>
+                                    <div class="card-body">
+                                        <h5 class="card-title" style="text-align: center">{{ movie['Title'] }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endfor %}
                 </div>
-            {% endfor %}
-        </div>
+    <div>
+        {% if current_page > 1 %}
+            {% if request.endpoint == 'popular' %}
+                <a href="{{ url_for(request.endpoint, genre_id=genre, type=type, page=current_page - 1) }}">Previous</a>
+            {% elif request.endpoint == 'search' %}
+                <a href="{{ url_for(request.endpoint, id=id, type=type, page=current_page - 1) }}">Previous</a>
+            {% else %}
+                <a href="{{ url_for(request.endpoint, page=current_page - 1) }}">Previous</a>
+            {% endif %}
+        {% endif %}
+        Page {{ current_page }}
+        {% if movies|length == 20 %}
+            {% if request.endpoint == 'popular' %}
+                <a href="{{ url_for(request.endpoint, genre_id=genre, type=type, page=current_page + 1) }}">Next</a>
+            {% elif request.endpoint == 'search' %}
+                    <a href="{{ url_for('search', id=id, type=type, page=current_page + 1) }}">Next</a>
+            {% else %}
+                <a href="{{ url_for(request.endpoint, page=current_page + 1) }}">Next</a>
+            {% endif %}
+        {% endif %}
     </div>
-</body>
-
-    <script>
-        // Script to open and close sidebar
-        function w3_open() {
-            document.getElementById("mySidebar").style.display = "block";
-        }
-
-        function w3_close() {
-            document.getElementById("mySidebar").style.display = "none";
-        }
-    </script>
-
+            </div></section></body>
 {% endblock %}
