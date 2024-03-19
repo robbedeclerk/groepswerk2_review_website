@@ -6,7 +6,7 @@ import psycopg2
 from flask_login import current_user, login_user, logout_user, login_required
 from app.forms import (LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm,
                        EditProfileForm, PostForm, EmptyForm)
-from app.models import User, Post, Address
+from app.models import User, Post
 from urllib.parse import urlsplit
 import sqlalchemy as sa
 from app.usermail import send_password_reset_email
@@ -176,17 +176,10 @@ def register():
             email=form.email.data,
             firstname=(form.firstname.data.capitalize()),
             family_name=(form.family_name.data.capitalize()),
-        )
-        address = Address(
-            country=(form.country.data.capitalize()),
-            city=form.city.data,
-            postalcode=form.postalcode.data,
-            street=(form.street.data.capitalize()),
-            house_number=form.house_number.data,
-            address_suffix=form.address_suffix.data
+            country=(form.country.data.capitalize())
         )
         user.set_password(form.password.data)
-        db.session.add(user, address)
+        db.session.add(user)
         db.session.commit()
         flash('Your account has been created!')
         return redirect(url_for('login'))

@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField, EmailField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length, NumberRange
 import sqlalchemy as sa
-from app.models import User, Address, Post
+from app.models import User, Post
 from app import db
 import re
 
@@ -19,11 +19,6 @@ class RegistrationForm(FlaskForm):
     firstname = StringField('First Name', validators=[DataRequired()])
     family_name = StringField('Family Name', validators=[DataRequired()])
     country = StringField('Country', validators=[DataRequired()])
-    city = StringField('City', validators=[DataRequired(), ])
-    postalcode = StringField('Postal Code', validators=[DataRequired()])
-    street = StringField('Street', validators=[DataRequired()])
-    house_number = IntegerField('House Number', validators=[DataRequired()])
-    address_suffix = StringField('Address Suffix')
     submit = SubmitField('Register')
 
     def validate_username(self, username):
@@ -35,19 +30,17 @@ class RegistrationForm(FlaskForm):
         user = db.session.scalar(sa.select(User).where(User.email == email.data))
         if user is not None:
             raise ValidationError('Please use a different email.')
-
+        
     def validate_country(self, country):
         """
         Needs to be tested. This function validates if the country is in the list of countries,
         This is important for future filters of movies.
         """
         with open('app/landen.txt') as landen_file:
-            landen_content = landen_file.read()
+            landen_content = landen_file.read()  # Read the entire file content as a single string
             is_match = re.search(fr"\b{country.data}\b", landen_content)
-        if is_match:
-            user = db.session.scalar(sa.select(Address).where(Address.country == country.data))
-            if user is not None:
-                raise ValidationError('Please choose a valid country.')
+        if not is_match:
+            raise ValidationError('Please choose a valid country.')
 
 
 class LoginForm(FlaskForm):

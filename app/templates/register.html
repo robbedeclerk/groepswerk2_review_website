@@ -49,45 +49,11 @@
                 {% for error in form.family_name.errors %}
                     <p style="color: red;">{{ error }}</p>
                 {% endfor %}
+            </div>
             <div>
                 {{ form.country.label }}
                 {{ form.country }}
                 {% for error in form.country.errors %}
-                    <p style="color: red;">{{ error }}</p>
-                {% endfor %}
-            </div>
-             <div>
-                {{ form.city.label }}
-                {{ form.city }}
-                {% for error in form.city.errors %}
-                    <p style="color: red;">{{ error }}</p>
-                {% endfor %}
-            </div>
-             <div>
-                {{ form.postalcode.label }}
-                {{ form.postalcode }}
-                {% for error in form.postalcode.errors %}
-                    <p style="color: red;">{{ error }}</p>
-                {% endfor %}
-            </div>
-             <div>
-                {{ form.street.label }}
-                {{ form.street }}
-                {% for error in form.street.errors %}
-                    <p style="color: red;">{{ error }}</p>
-                {% endfor %}
-            </div>
-             <div>
-                {{ form.house_number.label }}
-                {{ form.house_number }}
-                {% for error in form.house_number.errors %}
-                    <p style="color: red;">{{ error }}</p>
-                {% endfor %}
-            </div>
-             <div>
-                {{ form.address_suffix.label }}
-                {{ form.address_suffix }}
-                {% for error in form.address_suffix.errors %}
                     <p style="color: red;">{{ error }}</p>
                 {% endfor %}
             </div>
