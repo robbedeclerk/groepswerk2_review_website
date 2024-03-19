@@ -149,7 +149,6 @@
     if (results.length === 0) {
         resultsContainer.innerHTML = '<div>No results found.</div>'; // Show message if no results
     } else {
-<<<<<<< HEAD
         var maxWidth = document.getElementById("searchInput").offsetWidth; // Get width of search input
         resultsContainer.style.width = maxWidth + "px"; // Set width of results container
 
@@ -158,13 +157,7 @@
                 var linkElement = document.createElement("a");
                 linkElement.href = "/" + result['Type'] + "/" + result['Id']; // Set the href to the movie URL
                 linkElement.style.display = "block"; // Set display to block for a new line
-=======
-        results.forEach(function (result) {
-            // Create a link element
-            var linkElement = document.createElement("a");
-            linkElement.href = "/" + result['Type'] + "/" + result['Id']; // Set the href to the movie URL
-            linkElement.style.display = "block"; // Set display to block for a new line
->>>>>>> c69faaf19d3f885384d612a407e9767ffc46fd9c
+
 
             // Create an image element for the poster
             var posterElement = document.createElement("img");
