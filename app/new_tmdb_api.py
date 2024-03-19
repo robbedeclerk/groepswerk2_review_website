@@ -197,7 +197,7 @@ class Tmdb:
             poster_url = 'https://image.tmdb.org/t/p/original/xypWiOvbEjyLTHRQp4G57hAcb0.jpg'
         if isMovie:
             movie_info = {
-                "Title": data['title'],
+                "Title": data['original_title'],
                 "Poster": poster_url,
                 "Id": data['id'],
                 "Type": "film",
@@ -207,7 +207,7 @@ class Tmdb:
             }
         else:
             movie_info = {
-                "Title": data['name'],
+                "Title": data['original_name'],
                 "Poster": poster_url,
                 "Id": data['id'],
                 "Type": "serie",
@@ -258,21 +258,24 @@ class Tmdb:
 
 
 def make_faker_list():
-    """Make a list of small details out of big data"""
+    """Make a list of Popular movies and series for faker to use"""
     movie_id_list = []
     serie_id_list = []
 
     movie = Tmdb(True)
     serie = Tmdb(False)
+    data_getters_movie = [movie.get_popular_data(), movie.get_trending_data(), movie.get_now_playing_data()]
+    data_getters_serie = [serie.get_popular_data(), serie.get_trending_data(), serie.get_now_playing_data()]
+    for each in data_getters_movie:
+        movie_list = movie.get_small_details_out_big_data(each)
+        for each in movie_list:
+            movieBLa = {'Id': each['Id'], 'Type': each['Type']}
+            movie_id_list.append(movieBLa)
+    for each in data_getters_serie:
+        serie_list = serie.get_small_details_out_big_data(each)
+        for each in serie_list:
+            serieBLa = {'Id': each['Id'], 'Type': each['Type']}
+            serie_id_list.append(serieBLa)
+    big_id_list = movie_id_list + serie_id_list
+    return big_id_list
 
-    movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
-    for each in movie_list:
-        movieBLa = {'Id': each['Id'], 'Type': each['Type']}
-        movie_id_list.append(movieBLa)
-
-    serie_list = serie.get_small_details_out_big_data(serie.get_popular_data())
-    for each in serie_list:
-        serieBLa = {'Id': each['Id'], 'Type': each['Type']}
-        serie_id_list.append(serieBLa)
-    new_id_list = movie_id_list + serie_id_list
-    return new_id_list
