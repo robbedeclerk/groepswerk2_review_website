@@ -12,7 +12,7 @@
         <p>
             {% for genre in movie['Genre'] %}
                 <a class="badge text-bg-primary text-wrap"
-                   href="{{ url_for('popular', type=movie['Type'], genre_id=genre['id']) }}">{{ genre['name'] }}</a>
+                   href="{{ url_for('popular', type=movie['Type'], genre_id=genre['id'], page=1) }}">{{ genre['name'] }}</a>
             {% endfor %}
         </p>
         <h3>Movie Rating</h3><br>

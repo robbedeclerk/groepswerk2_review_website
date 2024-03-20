@@ -1,27 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
     <body>
-    <h4 style="text-align: center">            {% if request.endpoint == 'popular_movies' %}
-        Popular Movies
-    {% elif request.endpoint == 'now_playing_movies' %}
-        Movies In Cinema
-    {% elif request.endpoint == 'top_rated_movies' %}
-        Top Rated Movies
-    {% elif request.endpoint == 'trending_movies' %}
-        Trending Movies
-    {% elif request.endpoint == 'popular_series' %}
-        Popular Series
-    {% elif request.endpoint == 'now_playing_series' %}
-        New Series
-    {% elif request.endpoint == 'top_rated_series' %}
-        Top Rated Series
-    {% elif request.endpoint == 'trending_series' %}
-        Trending Series
-    {% elif request.endpoint == 'index' %}
-        Home
-    {% else %}
-        Other Page
-    {% endif %}</h4>
+    <h4 style="text-align: center">
+    {{ title_string }}
+</h4>
     <hr>
         <div class="container">
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-4" id="movie">
