@@ -2,60 +2,69 @@
 
 {% import "bootstrap_wtf.html" as wtf %}
 {% block content %}
-  <body>
-    <div class="container">
-        <div class="text-center"><img class="img-fluid" src="{{ movie['Poster'] }}" alt="poster movie" style="width: 40%" ></div>
-        <h3>{{ movie['Title'] }}</h3>
-        <p class="text-center">{{ movie['Overview'] }}</p>
-        <p>{{ movie['Release_date'] }}</p>
-        <p>{{ movie['Runtime'] }}</p>
-        <p>
-            {% for genre in movie['Genre'] %}
-                <a class="badge text-bg-primary text-wrap"
-                   href="{{ url_for('popular', type=movie['Type'], genre_id=genre['id'], page=1) }}">{{ genre['name'] }}</a>
-            {% endfor %}
-        </p>
-        <h3>Movie Rating</h3><br>
-        {% if current_user.is_authenticated %}
-            <div>{{ wtf.quick_form(form) }}</div>>
-        {% else %}
-            <p>You have to be logged in to post</p>
-            <a href="{{ url_for('login', next=request.url) }}">Login</a>
-        {% endif %}
-        <table class="card-body">
-            {% if posts %}
-                {% for post in posts %}
-                    <div class="text-center">
-                    {% if current_user.is_authenticated %}
-                        <form action="{{ url_for('upvote', post_id=post.id) }}" method="post">
-                            <button type="submit"><i class="fas fa-arrow-up"></i></button>
-                        </form>
-                        <form action="{{ url_for('downvote', post_id=post.id) }}" method="post">
-                            <button type="submit"><i class="fas fa-arrow-down"></i></button>
-                        </form>
-                    {% endif %}
-                        <p>Review:</p>
-                        <p>{{ post[0].post_message }}</p>
-                        <p>Rating:</p>
-                        <p>{{ post[0].rating }}</p>
-                        <p>Upvotes:</p> {{ post[0].upvote_count() }}<br>
-                        <p>Downvotes:</p> {{ post[0].downvote_count() }}<br>
-                        <p>Time of Posting:</p>
-                        <p>{{ post[0].time_of_posting }}</p>
-                        <p>{{ post[0].author.username }}</p>
-                        <!-- Add any additional post details you want to display -->
-
-                    </div>
-                {% endfor %}
-            {% else %}
-                <p>No posts available.</p>
-            {% endif %}
-        </table>
-        <div class="navigation">
-            <button id="prevBtn"><<</button>
-            <button id="nextBtn">>></button>
-        </div>
+<body>
+<div class="container">
+    <div class="text-center"><img class="img-fluid" src="{{ movie['Poster'] }}" alt="poster movie" style="width: 40%">
     </div>
-    </body>
+    <h3>{{ movie['Title'] }}</h3>
+    <p class="text-center">{{ movie['Overview'] }}</p>
+    <p>{{ movie['Release_date'] }}</p>
+    <p>{{ movie['Runtime'] }}</p>
+    <p>
+        {% for genre in movie['Genre'] %}
+            <a class="badge text-bg-primary text-wrap"
+               href="{{ url_for('popular', type=movie['Type'], genre_id=genre['id'], page=1) }}">{{ genre['name'] }}</a>
+        {% endfor %}
+    </p>
+    <h3>Movie Rating</h3><br>
+    {% if current_user.is_authenticated %}
+        <div>{{ wtf.quick_form(form) }}</div>
+    {% else %}
+        <p><a href="{{ url_for('login', next=request.url) }}">Login</a> to make a post</p>
+
+    {% endif %}
+    <p>
+    <hr>
+    {% if posts %}
+    <div class="accordion text-break" id="accordionExample">
+        {% for post in posts %}
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse{{ loop.index }}" aria-expanded="true"
+                            aria-controls="collapse{{ loop.index }}">
+                        {{ post[0].author.username }}'s Review: {{ post[0].post_message }}
+                    </button>
+                </h2>
+                <div id="collapse{{ loop.index }}" class="accordion-collapse collapse"
+                     data-bs-parent="#accordionExample">
+                    <div class="accordion-body">
+                        <p>Rating: {{ post[0].rating }}</p>
+                        <p>Upvotes: {{ post[0].upvote_count() }} Downvotes: {{ post[0].downvote_count() }}</p>
+                        <p>Time of Posting: {{ post[0].time_of_posting }}</p>
+                        <p>Posted by: {{ post[0].author.username }}</p>
+                        {% if current_user.is_authenticated %}
+                            <div>
+                                <form action="{{ url_for('upvote', post_id=post.id) }}" method="post">
+                                    <button class="badge text-bg-primary text-wrap" type="submit">Upvote!</button>
+                                </form>
+                                <form action="{{ url_for('downvote', post_id=post.id) }}" method="post">
+                                    <button class="badge text-bg-primary text-wrap" type="submit">Downvote!</button>
+                                </form>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div><hr>
+        {% endfor %}
+    </div>
+
+    {% endif %}
+    <div class="navigation">
+        <button id="prevBtn"><<</button>
+        <button id="nextBtn">>></button>
+    </div>
+</div>
+</body>
 
 {% endblock %}

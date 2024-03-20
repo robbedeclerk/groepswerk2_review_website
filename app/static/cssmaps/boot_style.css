@@ -48,7 +48,7 @@ textarea.form-control {
 }
 
 body {
-    background-color: #bbb
+    background-color: #f1f1f1
 }
 
 head {
@@ -105,7 +105,13 @@ div {
     color: black;
 }
 
+.container {
+    color: black;
+}
 
+div.accordion-body {
+    color: black;
+}
 /*.search-results {*/
 /*    position: absolute;*/
 /*    top: 100%; !* Position below the navbar *!*/
