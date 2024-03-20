@@ -1,4 +1,3 @@
-from turtle import title
 from app import app, db
 from app.new_tmdb_api import Tmdb
 from flask import render_template, request, redirect, url_for, session, jsonify, flash
