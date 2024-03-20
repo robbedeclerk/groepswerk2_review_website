@@ -6,7 +6,7 @@ import psycopg2
 from flask_login import current_user, login_user, logout_user, login_required
 from app.forms import (LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm,
                        EditProfileForm, PostForm, EmptyForm)
-from app.models import User, Post, Address
+from app.models import User, Post
 from urllib.parse import urlsplit
 import sqlalchemy as sa
 from app.usermail import send_password_reset_email
@@ -15,12 +15,11 @@ movie = Tmdb(True)
 serie = Tmdb(False)
 
 
-
-
-
 @app.context_processor
 def inject_movie():
     return dict(movie_tmdb=movie, serie_tmdb=serie)
+
+
 @app.route('/')
 @app.route('/index')
 def index():
@@ -39,14 +38,15 @@ def search_movies():
     else:
         return {'error': 'No title provided'}
 
+
 @app.route('/search_title/')
 def search_title():
-    title=request.args.get('title')
+    title = request.args.get('title')
     if title:
         page = request.args.get('page', 1, type=int)
         results = movie.get_10_Titles_for_both(title, page)
         sorted_movie_list = sorted(results, key=lambda x: x['Popularity'], reverse=True)
-        return render_template('index.html', movies=sorted_movie_list, current_page=page)
+        return render_template('index.html', movies=sorted_movie_list, current_page=page, title=title)
     else:
         page = request.args.get('page', 1, type=int)
         movie_list = movie.get_small_details_out_big_data(movie.get_popular_data(page))
@@ -134,13 +134,13 @@ def popular(type, genre_id):
         return render_template('index.html', movies=movie.get_small_details_out_big_data(movie.get_popular_data(page)),
                                current_page=page)
     if type == "film":
-        movie_list = movie.get_small_details_out_big_data(movie.get_data_filtered_genres_on_popularity(genre_id, page=page))
+        movie_list = movie.get_small_details_out_big_data(
+            movie.get_data_filtered_genres_on_popularity(genre_id, page=page))
         return render_template('index.html', movies=movie_list, type=type, genre=genre_id, current_page=page)
     elif type == "serie":
-        serie_list = serie.get_small_details_out_big_data(serie.get_data_filtered_genres_on_popularity(genre_id, page=page))
+        serie_list = serie.get_small_details_out_big_data(
+            serie.get_data_filtered_genres_on_popularity(genre_id, page=page))
         return render_template('index.html', movies=serie_list, type=type, genre=genre_id, current_page=page)
-
-
 
 
 @login_required
@@ -176,17 +176,10 @@ def register():
             email=form.email.data,
             firstname=(form.firstname.data.capitalize()),
             family_name=(form.family_name.data.capitalize()),
-        )
-        address = Address(
-            country=(form.country.data.capitalize()),
-            city=form.city.data,
-            postalcode=form.postalcode.data,
-            street=(form.street.data.capitalize()),
-            house_number=form.house_number.data,
-            address_suffix=form.address_suffix.data
+            country=(form.country.data.capitalize())
         )
         user.set_password(form.password.data)
-        db.session.add(user, address)
+        db.session.add(user)
         db.session.commit()
         flash('Your account has been created!')
         return redirect(url_for('login'))
@@ -270,53 +263,36 @@ def reset_password(token):
     return render_template('email/reset_password.html', form=form, title='Edit Profile')
 
 
-@app.route('/profile', methods=['GET', 'POST'])
+@app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
-def profile():
+def edit_profile():
     form = EditProfileForm(current_user.username)
     if form.validate_on_submit():
-        # Update the user's profile information
-        current_user.username = form.username.data
+        # If the form is valid, update the user profile with the form data
+        current_user.firstname = form.firstname.data
+        current_user.family_name = form.family_name.data
+        current_user.country = form.country.data
+        db.session.commit()  # Commit the changes to the database
+        flash('Your changes have been saved.')  # Show a flash message to the user
+        return redirect(url_for('index'))  # Redirect the user back to the profile page
 
-        # Retrieve the user's address
-        address = Address.query.filter_by(user_id=current_user.id).first()
-        if address:
-            # Update the address fields
-            address.country = form.country.data
-            address.city = form.city.data
-            address.postalcode = form.postalcode.data
-            address.street = form.street.data
-            address.house_number = form.house_number.data
-            address.address_suffix = form.address_suffix.data
-        else:
-            # If the user doesn't have an address, create a new one
-            address = Address(
-                country=form.country.data,
-                city=form.city.data,
-                postalcode=form.postalcode.data,
-                street=form.street.data,
-                house_number=form.house_number.data,
-                address_suffix=form.address_suffix.data,
-                user_id=current_user.id
-            )
-            db.session.add(address)
-
-        db.session.commit()
-        flash('Your changes have been saved.')
-        return redirect(url_for('profile'))
+    # If it's a GET request, pre-populate the form fields with the current user data
     elif request.method == 'GET':
-        # Populate the form fields with current user's information
-        form.username.data = current_user.username
-        address = Address.query.filter_by(user_id=current_user.id).first()
-        if address:
-            form.country.data = address.country
-            form.city.data = address.city
-            form.postalcode.data = address.postalcode
-            form.street.data = address.street
-            form.house_number.data = address.house_number
-            form.address_suffix.data = address.address_suffix
+        form.firstname.data = current_user.firstname
+        form.family_name.data = current_user.family_name
+        form.country.data = current_user.country
 
-    return render_template('profile.html', title='Edit Profile', form=form, user=current_user)
+    # Render the posts for the current user
+    return render_template('edit_profile.html', title='Edit Profile', form=form, user=current_user)
+
+
+@app.route('/profile')
+def profile(user_id=None):
+    if user_id is None:
+        user_id = current_user.id
+    user = User.query.get_or_404(user_id)
+    posts = Post.query.filter_by(author=user).all()
+    return render_template('profile.html', title='Profile', user=user, posts=posts)
 
 
 @login_required

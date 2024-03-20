@@ -1,40 +1,37 @@
 from faker import Faker
 from app import app, db
-from app.models import User, Address, Post
+from app.models import User, Post
 from app.new_tmdb_api import make_faker_list
 
 fake = Faker()
-
 # Create app context
 app.app_context().push()
 
+# Country Codes
+country_List = [{'country': 'United States', 'locale': 'en_US'}, {'country': 'United Kingdom', 'locale': 'en_GB'},
+                {'country': 'Germany', 'locale': 'de_DE'}, {'country': 'France', 'locale': 'fr_FR'},
+                {'country': 'Spain', 'locale': 'es_ES'}, {'country': 'Italy', 'locale': 'it_IT'},
+                {'country': 'Japan', 'locale': 'ja_JP'}, {'country': 'Brazil', 'locale': 'pt_BR'},
+                {'country': 'China', 'locale': 'zh_CN'}, {'country': 'Russia', 'locale': 'ru_RU'}, ]
+
 # Create fake users
-for _ in range(100):
+users = []
+for _ in range(1000):
+    country_choice = fake.random.choice(country_List)
+    fake_Country = Faker(country_choice['locale'])
     my_user = User(
-        username=fake.user_name(),
-        email=fake.email(),
-        firstname=fake.first_name(),
-        family_name=fake.last_name()
+        country=country_choice['country'],
+        username=fake_Country.user_name()+str(fake.random.randint(0, 1000)),
+        email=str(fake.random.randint(0, 1000))+fake_Country.email(),
+        firstname=fake_Country.first_name(),
+        family_name=fake_Country.last_name(),
     )
     my_user.set_password(fake.password())
+    users.append(my_user)
     db.session.add(my_user)
-
-# Create fake addresses for users
-for user in User.query.all():
-    address = Address(
-        country=fake.country(),
-        city=fake.city(),
-        postalcode=fake.postcode(),
-        street=fake.street_name(),
-        house_number=fake.building_number(),
-        address_suffix=fake.secondary_address(),
-        user_id=user.id
-    )
-    db.session.add(address)
 
 # Create fake posts for users
 popular = make_faker_list()
-
 for user in User.query.all():
     choice = fake.random.choices(popular, k=1)
     post = Post(
@@ -45,5 +42,17 @@ for user in User.query.all():
         user_id=user.id
     )
     db.session.add(post)
+
+    other_users = [u for u in users if u.id != user.id]
+    if other_users:
+        num_upvotes = fake.random.randint(0, len(other_users))
+        upvoters = fake.random.sample(other_users, num_upvotes)
+        for upvoter in upvoters:
+            post.upvoters.append(upvoter)
+    if other_users:
+        num_downvotes = fake.random.randint(0, len(other_users))
+        downvoters = fake.random.sample(other_users, num_downvotes)
+        for downvoter in downvoters:
+            post.downvoters.append(downvoter)
 
 db.session.commit()
