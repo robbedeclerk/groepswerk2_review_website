@@ -1,12 +1,11 @@
 from app import app, db
 from app.new_tmdb_api import Tmdb
-from flask import render_template, request, redirect, url_for, session, jsonify, flash
-import psycopg2
+from flask import render_template, request, redirect, url_for, session, flash
 from flask_login import current_user, login_user, logout_user, login_required
 from app.forms import (LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm,
-                       EditProfileForm, PostForm, EmptyForm)
+                       EditProfileForm, PostForm)
 from app.models import User, Post
-from urllib.parse import urlsplit
+
 import sqlalchemy as sa
 from app.usermail import send_password_reset_email
 
@@ -259,7 +258,7 @@ def reset_password(token):
         db.session.commit()
         flash('Your password has been reset.')
         return redirect(url_for('login'))
-    return render_template('email/reset_password.html', form=form, title='Edit Profile')
+    return render_template('reset_password.html', form=form, title='Edit Profile')
 
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
@@ -268,9 +267,9 @@ def edit_profile():
     form = EditProfileForm(current_user.username)
     if form.validate_on_submit():
         # If the form is valid, update the user profile with the form data
-        current_user.firstname = form.firstname.data
-        current_user.family_name = form.family_name.data
-        current_user.country = form.country.data
+        current_user.firstname = form.firstname.data.capitalize()
+        current_user.family_name = form.family_name.data.capitalize()
+        current_user.country = form.country.data.capitalize()
         db.session.commit()  # Commit the changes to the database
         flash('Your changes have been saved.')  # Show a flash message to the user
         return redirect(url_for('index'))  # Redirect the user back to the profile page

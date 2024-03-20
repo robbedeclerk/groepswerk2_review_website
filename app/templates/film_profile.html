@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+
 {% import "bootstrap_wtf.html" as wtf %}
 {% block content %}
   <body>
@@ -21,7 +22,7 @@
             <p>You have to be logged in to post</p>
             <a href="{{ url_for('login', next=request.url) }}">Login</a>
         {% endif %}
-        <tr>
+        <table class="card-body">
             {% if posts %}
                 {% for post in posts %}
                     <div class="text-center">
@@ -49,7 +50,7 @@
             {% else %}
                 <p>No posts available.</p>
             {% endif %}
-        </tr>
+        </table>
         <div class="navigation">
             <button id="prevBtn"><<</button>
             <button id="nextBtn">>></button>
