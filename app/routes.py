@@ -73,7 +73,8 @@ def search(type, id=None):
             # posts = db.session.execute(
             #     sa.select(Post, Post.id).where(Post.movie_id == id, Post.is_movie == True)).fetchall()
             if current_user.is_authenticated:
-                posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by, current_user_country=current_user.country)
+                posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by,
+                                         current_user_country=current_user.country)
             else:
                 posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by)
             movie_details = movie.get_small_details_out_single_movie(True, movie.get_data(id))
@@ -113,19 +114,24 @@ def search(type, id=None):
             return render_template(url_for('index'))
     elif type == "serie":
         if id.isnumeric():
-            posts = db.session.execute(
-                sa.select(Post, Post.id).where(Post.movie_id == id, Post.is_movie == False)).fetchall()
+            sort_by = request.args.get('sort_by', 'newest', type=str)
+            # posts = db.session.execute(
+            #     sa.select(Post, Post.id).where(Post.movie_id == id, Post.is_movie == True)).fetchall()
+            if current_user.is_authenticated:
+                posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by,
+                                         current_user_country=current_user.country)
+            else:
+                posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by)
             serie_details = serie.get_small_details_out_single_movie(False, serie.get_data(id))
-            serie_similars = serie.get_small_details_out_big_data(serie.get_similar_data(id))
             form = PostForm()
             if form.validate_on_submit():
                 post = Post(post_message=form.post_message.data, rating=form.rating.data, author=current_user,
                             movie_id=id, is_movie=False)
                 db.session.add(post)
                 db.session.commit()
-                return redirect(url_for('search', type=type, id=id))
-            return render_template('film_profile.html', movie=serie_details, movieapi=serie, id=id,
-                                   similars=serie_similars, posts=posts, form=form)
+                return redirect(url_for('search', type=type, id=id, sort_by=sort_by))
+            return render_template('film_profile.html', movie=serie_details, movieapi=serie, id=id, posts=posts,
+                                   form=form, sort_by=sort_by)
         else:
             if id == "popular":
                 page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
