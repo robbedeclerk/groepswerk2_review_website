@@ -20,9 +20,11 @@
         </div>
         <div class="col-md-6">
             <p style="color: black"><strong>Review:</strong> {{ post.post_message }}</p>
-            {% if post.upvote %}<p style="color: black"><strong>Review:</strong> {{ post.upvote }}</p>{% endif %}
-            {% if post.downvote %}<p style="color: black"><strong>Review:</strong> {{ post.downvote }}</p>{% endif %}
-            <p style="color: black"><strong>Rating:</strong> {{ post.rating }}</p>{
+            <p style="color: black"><strong>Rating:</strong> {{ post.rating }}</p>
+            {% if post.upvoters %}
+                <p style="color: black"><strong>Upvotes:</strong> {{ post.upvote_count() }}</p>{% endif %}
+            {% if post.downvoters %}
+                <p style="color: black"><strong>Downvotes:</strong> {{ post.downvote_count() }}</p>{% endif %}
             <p style="color: black"><strong>Time of Posting:</strong> {{ post.time_of_posting }}</p>
         </div>
     </div>

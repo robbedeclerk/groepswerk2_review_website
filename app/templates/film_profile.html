@@ -64,15 +64,17 @@
                             <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapse{{ loop.index }}" aria-expanded="true"
                                     aria-controls="collapse{{ loop.index }}"><strong
-                                    class="flex no-wrap align-items-start flex-column mb-1">
-                                {{ post.author.country }}:::    {{ post.author.username }}'s Review:</strong><label class="mb-auto p-2 text-break"
-                                                                                    style="width: 70%"> {{ post.post_message }}
+                                    class="flex no-wrap align-items-start flex-column mb-1"><a href="{{ url_for('profile', user_id=post.author.id) }}">
+                                {{ post.author.country }}::: {{ post.author.username }}'s Review:</a></strong><label
+                                    class="mb-auto p-2 text-break"
+                                    style="width: 70%"> {{ post.post_message }}
                             </label>
                             </button>
                         </h2>
                         <div id="collapse{{ loop.index }}" class="accordion-collapse collapse"
                              data-bs-parent="#accordionExample">
                             <div class="accordion-body">
+                                <strong class="flex no-wrap align-items-start flex-column mb-1">User name: </strong><a href="{{ url_for('profile', user_id=post.author.id) }}"><label>{{ post.author.username }}</label></a><br>
                                 <strong class="flex no-wrap align-items-start flex-column mb-1">Rating: </strong><label>{{ post.rating }}</label><br>
                                 <strong class="flex no-wrap align-items-start flex-column mb-1">Upvotes: </strong><label>{{ post.upvote_count() }}</label><strong
                                     class="flex no-wrap align-items-start flex-column mb-1">
@@ -112,14 +114,18 @@
                 <ul class="pagination justify-content-center">
                     {% if posts.has_prev %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('search', id=id, type=movie['Type'], sort_by=sort_by, page=posts.prev_num) }}" aria-label="Previous">
+                            <a class="page-link"
+                               href="{{ url_for('search', id=id, type=movie['Type'], sort_by=sort_by, page=posts.prev_num) }}"
+                               aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
                     {% endif %}
                     {% if posts.has_next %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('search', id=id, type=movie['Type'], sort_by=sort_by, page=posts.next_num) }}" aria-label="Next">
+                            <a class="page-link"
+                               href="{{ url_for('search', id=id, type=movie['Type'], sort_by=sort_by, page=posts.next_num) }}"
+                               aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>

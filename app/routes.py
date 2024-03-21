@@ -121,7 +121,12 @@ def search(type, id=None):
         if id.isnumeric():
             sort_by = request.args.get('sort_by', 'newest', type=str)
             page = request.args.get('page', 1, type=int)
-            posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by, page=page)
+
+            if current_user.is_authenticated:
+                posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by,
+                                         current_user_country=current_user.country, page=page)
+            else:
+                posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by, page=page)
             serie_details = serie.get_small_details_out_single_movie(False, serie.get_data(id))
             form = PostForm()
             if form.validate_on_submit():
@@ -169,8 +174,6 @@ def search_title():
         return render_template('index.html', movies=sorted_movie_list, current_page=page, title=title,
                                title_string="Search Results for : " + str(title))
     else:
-        page = request.args.get('page', 1, type=int)
-        movie_list = movie.get_small_details_out_big_data(movie.get_popular_data(page))
         return render_template(url_for('index'))
 
 
@@ -389,7 +392,8 @@ def edit_profile():
 
 
 @app.route('/profile')
-def profile(user_id=None):
+def profile():
+    user_id = request.args.get('user_id')
     if user_id is None:
         user_id = current_user.id
     user = User.query.get_or_404(user_id)
