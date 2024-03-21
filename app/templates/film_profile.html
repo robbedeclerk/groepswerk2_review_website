@@ -27,6 +27,33 @@
         <p>
         <hr>
         {% if posts %}
+            <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false">
+                Sort by
+            </a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item"
+                       href={{ url_for('search', type=movie['Type'],id=id,  sort_by='newest', page=1) }}>Newest</a>
+                </li>
+                <li><a class="dropdown-item"
+                       href={{ url_for('search', id=id, type=movie['Type'], sort_by='oldest', page=1) }}>Oldest</a>
+                </li>
+                <li><a class="dropdown-item"
+                       href={{ url_for('search', id=id, type=movie['Type'], sort_by='rating', page=1) }}>Rating</a>
+                </li>
+                <li><a class="dropdown-item"
+                       href={{ url_for('search', id=id, type=movie['Type'], sort_by='upvotes', page=1) }}>Upvotes</a>
+                </li>
+                <li><a class="dropdown-item"
+                       href={{ url_for('search', id=id, type=movie['Type'], sort_by='downvotes', page=1) }}>Downvotes</a>
+                </li>
+                {% if current_user.is_authenticated %}
+                    <li><a class="dropdown-item"
+                           href={{ url_for('search', id=id, type=movie['Type'], sort_by='my_country', page=1) }}>My
+                        Country Reviews</a></li>
+                {% endif %}
+            </ul>
             <div class="accordion" id="accordionExample">
                 {% for post in posts %}
                     <div class="accordion-item">
@@ -35,20 +62,20 @@
                                     data-bs-target="#collapse{{ loop.index }}" aria-expanded="true"
                                     aria-controls="collapse{{ loop.index }}"><strong
                                     class="flex no-wrap align-items-start flex-column mb-1">
-                                {{ post[0].author.username }}'s Review:</strong><label class="mb-auto p-2 text-break"
-                                                                                       style="width: 70%"> {{ post[0].post_message }}
+                                {{ post.author.username }}'s Review:</strong><label class="mb-auto p-2 text-break"
+                                                                                    style="width: 70%"> {{ post.post_message }}
                             </label>
                             </button>
                         </h2>
                         <div id="collapse{{ loop.index }}" class="accordion-collapse collapse"
                              data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                <strong class="flex no-wrap align-items-start flex-column mb-1">Rating: </strong><label>{{ post[0].rating }}</label><br>
-                                <strong class="flex no-wrap align-items-start flex-column mb-1">Upvotes: </strong><label>{{ post[0].upvote_count() }}</label><strong
+                                <strong class="flex no-wrap align-items-start flex-column mb-1">Rating: </strong><label>{{ post.rating }}</label><br>
+                                <strong class="flex no-wrap align-items-start flex-column mb-1">Upvotes: </strong><label>{{ post.upvote_count() }}</label><strong
                                     class="flex no-wrap align-items-start flex-column mb-1">
-                                Downvotes: </strong><label>{{ post[0].downvote_count() }}</label><br>
+                                Downvotes: </strong><label>{{ post.downvote_count() }}</label><br>
                                 <strong>Posted: </strong>
-                                <p>{{ moment(post[0].time_of_posting).fromNow() }}</p>
+                                <p>{{ moment(post.time_of_posting).fromNow() }}</p>
                                 {% if current_user.is_authenticated %}
                                     <div>
                                         <form action="{{ url_for('upvote', post_id=post.id) }}" method="post">

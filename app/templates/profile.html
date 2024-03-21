@@ -2,8 +2,12 @@
 
 {% block content %}
     <h5>Profile</h5>
+    {% if posts %}
     {% for post in posts %}
         <hr>
         {% include '_post.html' %}
     {% endfor %}
+    {% else %}
+    <hr> No posts yet!
+    {% endif %}
 {% endblock %}

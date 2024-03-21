@@ -12,7 +12,8 @@ country_List = [{'country': 'United States', 'locale': 'en_US'}, {'country': 'Un
                 {'country': 'Germany', 'locale': 'de_DE'}, {'country': 'France', 'locale': 'fr_FR'},
                 {'country': 'Spain', 'locale': 'es_ES'}, {'country': 'Italy', 'locale': 'it_IT'},
                 {'country': 'Japan', 'locale': 'ja_JP'}, {'country': 'Brazil', 'locale': 'pt_BR'},
-                {'country': 'China', 'locale': 'zh_CN'}, {'country': 'Russia', 'locale': 'ru_RU'}, ]
+                {'country': 'China', 'locale': 'zh_CN'}, {'country': 'Russia', 'locale': 'ru_RU'},
+                {'country': 'Belgium', 'locale': 'nl_BE'}]
 
 # Create fake users
 users = []
@@ -21,8 +22,8 @@ for _ in range(1000):
     fake_Country = Faker(country_choice['locale'])
     my_user = User(
         country=country_choice['country'],
-        username=fake_Country.user_name()+str(fake.random.randint(0, 1000)),
-        email=str(fake.random.randint(0, 1000))+fake_Country.email(),
+        username=fake_Country.user_name() + str(fake.random.randint(0, 1000)),
+        email=str(fake.random.randint(0, 1000)) + fake_Country.email(),
         firstname=fake_Country.first_name(),
         family_name=fake_Country.last_name(),
     )

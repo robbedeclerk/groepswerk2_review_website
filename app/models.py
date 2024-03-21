@@ -116,8 +116,6 @@ class Post(db.Model):
     rating: so.Mapped[int] = so.mapped_column(
         sa.Integer)  # While implementing in the code we have to add min =0 and max = 10
 
-    # upvote: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=True)  # implement thumb up count.
-    # downvote: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=True)  # implement thumbs down count.
     time_of_posting: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
     movie_id: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=True)
     is_movie: so.Mapped[bool] = so.mapped_column(sa.Boolean, nullable=True)
