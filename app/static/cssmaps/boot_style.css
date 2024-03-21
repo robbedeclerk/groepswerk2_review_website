@@ -1,3 +1,11 @@
+.dropdown-menu {
+    --bs-dropdown-bg: #370404;
+}
+
+.dropdown-item {
+    color: #bbbbbb;
+}
+
 .dropdown-menu li {
     position: relative;
 }

@@ -1,27 +1,27 @@
-    <table class="table table-hover">
-        <tr>
-            <td width="70px">
-                <a href="{{ url_for('profile', user_id=post.author.id) }}">
-                    <img src="{{ post.author.avatar(70) }}" />
-                </a>
-            </td>
-            <td>
-                {% set user_link %}
-                    <a href="{{ url_for('profile', user_id=post.author.id) }}">
-                        {{ post.author.username }}
-                    </a>
-                {% endset %}
-
-                <br>
-                <span id="post{{ post.id }}">{{ post.post_message }}</span>
+<div class="card" style="--bs-card-bg: grey">
+    <div class="row break-text">
+        <div class="col-md-6">
+            <table>
                 {% if post.is_movie %}
-                <img style="width: 30%" src=" {{ movie_tmdb.get_small_details_out_single_movie(post.is_movie, movie_tmdb.get_data(post.movie_id))['Poster'] }}" />
-                    {% set title = movie_tmdb.get_small_details_out_single_movie(post.is_movie, movie_tmdb.get_data(post.movie_id))['Title'] %}
+                    {% set movie_details = movie_tmdb.get_small_details_out_single_movie(post.is_movie, movie_tmdb.get_data(post.movie_id)) %}
                 {% else %}
-                <img style="width: 30%" src=" {{ serie_tmdb.get_small_details_out_single_movie(post.is_movie, serie_tmdb.get_data(post.movie_id))['Poster'] }}" />
-                {% set title = serie_tmdb.get_small_details_out_single_movie(post.is_movie, serie_tmdb.get_data(post.movie_id))['Title'] %}
+                    {% set movie_details = serie_tmdb.get_small_details_out_single_movie(post.is_movie, serie_tmdb.get_data(post.movie_id)) %}
                 {% endif %}
-                <strong><a style="hidden: true" href="{{ url_for('search', type=post.is_movie, id=post.movie_id) }}"> Movie Name: {{ title }}</a></strong>
-            </td>
-        </tr>
-    </table>
+                <tr>
+                    <td>
+                        <img style="width: 100px" src="{{ movie_details['Poster'] }}"/>
+                    </td>
+                    <td>
+                        <p style="color: black">Movie Name: </p><a href="{{ url_for('search', type=movie_details['Type'], id=movie_details['Id']) }}">{{ movie_details['Title'] }}</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <p style="color: black"><strong>Review:</strong> {{ post.review }}</p>
+            <p style="color: black"><strong>Time of Posting:</strong> {{ post.time_of_posting }}</p>
+        </div>
+    </div>
+</div>
+
+
