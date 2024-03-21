@@ -36,7 +36,8 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href={{ url_for('search', id='popular', type='film', page=1) }}>Popular
                             Movies</a></li>
-                        <li><a class="dropdown-item" href={{ url_for('search', id='now-playing', type='film', page=1) }}>In
+                        <li><a class="dropdown-item"
+                               href={{ url_for('search', id='now-playing', type='film', page=1) }}>In
                             Cinema's</a></li>
                         <li><a class="dropdown-item" href={{ url_for('search', id='top-rated', type='film', page=1) }}>Top
                             Rated</a></li>
@@ -118,7 +119,10 @@
             </div>
         </div>
     </div>
-</nav><div id="searchResultsContainer"><div id="searchResults"></div></div>
+</nav>
+<div id="searchResultsContainer">
+    <div id="searchResults"></div>
+</div>
 <hr>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
@@ -126,7 +130,10 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
+
+
 {% block content %}{% endblock %}
+{{ moment.include_moment() }}
 </body>
 </html>
 <script>
@@ -147,42 +154,43 @@
     });
 
     function displayResults(results) {
-    var resultsContainer = document.getElementById("searchResults");
-    resultsContainer.innerHTML = ''; // Clear previous results
-    if (results.length === 0) {
-        resultsContainer.innerHTML = '<div>No results found.</div>'; // Show message if no results
-    } else {
-        var maxWidth = document.getElementById("searchInput").offsetWidth; // Get width of search input
-        resultsContainer.style.width = maxWidth + "px"; // Set width of results container
+        var resultsContainer = document.getElementById("searchResults");
+        resultsContainer.innerHTML = ''; // Clear previous results
+        if (results.length === 0) {
+            resultsContainer.innerHTML = '<div>No results found.</div>'; // Show message if no results
+        } else {
+            var maxWidth = document.getElementById("searchInput").offsetWidth; // Get width of search input
+            resultsContainer.style.width = maxWidth + "px"; // Set width of results container
 
-        results.forEach(function (result) {
+            results.forEach(function (result) {
                 // Create a link element
                 var linkElement = document.createElement("a");
                 linkElement.href = "/" + result['Type'] + "/" + result['Id']; // Set the href to the movie URL
                 linkElement.style.display = "block"; // Set display to block for a new line
 
 
-            // Create an image element for the poster
-            var posterElement = document.createElement("img");
-            posterElement.src = result['Poster']; // Set the source of the image
-            posterElement.alt = result['Title']; // Set the alt text of the image
-            posterElement.style.width = "60px"; // Adjust width as needed
+                // Create an image element for the poster
+                var posterElement = document.createElement("img");
+                posterElement.src = result['Poster']; // Set the source of the image
+                posterElement.alt = result['Title']; // Set the alt text of the image
+                posterElement.style.width = "60px"; // Adjust width as needed
 
-            // Create a span element for the title
-            var titleElement = document.createElement("span");
-            titleElement.textContent = result['Title']; // Set the text content of the span
+                // Create a span element for the title
+                var titleElement = document.createElement("span");
+                titleElement.textContent = result['Title']; // Set the text content of the span
 
-            // Append the image and title to the link element
-            linkElement.appendChild(posterElement);
-            linkElement.appendChild(titleElement);
+                // Append the image and title to the link element
+                linkElement.appendChild(posterElement);
+                linkElement.appendChild(titleElement);
 
-            // Append the link element to the results container
-            resultsContainer.appendChild(linkElement);
-        });
+                // Append the link element to the results container
+                resultsContainer.appendChild(linkElement);
+            });
+        }
+        // Show the search results container
+        document.getElementById("searchResultsContainer").classList.add("show");
     }
-    // Show the search results container
-    document.getElementById("searchResultsContainer").classList.add("show");
-}
+
     {#function displayResults(results) {#}
     {#    var resultsContainer = document.getElementById("searchResults");#}
     {#    resultsContainer.innerHTML = ''; // Clear previous results#}
