@@ -3,7 +3,7 @@
 {% block content %}
     <h5>Profile</h5>
     {% for post in posts %}
+        <hr>
         {% include '_post.html' %}
-        {{ post.post_message }}
     {% endfor %}
 {% endblock %}
