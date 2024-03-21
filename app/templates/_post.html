@@ -12,13 +12,17 @@
                         <img style="width: 100px" src="{{ movie_details['Poster'] }}"/>
                     </td>
                     <td>
-                        <p style="color: black">Movie Name: </p><a href="{{ url_for('search', type=movie_details['Type'], id=movie_details['Id']) }}">{{ movie_details['Title'] }}</a>
+                        <p style="color: black">Movie Name: </p><a
+                            href="{{ url_for('search', type=movie_details['Type'], id=movie_details['Id']) }}">{{ movie_details['Title'] }}</a>
                     </td>
                 </tr>
             </table>
         </div>
         <div class="col-md-6">
             <p style="color: black"><strong>Review:</strong> {{ post.post_message }}</p>
+            {% if post.upvote %}<p style="color: black"><strong>Review:</strong> {{ post.upvote }}</p>{% endif %}
+            {% if post.downvote %}<p style="color: black"><strong>Review:</strong> {{ post.downvote }}</p>{% endif %}
+            <p style="color: black"><strong>Rating:</strong> {{ post.rating }}</p>{
             <p style="color: black"><strong>Time of Posting:</strong> {{ post.time_of_posting }}</p>
         </div>
     </div>
