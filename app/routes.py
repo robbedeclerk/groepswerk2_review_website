@@ -40,29 +40,30 @@ def search_movies():
         return {'error': 'No title provided'}
 
 
-def get_sorted_posts(id=None, movie_type=None, sort_by='newest', current_user_country=None):
+def get_sorted_posts(id=None, movie_type=None, sort_by='newest', current_user_country=None, page=1, per_page=5):
     query = Post.query
     if movie_type == 'film':
         query = query.filter_by(movie_id=id, is_movie=True)
-    if movie_type == 'serie':
+    elif movie_type == 'serie':
         query = query.filter_by(movie_id=id, is_movie=False)
+    
     if sort_by == 'newest':
-        sorted_posts = query.order_by(desc(Post.time_of_posting)).all()
+        query = query.order_by(desc(Post.time_of_posting))
     elif sort_by == 'oldest':
-        sorted_posts = query.order_by(Post.time_of_posting).all()
+        query = query.order_by(Post.time_of_posting)
     elif sort_by == 'rating':
-        sorted_posts = query.order_by(desc(Post.rating)).all()
+        query = query.order_by(desc(Post.rating))
     elif sort_by == 'upvotes':
-        sorted_posts = sorted(query.all(), key=lambda post: post.upvote_count(), reverse=True)
+        query = query.order_by(desc(Post.upvote_count()))
     elif sort_by == 'downvotes':
-        sorted_posts = sorted(query.all(), key=lambda post: post.downvote_count(), reverse=True)
-    elif sort_by == 'my_country' and current_user.is_authenticated:
-        sorted_posts = query.join(User).filter(User.country == current_user_country).all()
-    else:
-        # Default sorting by newest
-        sorted_posts = query.order_by(desc(Post.time_of_posting)).all()
-
-    return sorted_posts
+        query = query.order_by(desc(Post.downvote_count()))
+    elif sort_by == 'my_country' and current_user_country and current_user.is_authenticated:
+        query = query.join(User).filter(User.country == current_user_country)
+    
+    # Pagination
+    posts = query.paginate(page=page, per_page=per_page)
+    
+    return posts
 
 
 @app.route('/<type>/<id>', methods=['GET', 'POST'])
@@ -70,13 +71,8 @@ def search(type, id=None):
     if type == "film":
         if id.isnumeric():
             sort_by = request.args.get('sort_by', 'newest', type=str)
-            # posts = db.session.execute(
-            #     sa.select(Post, Post.id).where(Post.movie_id == id, Post.is_movie == True)).fetchall()
-            if current_user.is_authenticated:
-                posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by,
-                                         current_user_country=current_user.country)
-            else:
-                posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by)
+            page = request.args.get('page', 1, type=int)
+            posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by, page=page)
             movie_details = movie.get_small_details_out_single_movie(True, movie.get_data(id))
             movie_similars = movie.get_small_details_out_big_data(movie.get_similar_data(id))
             form = PostForm()
@@ -115,13 +111,8 @@ def search(type, id=None):
     elif type == "serie":
         if id.isnumeric():
             sort_by = request.args.get('sort_by', 'newest', type=str)
-            # posts = db.session.execute(
-            #     sa.select(Post, Post.id).where(Post.movie_id == id, Post.is_movie == True)).fetchall()
-            if current_user.is_authenticated:
-                posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by,
-                                         current_user_country=current_user.country)
-            else:
-                posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by)
+            page = request.args.get('page', 1, type=int)
+            posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by, page=page)
             serie_details = serie.get_small_details_out_single_movie(False, serie.get_data(id))
             form = PostForm()
             if form.validate_on_submit():
