@@ -40,7 +40,10 @@
                        href={{ url_for('search', id=id, type=movie['Type'], sort_by='oldest', page=1) }}>Oldest</a>
                 </li>
                 <li><a class="dropdown-item"
-                       href={{ url_for('search', id=id, type=movie['Type'], sort_by='rating', page=1) }}>Rating</a>
+                       href={{ url_for('search', id=id, type=movie['Type'], sort_by='rating_high', page=1) }}>Rating(High->Low)</a>
+                </li>
+                <li><a class="dropdown-item"
+                       href={{ url_for('search', id=id, type=movie['Type'], sort_by='rating_low', page=1) }}>Rating(Low->High)</a>
                 </li>
                 <li><a class="dropdown-item"
                        href={{ url_for('search', id=id, type=movie['Type'], sort_by='upvotes', page=1) }}>Upvotes</a>
@@ -62,7 +65,7 @@
                                     data-bs-target="#collapse{{ loop.index }}" aria-expanded="true"
                                     aria-controls="collapse{{ loop.index }}"><strong
                                     class="flex no-wrap align-items-start flex-column mb-1">
-                                {{ post.author.username }}'s Review:</strong><label class="mb-auto p-2 text-break"
+                                {{ post.author.country }}:::    {{ post.author.username }}'s Review:</strong><label class="mb-auto p-2 text-break"
                                                                                     style="width: 70%"> {{ post.post_message }}
                             </label>
                             </button>
@@ -109,14 +112,14 @@
                 <ul class="pagination justify-content-center">
                     {% if posts.has_prev %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('search', id=id, type=movie['Type'], sort_by='newest', page=posts.prev_num) }}" aria-label="Previous">
+                            <a class="page-link" href="{{ url_for('search', id=id, type=movie['Type'], sort_by=sort_by, page=posts.prev_num) }}" aria-label="Previous">
                                 <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
                     {% endif %}
                     {% if posts.has_next %}
                         <li class="page-item">
-                            <a class="page-link" href="{{ url_for('search', id=id, type=movie['Type'], sort_by='newest', page=posts.next_num) }}" aria-label="Next">
+                            <a class="page-link" href="{{ url_for('search', id=id, type=movie['Type'], sort_by=sort_by, page=posts.next_num) }}" aria-label="Next">
                                 <span aria-hidden="true">&raquo;</span>
                             </a>
                         </li>
@@ -124,10 +127,6 @@
                 </ul>
             </nav>
         {% endif %}
-        <div class="navigation">
-            <button id="prevBtn"><<</button>
-            <button id="nextBtn">>></button>
-        </div>
     </div>
     </body>
 

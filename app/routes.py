@@ -5,10 +5,10 @@ import psycopg2
 from flask_login import current_user, login_user, logout_user, login_required
 from app.forms import (LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm,
                        EditProfileForm, PostForm, EmptyForm)
-from app.models import User, Post
+from app.models import User, Post, downvotes, upvotes
 from urllib.parse import urlsplit
 import sqlalchemy as sa
-from sqlalchemy import desc
+from sqlalchemy import desc, func
 from app.usermail import send_password_reset_email
 
 movie = Tmdb(True)
@@ -44,24 +44,28 @@ def get_sorted_posts(id=None, movie_type=None, sort_by='newest', current_user_co
     query = Post.query
     if movie_type == 'film':
         query = query.filter_by(movie_id=id, is_movie=True)
-    elif movie_type == 'serie':
+    if movie_type == 'serie':
         query = query.filter_by(movie_id=id, is_movie=False)
     
     if sort_by == 'newest':
-        query = query.order_by(desc(Post.time_of_posting))
+        sorted_query = query.order_by(desc(Post.time_of_posting))
     elif sort_by == 'oldest':
-        query = query.order_by(Post.time_of_posting)
-    elif sort_by == 'rating':
-        query = query.order_by(desc(Post.rating))
+        sorted_query = query.order_by(Post.time_of_posting)
+    elif sort_by == 'rating_high':
+        sorted_query = query.order_by(desc(Post.rating))
+    elif sort_by == 'rating_low':
+        sorted_query = query.order_by(Post.rating)
     elif sort_by == 'upvotes':
-        query = query.order_by(desc(Post.upvote_count()))
+        sorted_query = query.outerjoin(upvotes).group_by(Post.id).order_by(desc(func.count(upvotes.c.post_id)))
     elif sort_by == 'downvotes':
-        query = query.order_by(desc(Post.downvote_count()))
-    elif sort_by == 'my_country' and current_user_country and current_user.is_authenticated:
-        query = query.join(User).filter(User.country == current_user_country)
-    
+        sorted_query = query.outerjoin(downvotes).group_by(Post.id).order_by(desc(func.count(downvotes.c.post_id)))
+    elif sort_by == 'my_country' and current_user.is_authenticated:
+        sorted_query = query.join(Post.author).filter(User.country == current_user_country).order_by(desc(Post.time_of_posting))
+    else:
+        sorted_query = query.order_by(desc(Post.time_of_posting))
+
     # Pagination
-    posts = query.paginate(page=page, per_page=per_page)
+    posts = sorted_query.paginate(page=page, per_page=per_page)
     
     return posts
 
@@ -72,7 +76,12 @@ def search(type, id=None):
         if id.isnumeric():
             sort_by = request.args.get('sort_by', 'newest', type=str)
             page = request.args.get('page', 1, type=int)
-            posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by, page=page)
+
+            if current_user.is_authenticated:
+                posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by,
+                                         current_user_country=current_user.country, page=page)
+            else:
+                posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by, page=page)
             movie_details = movie.get_small_details_out_single_movie(True, movie.get_data(id))
             movie_similars = movie.get_small_details_out_big_data(movie.get_similar_data(id))
             form = PostForm()
