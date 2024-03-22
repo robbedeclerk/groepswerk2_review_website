@@ -181,57 +181,6 @@ def search_title():
         return render_template(url_for('index'))
 
 
-#
-# @app.route('/film/popular')
-# def popular_movies():
-#     page = request.args.get('page', 1, type=int)
-#     movie_list = movie.get_small_details_out_big_data(movie.get_popular_data(page))
-#     return render_template('index.html', title='Popular Movies', movies=movie_list, current_page=page)
-#
-# @app.route('/film/now-playing')
-# def now_playing_movies():
-#     page = request.args.get('page', 1, type=int)
-#     movie_list = movie.get_small_details_out_big_data(movie.get_now_playing_data(page))
-#     return render_template('index.html', title='Now Playing Movies', movies=movie_list, current_page=page)
-#
-# @app.route('/film/top-rated')
-# def top_rated_movies():
-#     page = request.args.get('page', 1, type=int)
-#     movie_list = movie.get_small_details_out_big_data(movie.get_top_rated_data(page))
-#     return render_template('index.html', title='Top Rated Movies', movies=movie_list, current_page=page)
-#
-# @app.route('/film/trending')
-# def trending_movies():
-#     page = request.args.get('page', 1, type=int)
-#     movie_list = movie.get_small_details_out_big_data(movie.get_trending_data(page))
-#     return render_template('index.html', title='Trending Movies', movies=movie_list, current_page=page)
-#
-# @app.route('/serie/popular')
-# def popular_series():
-#     page = request.args.get('page', 1, type=int)
-#     serie_list = serie.get_small_details_out_big_data(serie.get_popular_data(page))
-#     return render_template('index.html', title='Popular Series', movies=serie_list, current_page=page)
-#
-# @app.route('/serie/now-playing')
-# def now_playing_series():
-#     page = request.args.get('page', 1, type=int)
-#     serie_list = serie.get_small_details_out_big_data(serie.get_now_playing_data(page))
-#     return render_template('index.html', title='Now Playing Series', movies=serie_list, current_page=page)
-#
-# @app.route('/serie/top-rated')
-# def top_rated_series():
-#     page = request.args.get('page', 1, type=int)
-#     serie_list = serie.get_small_details_out_big_data(serie.get_top_rated_data(page))
-#     return render_template('index.html', title='Top Rated Series', movies=serie_list, current_page=page)
-#
-# @app.route('/serie/trending')
-# def trending_series():
-#     page = request.args.get('page', 1, type=int)
-#     serie_list = serie.get_small_details_out_big_data(serie.get_trending_data(page))
-#     return render_template('index.html', title='Trending Series', movies=serie_list, current_page=page)
-#
-
-
 @app.route('/genre/<type>/popular/<int:genre_id>')
 def popular(type, genre_id):
     page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments

@@ -158,8 +158,6 @@ class Tmdb:
         poster_base_url = 'https://image.tmdb.org/t/p/original'
         genres = data['genres']
         genre_ids = [each['id'] for each in genres]
-        # for each in genres:
-        #     genre_ids.append(each['id'])
         if poster_path:
             poster_url = poster_base_url + poster_path
         else:
