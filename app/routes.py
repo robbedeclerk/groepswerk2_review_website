@@ -40,13 +40,16 @@ def search_movies():
         return {'error': 'No title provided'}
 
 
-def get_sorted_posts(id=None, movie_type=None, sort_by='newest', current_user_country=None, page=1, per_page=5):
+def get_sorted_posts(id=None, movie_type=None, sort_by='newest', current_user_country=None, page=1, per_page=5,
+                     user_id=None):
     query = Post.query
+    if user_id:
+        query = query.filter_by(user_id=user_id)
     if movie_type == 'film':
         query = query.filter_by(movie_id=id, is_movie=True)
     if movie_type == 'serie':
         query = query.filter_by(movie_id=id, is_movie=False)
-    
+
     if sort_by == 'newest':
         sorted_query = query.order_by(desc(Post.time_of_posting))
     elif sort_by == 'oldest':
@@ -60,13 +63,14 @@ def get_sorted_posts(id=None, movie_type=None, sort_by='newest', current_user_co
     elif sort_by == 'downvotes':
         sorted_query = query.outerjoin(downvotes).group_by(Post.id).order_by(desc(func.count(downvotes.c.post_id)))
     elif sort_by == 'my_country' and current_user.is_authenticated:
-        sorted_query = query.join(Post.author).filter(User.country == current_user_country).order_by(desc(Post.time_of_posting))
+        sorted_query = query.join(Post.author).filter(User.country == current_user_country).order_by(
+            desc(Post.time_of_posting))
     else:
         sorted_query = query.order_by(desc(Post.time_of_posting))
 
     # Pagination
     posts = sorted_query.paginate(page=page, per_page=per_page)
-    
+
     return posts
 
 
@@ -394,11 +398,13 @@ def edit_profile():
 @app.route('/profile')
 def profile():
     user_id = request.args.get('user_id')
+    page = request.args.get('page', 1, type=int)
+    sort_by = request.args.get('sort_by', 'newest', type=str)
     if user_id is None:
         user_id = current_user.id
     user = User.query.get_or_404(user_id)
-    posts = Post.query.filter_by(author=user).all()
-    return render_template('profile.html', title='Profile', user=user, posts=posts)
+    posts = get_sorted_posts(user_id=user_id, page=page, sort_by=sort_by)
+    return render_template('profile.html', title='Profile', user=user, posts=posts, page=page, sort_by=sort_by)
 
 
 @login_required
