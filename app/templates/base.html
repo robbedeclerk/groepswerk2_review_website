@@ -89,11 +89,14 @@
         </div>
         <div class="d-flex">
             <form id="searchForm" class="d-flex ms-auto" role="search">
-                <input class="form-control me-2" type="search"
-                       style="float: left;background-color: #edf2fb;"
-                       id="searchInput" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
+                <div class="input-group">
+                    <input class="form-control me-2" type="search" style="background-color: #edf2fb;"
+                           id="searchInput" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </div>
+                <div id="searchResults" class="search-results text-wrap position-absolute bg-light"></div>
             </form>
+
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item dropdown">
@@ -119,8 +122,7 @@
             </div>
         </div>
     </div>
-</nav>
-<div id="searchResultsContainer">
+</nav><div id="searchResultsContainer">
     <div id="searchResults"></div>
 </div>
 <hr>
@@ -168,7 +170,6 @@
                 linkElement.href = "/" + result['Type'] + "/" + result['Id']; // Set the href to the movie URL
                 linkElement.style.display = "block"; // Set display to block for a new line
 
-
                 // Create an image element for the poster
                 var posterElement = document.createElement("img");
                 posterElement.src = result['Poster']; // Set the source of the image
@@ -187,45 +188,7 @@
                 resultsContainer.appendChild(linkElement);
             });
         }
-        // Show the search results container
-        document.getElementById("searchResultsContainer").classList.add("show");
     }
-
-    {#function displayResults(results) {#}
-    {#    var resultsContainer = document.getElementById("searchResults");#}
-    {#    resultsContainer.innerHTML = ''; // Clear previous results#}
-    {#    if (results.length === 0) {#}
-    {#        resultsContainer.innerHTML = '<div>No results found.</div>'; // Show message if no results#}
-    {#    } else {#}
-    {#        results.forEach(function (result) {#}
-    {#            // Create a div element for each result#}
-    {#            var movieContainer = document.createElement("div");#}
-    {#            movieContainer.classList.add("movie");#}
-    {#            // Create a link element#}
-    {#            var linkElement = document.createElement("a");#}
-    {#            linkElement.href = "/" + result['Type'] + "/" + result['Id']; // Set the href to the movie URL#}
-    {#            linkElement.classList.add("movie-link");#}
-    {##}
-    {#            // Create an image element for the poster#}
-    {#            var posterElement = document.createElement("img");#}
-    {#            posterElement.src = result['Poster']; // Set the source of the image#}
-    {#            posterElement.alt = result['Title']; // Set the alt text of the image#}
-    {#            posterElement.classList.add("movie-poster");#}
-    {##}
-    {#            // Create a span element for the title#}
-    {#            var titleElement = document.createElement("span");#}
-    {#            titleElement.textContent = result['Title']; // Set the text content of the span#}
-    {#            titleElement.classList.add("movie-title");#}
-    {##}
-    {##}
-    {#            // Append the image and title to the link element#}
-    {#            linkElement.appendChild(posterElement);#}
-    {#            linkElement.appendChild(titleElement);#}
-    {#            movieContainer.appendChild(linkElement)#}
-    {#            resultsContainer.appendChild(movieContainer);#}
-    {#        });#}
-    {#    }#}
-
 
     function clearResults() {
         var resultsContainer = document.getElementById("searchResults");

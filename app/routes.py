@@ -77,9 +77,10 @@ def get_sorted_posts(id=None, movie_type=None, sort_by='newest', current_user_co
 @app.route('/<type>/<id>', methods=['GET', 'POST'])
 def search(type, id=None):
     if type == "film":
+        page = request.args.get('page', 1, type=int)
         if id.isnumeric():
             sort_by = request.args.get('sort_by', 'newest', type=str)
-            page = request.args.get('page', 1, type=int)
+
 
             if current_user.is_authenticated:
                 posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by,
@@ -96,7 +97,7 @@ def search(type, id=None):
                 db.session.commit()
                 return redirect(url_for('search', type=type, id=id, sort_by=sort_by))
             return render_template('film_profile.html', movie=movie_details, movieapi=movie, id=id,
-                                   similars=movie_similars, posts=posts, form=form, sort_by=sort_by)
+                                   similars=movie_similars, posts=posts, form=form,  sort_by=sort_by, page=page)
         else:
             if id == "popular":
                 page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
@@ -140,7 +141,7 @@ def search(type, id=None):
                 db.session.commit()
                 return redirect(url_for('search', type=type, id=id, sort_by=sort_by))
             return render_template('film_profile.html', movie=serie_details, movieapi=serie, id=id, posts=posts,
-                                   form=form, sort_by=sort_by)
+                                   form=form, sort_by=sort_by, page=page)
         else:
             if id == "popular":
                 page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
