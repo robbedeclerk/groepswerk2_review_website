@@ -1,7 +1,7 @@
 from flask import request
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField, IntegerField, EmailField
-from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length, NumberRange
+from wtforms.validators import DataRequired, ValidationError, Email, EqualTo, Length, NumberRange, InputRequired
 import sqlalchemy as sa
 from app.models import User, Post
 from app import db
@@ -60,7 +60,7 @@ class EmptyForm(FlaskForm):
 
 class PostForm(FlaskForm):
     post_message = TextAreaField('Post review', render_kw={'style': 'width: device'})
-    rating = IntegerField('Rating [0-10]', validators=[DataRequired(), NumberRange(min=0, max=10)],
+    rating = IntegerField('Rating [0-10]', validators=[InputRequired(), NumberRange(min=0, max=10)],
                           render_kw={'style': 'width: 70px'})
     submit = SubmitField('Submit')
 
