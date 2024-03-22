@@ -3,7 +3,7 @@
 {% block content %}
     <h5 class="container" style="text-align: center">Profile for {{ user.username }}</h5>
     {% if posts %}
-        <li class="nav-item dropdown" style="list-style-type: none">
+        <li class="container nav-item dropdown" style="list-style-type: none;">
                 <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
                    aria-expanded="false">Sort by</a>
         <ul class="dropdown-menu">
@@ -41,7 +41,11 @@
                         </a>
                     </li>
                 {% endif %}
-                <li class="page-item"><span aria-hidden="true">{{ page }}</span></li>
+                <li class="page-item"><a class="page-link"
+                           href=#
+                           aria-label="Previous">
+                            <span aria-hidden="true">{{ page }}</span>
+                        </a></li>
                 {% if posts.has_next %}
                     <li class="page-item">
                         <a class="page-link"
