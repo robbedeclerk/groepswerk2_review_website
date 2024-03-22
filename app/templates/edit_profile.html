@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% import 'bootstrap_wtf.html' as wtf %}
 {% block content %}
-    <h4>Edit your profile</h4>
-    {{ wtf.quick_form(form) }}
+    <h4 class="container">Edit your profile</h4>
+    <div class="container">{{ wtf.quick_form(form) }}</div>
 
     {% for post in posts %}
         {% include '_post.html' %}

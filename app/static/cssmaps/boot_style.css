@@ -120,6 +120,14 @@ div {
 div.accordion-body {
     color: black;
 }
+
+.accordion-button {
+    background-color: #fff;
+}
+
+.accordion-button:not(.collapsed) {
+        background-color: #bcbcbc;
+}
 /*.search-results {*/
 /*    position: absolute;*/
 /*    top: 100%; !* Position below the navbar *!*/

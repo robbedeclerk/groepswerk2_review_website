@@ -27,11 +27,9 @@
         <p>
         <hr>
         {% if posts %}
-            <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
-               aria-expanded="false">
-                Sort by
-            </a>
+            <li class="nav-item dropdown" style="list-style-type: none">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+                   aria-expanded="false">Sort by</a>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item"
                        href={{ url_for('search', type=movie['Type'],id=id,  sort_by='newest', page=1) }}>Newest</a>
@@ -64,8 +62,9 @@
                             <button class="accordion-button" type="button" data-bs-toggle="collapse"
                                     data-bs-target="#collapse{{ loop.index }}" aria-expanded="true"
                                     aria-controls="collapse{{ loop.index }}"><strong
-                                    class="flex no-wrap align-items-start flex-column mb-1"><a href="{{ url_for('profile', user_id=post.author.id) }}">
-                                {{ post.author.country }}::: {{ post.author.username }}'s Review:</a></strong><label
+                                    class="flex no-wrap align-items-start flex-column mb-1"><a
+                                    href="{{ url_for('profile', user_id=post.author.id) }}">
+                                {{ post.author.username }}'s Review:</a></strong><label
                                     class="mb-auto p-2 text-break"
                                     style="width: 70%"> {{ post.post_message }}
                             </label>
@@ -74,7 +73,9 @@
                         <div id="collapse{{ loop.index }}" class="accordion-collapse collapse"
                              data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                <strong class="flex no-wrap align-items-start flex-column mb-1">User name: </strong><a href="{{ url_for('profile', user_id=post.author.id) }}"><label>{{ post.author.username }}</label></a><br>
+                                <strong class="flex no-wrap align-items-start flex-column mb-1">User name: </strong><a
+                                    href="{{ url_for('profile', user_id=post.author.id) }}"><label>{{ post.author.username }}</label></a><br>
+                                <strong class="flex no-wrap align-items-start flex-column mb-1">From: </strong><label>{{ post.author.country }}</label><br>
                                 <strong class="flex no-wrap align-items-start flex-column mb-1">Rating: </strong><label>{{ post.rating }}</label><br>
                                 <strong class="flex no-wrap align-items-start flex-column mb-1">Upvotes: </strong><label>{{ post.upvote_count() }}</label><strong
                                     class="flex no-wrap align-items-start flex-column mb-1">
