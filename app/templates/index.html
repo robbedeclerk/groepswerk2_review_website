@@ -25,21 +25,21 @@
                 {% endfor %}
             </div>
             <div>
-                <nav aria-label="...">
-                    <ul class="pagination">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
                         <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
                             {% if current_page > 1 %}
                                 {% if request.endpoint == 'popular' %}
                                     <a class="page-link"
-                                       href="{{ url_for(request.endpoint, genre_id=genre, type=type, page=current_page - 1) }}">Previous</a>
+                                       href="{{ url_for(request.endpoint, genre_id=genre, type=type, page=current_page - 1) }}">&laquo;</a>
                                 {% elif request.endpoint == 'search' %}
                                     <a class="page-link"
-                                       href="{{ url_for(request.endpoint, id=id, type=type, page=current_page - 1) }}">Previous</a>
+                                       href="{{ url_for(request.endpoint, id=id, type=type, page=current_page - 1) }}">&laquo;</a>
                                 {% else %}
-                                    <a class="page-link" href="{{ url_for(request.endpoint, page=current_page - 1) }}">Previous</a>
+                                    <a class="page-link" href="{{ url_for(request.endpoint, page=current_page - 1) }}">&laquo;</a>
                                 {% endif %}
                             {% else %}
-                                <a class="page-link">Previous</a>
+                                <a class="page-link">&laquo;</a>
                             {% endif %}
                         </li>
                         <li class="page-item">
@@ -49,18 +49,18 @@
                             {% if movies|length == 20 %}
                                 {% if request.endpoint == 'popular' %}
                                     <a class="page-link"
-                                       href="{{ url_for(request.endpoint, genre_id=genre, type=type, page=current_page + 1) }}">Next</a>
+                                       href="{{ url_for(request.endpoint, genre_id=genre, type=type, page=current_page + 1) }}">&raquo;</a>
                                 {% elif request.endpoint == 'search' %}
                                     <a class="page-link"
-                                       href="{{ url_for('search', id=id, type=type, page=current_page + 1) }}">Next</a>
+                                       href="{{ url_for('search', id=id, type=type, page=current_page + 1) }}">&raquo;</a>
                                 {% elif request.endpoint == 'search_title' %}
                                     <a class="page-link"
-                                       href="{{ url_for('search_title', title=title, page=current_page + 1) }}">Next</a>
+                                       href="{{ url_for('search_title', title=title, page=current_page + 1) }}">&raquo;</a>
                                 {% else %}
-                                    <a class="page-link" href="{{ url_for(request.endpoint, page=current_page + 1) }}">Next</a>
+                                    <a class="page-link" href="{{ url_for(request.endpoint, page=current_page + 1) }}">&raquo;</a>
                                 {% endif %}
                             {% else %}
-                                <a class="page-link">Next</a>
+                                <a class="page-link">&raquo;</a>
                             {% endif %}
                         </li>
                     </ul>

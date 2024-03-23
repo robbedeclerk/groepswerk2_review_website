@@ -9,8 +9,9 @@
                 {% endif %}
                 <tr>
                     <td>
-                        <img style="width: 100px" src="{{ movie_details['Poster'] }}"/>
-                    </td>
+                        <a href="{{ url_for('search', type=movie_details['Type'], id=movie_details['Id']) }}"> <img
+                                style="width: 100px" src="{{ movie_details['Poster'] }}"/>
+                        </a></td>
                     <td>
                         <p style="color: black">Movie Name: </p><a
                             href="{{ url_for('search', type=movie_details['Type'], id=movie_details['Id']) }}">{{ movie_details['Title'] }}</a>
