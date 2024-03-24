@@ -2,14 +2,13 @@ from app import app, db, login
 from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import relationship
 from datetime import timezone, datetime
 from time import time
 from werkzeug.security import generate_password_hash, check_password_hash
 from hashlib import md5
 from flask_login import UserMixin
 import jwt
-
 
 
 @login.user_loader
@@ -21,6 +20,7 @@ def load_user(id):
     """
     return db.session.get(User, int(id))
 
+
 upvotes = db.Table('upvotes',
                    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
                    db.Column('post_id', db.Integer, db.ForeignKey('post.id'))
@@ -29,6 +29,7 @@ downvotes = db.Table('downvotes',
                      db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
                      db.Column('post_id', db.Integer, db.ForeignKey('post.id'))
                      )
+
 
 def get_posts(movie_id, is_movie):
     """
@@ -49,13 +50,13 @@ class User(UserMixin, db.Model):
     family_name: so.Mapped[str] = so.mapped_column(sa.String(60), index=True)
     country: so.Mapped[str] = so.mapped_column(sa.String(55), index=True)
 
-
     posts: so.WriteOnlyMapped['Post'] = so.relationship('Post', back_populates='author')
 
     # Define relationship with posts that this user has upvoted
     upvoted_posts = relationship("Post", secondary="upvotes", back_populates="upvoters")
     # Define relationship with posts that this user has downvoted
     downvoted_posts = relationship("Post", secondary="downvotes", back_populates="downvoters")
+
     def __repr__(self):
         """
         Function defines string representation of the user object.
@@ -67,6 +68,7 @@ class User(UserMixin, db.Model):
 
     def downvote_post(self, post):
         self.downvoted_posts.append(post)
+
     def set_password(self, password):
         """
         Function generates a hashed password.
