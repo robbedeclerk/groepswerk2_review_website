@@ -1,20 +1,33 @@
-    <table class="table table-hover">
-        <tr>
-            <td width="70px">
-                <a href="{{ url_for('user', username=post.author.username) }}">
-                    <img src="{{ post.author.avatar(70) }}" />
-                </a>
-            </td>
-            <td>
-                {% set user_link %}
-                    <a href="{{ url_for('profile', user_id=post.author.id) }}">
-                        {{ post.author.username }}
-                    </a>
-                {% endset %}
-                {{ _('%(username)s said %(when)s',
-                    username=user_link, when=moment(post.timestamp).fromNow()) }}
-                <br>
-                <span id="post{{ post.id }}">{{ post.body }}</span>
-            </td>
-        </tr>
-    </table>
+<div class="card container" style="--bs-card-bg: #fff">
+    <div class="row break-text">
+        <div class="col-md-6">
+            <table>
+                {% if post.is_movie %}
+                    {% set movie_details = movie_tmdb.get_small_details_out_single_movie(post.is_movie, movie_tmdb.get_data(post.movie_id)) %}
+                {% else %}
+                    {% set movie_details = serie_tmdb.get_small_details_out_single_movie(post.is_movie, serie_tmdb.get_data(post.movie_id)) %}
+                {% endif %}
+                <tr>
+                    <td>
+                        <img style="width: 100px" src="{{ movie_details['Poster'] }}"/>
+                    </td>
+                    <td>
+                        <p style="color: black">Movie Name: </p><a
+                            href="{{ url_for('search', type=movie_details['Type'], id=movie_details['Id']) }}">{{ movie_details['Title'] }}</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-md-6">
+            <p style="color: black"><strong>Review:</strong> {{ post.post_message }}</p>
+            <p style="color: black"><strong>Rating:</strong> {{ post.rating }}</p>
+            {% if post.upvoters %}
+                <p style="color: black"><strong>Upvotes:</strong> {{ post.upvote_count() }}</p>{% endif %}
+            {% if post.downvoters %}
+                <p style="color: black"><strong>Downvotes:</strong> {{ post.downvote_count() }}</p>{% endif %}
+            <p style="color: black"><strong>Time of Posting:</strong> {{ post.time_of_posting }}</p>
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,31 @@
+version: '3'
+services:
+  main:
+    image: main
+    build: .
+    ports:
+      - '8000:5000'
+    environment:
+      - DB_URL=postgresql+psycopg2://postgres:pqsszord@host.docker.internal:5432/moviedb
+    depends_on:
+      - moviedb
+
+  moviedb:
+    image: postgres
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=pqsszord
+      - POSTGRES_DB=moviedb
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata: {}
+
+networks:
+  default:
+    external:
+      name: groepswerk2-network
+

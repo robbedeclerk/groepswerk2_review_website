@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_login import LoginManager
 from flask_mail import Mail
-
+from flask_moment import Moment
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
@@ -13,6 +13,7 @@ migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
 mail = Mail(app)
+moment = Moment(app)
 
 
 from app import routes, models, new_tmdb_api, usermail

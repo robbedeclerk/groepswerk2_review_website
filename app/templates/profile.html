@@ -1,43 +1,62 @@
-
 {% extends "base.html" %}
-{% import 'bootstrap_wtf.html' as wtf %}
+
 {% block content %}
-<<<<<<< HEAD
-<div class="profile">
-    <body>
-        <h1>Welcome to your profile!</h1>
-        <h2>you are logged in as {{ user.username }}</h2>
-    </div>
-
-    <div class="profile_picture">
-        <img src="{{ user.avatar(300) }}" alt="Profile Picture">
-    </div>
-        <div class="bio">
-            <h3>profile info</h3><h4>change email or username</h4>
-        </div>
-            <div class = "info">
-            <p>username: {{ user.username }}</p>
-            <p>email: {{ user.email }}</p>
-            <p>name: {{ user.firstname }}</p>
-            <p>family name: {{ user.family_name }}</p>
-            <p>country: {{ user.country }}</p>
-            </div>
-        
-        </div>
-        <a href="{{ url_for('edit_profile', user_id=current_user.id) }}">Edit Profile</a>
-    </section>
-
-    <section class="reviews">
-        <h5>reviews</h5>
-        <ul>
+    <h5 class="container" style="text-align: center">Profile for {{ user.username }}</h5>
+    {% if posts %}
+        <li class="container nav-item dropdown" style="list-style-type: none;">
+                <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
+                   aria-expanded="false">Sort by</a>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item"
+                   href={{ url_for('profile', user_id=user.id, sort_by='newest', page=1) }}>Newest</a>
+            </li>
+            <li><a class="dropdown-item"
+                   href={{ url_for('profile', user_id=user.id, sort_by='oldest', page=1) }}>Oldest</a>
+            </li>
+            <li><a class="dropdown-item"
+                   href={{ url_for('profile', user_id=user.id, sort_by='rating_high', page=1) }}>Rating(High->Low)</a>
+            </li>
+            <li><a class="dropdown-item"
+                   href={{ url_for('profile', user_id=user.id, sort_by='rating_low', page=1) }}>Rating(Low->High)</a>
+            </li>
+            <li><a class="dropdown-item"
+                   href={{ url_for('profile', user_id=user.id, sort_by='upvotes', page=1) }}>Upvotes</a>
+            </li>
+            <li><a class="dropdown-item"
+                   href={{ url_for('profile', user_id=user.id, sort_by='downvotes', page=1) }}>Downvotes</a>
+            </li>
         </ul>
-    </section>
-    </body>
-</div>
-{%endblock%}
-=======
-<h4>Edit your profile</h4>
-    {{ wtf.quick_form(form) }}
-
+        {% for post in posts %}
+            <hr>
+            {% include '_post.html' %}
+        {% endfor %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if posts.has_prev %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="{{ url_for('profile', user_id=user.id, sort_by=sort_by, page=posts.prev_num) }}"
+                           aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+                <li class="page-item"><a class="page-link"
+                           href=#
+                           aria-label="Previous">
+                            <span aria-hidden="true">{{ page }}</span>
+                        </a></li>
+                {% if posts.has_next %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="{{ url_for('profile', user_id=user.id, sort_by=sort_by, page=posts.next_num) }}"
+                           aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>    {% else %}
+        <hr> No posts yet!
+    {% endif %}
 {% endblock %}
->>>>>>> inias_test

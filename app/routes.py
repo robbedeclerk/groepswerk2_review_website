@@ -1,4 +1,3 @@
-from turtle import title
 from app import app, db
 from app.new_tmdb_api import Tmdb
 from flask import render_template, request, redirect, url_for, session, jsonify, flash
@@ -6,27 +5,28 @@ import psycopg2
 from flask_login import current_user, login_user, logout_user, login_required
 from app.forms import (LoginForm, RegistrationForm, ResetPasswordRequestForm, ResetPasswordForm,
                        EditProfileForm, PostForm, EmptyForm)
-from app.models import User, Post# Address is hier weg
+from app.models import User, Post, downvotes, upvotes
 from urllib.parse import urlsplit
 import sqlalchemy as sa
+from sqlalchemy import desc, func
 from app.usermail import send_password_reset_email
 
 movie = Tmdb(True)
 serie = Tmdb(False)
 
 
-
-
-
 @app.context_processor
 def inject_movie():
     return dict(movie_tmdb=movie, serie_tmdb=serie)
+
+
 @app.route('/')
 @app.route('/index')
 def index():
     page = request.args.get('page', 1, type=int)
     movie_list = movie.get_small_details_out_big_data(movie.get_popular_data(page))
-    return render_template('index.html', title='Homepage', movies=movie_list, current_page=page)
+    return render_template('index.html', title='Homepage', movies=movie_list, current_page=page,
+                           title_string="Popular Movies")
 
 
 @app.route('/search_movies')
@@ -39,26 +39,54 @@ def search_movies():
     else:
         return {'error': 'No title provided'}
 
-@app.route('/search_title/')
-def search_title():
-    title=request.args.get('title')
-    if title:
-        page = request.args.get('page', 1, type=int)
-        results = movie.get_10_Titles_for_both(title, page)
-        sorted_movie_list = sorted(results, key=lambda x: x['Popularity'], reverse=True)
-        return render_template('index.html', movies=sorted_movie_list, current_page=page)
+
+def get_sorted_posts(id=None, movie_type=None, sort_by='newest', current_user_country=None, page=1, per_page=5,
+                     user_id=None):
+    query = Post.query
+    if user_id:
+        query = query.filter_by(user_id=user_id)
+    if movie_type == 'film':
+        query = query.filter_by(movie_id=id, is_movie=True)
+    if movie_type == 'serie':
+        query = query.filter_by(movie_id=id, is_movie=False)
+
+    if sort_by == 'newest':
+        sorted_query = query.order_by(desc(Post.time_of_posting))
+    elif sort_by == 'oldest':
+        sorted_query = query.order_by(Post.time_of_posting)
+    elif sort_by == 'rating_high':
+        sorted_query = query.order_by(desc(Post.rating))
+    elif sort_by == 'rating_low':
+        sorted_query = query.order_by(Post.rating)
+    elif sort_by == 'upvotes':
+        sorted_query = query.outerjoin(upvotes).group_by(Post.id).order_by(desc(func.count(upvotes.c.post_id)))
+    elif sort_by == 'downvotes':
+        sorted_query = query.outerjoin(downvotes).group_by(Post.id).order_by(desc(func.count(downvotes.c.post_id)))
+    elif sort_by == 'my_country' and current_user.is_authenticated:
+        sorted_query = query.join(Post.author).filter(User.country == current_user_country).order_by(
+            desc(Post.time_of_posting))
     else:
-        page = request.args.get('page', 1, type=int)
-        movie_list = movie.get_small_details_out_big_data(movie.get_popular_data(page))
-        return render_template('index.html', title='Homepage', movies=movie_list, current_page=page)
+        sorted_query = query.order_by(desc(Post.time_of_posting))
+
+    # Pagination
+    posts = sorted_query.paginate(page=page, per_page=per_page)
+
+    return posts
 
 
 @app.route('/<type>/<id>', methods=['GET', 'POST'])
 def search(type, id=None):
     if type == "film":
+        page = request.args.get('page', 1, type=int)
         if id.isnumeric():
-            posts = db.session.execute(
-                sa.select(Post, Post.id).where(Post.movie_id == id, Post.is_movie == True)).fetchall()
+            sort_by = request.args.get('sort_by', 'newest', type=str)
+
+
+            if current_user.is_authenticated:
+                posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by,
+                                         current_user_country=current_user.country, page=page)
+            else:
+                posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by, page=page)
             movie_details = movie.get_small_details_out_single_movie(True, movie.get_data(id))
             movie_similars = movie.get_small_details_out_big_data(movie.get_similar_data(id))
             form = PostForm()
@@ -67,71 +95,91 @@ def search(type, id=None):
                             movie_id=id, is_movie=True)
                 db.session.add(post)
                 db.session.commit()
-                return redirect(url_for('search', type=type, id=id))
+                return redirect(url_for('search', type=type, id=id, sort_by=sort_by))
             return render_template('film_profile.html', movie=movie_details, movieapi=movie, id=id,
-                                   similars=movie_similars, posts=posts, form=form)
+                                   similars=movie_similars, posts=posts, form=form,  sort_by=sort_by, page=page)
         else:
             if id == "popular":
                 page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
                 movie_list = movie.get_small_details_out_big_data(movie.get_popular_data(page))
-                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
+                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id,
+                                       title_string="Popular Movies")
             elif id == "top-rated":
                 page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
                 movie_list = movie.get_small_details_out_big_data(movie.get_top_rated_data(page))
-                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
+                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id,
+                                       title_string="Top Rated Movies")
             elif id == "trending":
                 page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
                 movie_list = movie.get_small_details_out_big_data(movie.get_trending_data(page))
-                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
+                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id,
+                                       title_string="Trending Movies")
             elif id == "now-playing":
                 page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
                 movie_list = movie.get_small_details_out_big_data(movie.get_now_playing_data(page))
-                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
+                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id,
+                                       title_string="Now Playing Movies")
             movie_list = movie.get_small_details_out_big_data(movie.get_popular_data())
             page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
-            return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
+            return render_template(url_for('index'))
     elif type == "serie":
         if id.isnumeric():
-            posts = db.session.execute(
-                sa.select(Post, Post.id).where(Post.movie_id == id, Post.is_movie == False)).fetchall()
+            sort_by = request.args.get('sort_by', 'newest', type=str)
+            page = request.args.get('page', 1, type=int)
+
+            if current_user.is_authenticated:
+                posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by,
+                                         current_user_country=current_user.country, page=page)
+            else:
+                posts = get_sorted_posts(id=id, movie_type=type, sort_by=sort_by, page=page)
             serie_details = serie.get_small_details_out_single_movie(False, serie.get_data(id))
-            serie_similars = serie.get_small_details_out_big_data(serie.get_similar_data(id))
             form = PostForm()
             if form.validate_on_submit():
                 post = Post(post_message=form.post_message.data, rating=form.rating.data, author=current_user,
                             movie_id=id, is_movie=False)
                 db.session.add(post)
                 db.session.commit()
-                return redirect(url_for('search', type=type, id=id))
-            return render_template('film_profile.html', movie=serie_details, movieapi=serie, id=id,
-                                   similars=serie_similars, posts=posts, form=form)
+                return redirect(url_for('search', type=type, id=id, sort_by=sort_by))
+            return render_template('film_profile.html', movie=serie_details, movieapi=serie, id=id, posts=posts,
+                                   form=form, sort_by=sort_by, page=page)
         else:
             if id == "popular":
                 page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
                 movie_list = serie.get_small_details_out_big_data(serie.get_popular_data(page))
-                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
+                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id,
+                                       title_string="Popular Series")
             elif id == "top-rated":
                 page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
                 movie_list = serie.get_small_details_out_big_data(serie.get_top_rated_data(page))
-                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
+                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id,
+                                       title_string="Top Rated Series")
             elif id == "trending":
                 page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
                 movie_list = serie.get_small_details_out_big_data(serie.get_trending_data(page))
-                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
+                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id,
+                                       title_string="Trending Series")
             elif id == "now-playing":
-<<<<<<< HEAD
-                movie_list = serie.get_small_details_out_big_data(serie.get_now_playing_data())
-                return render_template('index.html', movies=movie_list, movieapi=serie)
-            movie_list = serie.get_small_details_out_big_data(serie.get_popular_data())
-            return render_template('index.html', movies=movie_list, movieapi=serie)
-=======
                 page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
                 movie_list = serie.get_small_details_out_big_data(serie.get_now_playing_data(page))
-                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
+                return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id,
+                                       title_string="Now Playing Series")
             page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
             movie_list = serie.get_small_details_out_big_data(serie.get_popular_data(page))
-            return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id)
->>>>>>> inias_test
+            return render_template('index.html', movies=movie_list, current_page=page, type=type, id=id,
+                                   title_string="Popular Series")
+
+
+@app.route('/search_title/')
+def search_title():
+    title = request.args.get('title')
+    if title:
+        page = request.args.get('page', 1, type=int)
+        results = movie.get_10_Titles_for_both(title, page)
+        sorted_movie_list = sorted(results, key=lambda x: x['Popularity'], reverse=True)
+        return render_template('index.html', movies=sorted_movie_list, current_page=page, title=title,
+                               title_string="Search Results for : " + str(title))
+    else:
+        return render_template(url_for('index'))
 
 
 @app.route('/genre/<type>/popular/<int:genre_id>')
@@ -139,15 +187,19 @@ def popular(type, genre_id):
     page = request.args.get('page', 1, type=int)  # Get the current page from the request arguments
     if type not in ["film", "serie"]:
         return render_template('index.html', movies=movie.get_small_details_out_big_data(movie.get_popular_data(page)),
-                               current_page=page)
+                               current_page=page, title_string="Popular Movies")
     if type == "film":
-        movie_list = movie.get_small_details_out_big_data(movie.get_data_filtered_genres_on_popularity(genre_id, page=page))
-        return render_template('index.html', movies=movie_list, type=type, genre=genre_id, current_page=page)
+        genre_name = movie.get_genre_name(genre_id)
+        movie_list = movie.get_small_details_out_big_data(
+            movie.get_data_filtered_genres_on_popularity(genre_id, page=page))
+        return render_template('index.html', movies=movie_list, type=type, genre=genre_id, current_page=page,
+                               title_string="Popular Movies for Genre: " + str(genre_name))
     elif type == "serie":
-        serie_list = serie.get_small_details_out_big_data(serie.get_data_filtered_genres_on_popularity(genre_id, page=page))
-        return render_template('index.html', movies=serie_list, type=type, genre=genre_id, current_page=page)
-
-
+        genre_name = serie.get_genre_name(genre_id)
+        serie_list = serie.get_small_details_out_big_data(
+            serie.get_data_filtered_genres_on_popularity(genre_id, page=page))
+        return render_template('index.html', movies=serie_list, type=type, genre=genre_id, current_page=page,
+                               title_string="Popular Series for Genre: " + str(genre_name))
 
 
 @login_required
@@ -183,23 +235,10 @@ def register():
             email=form.email.data,
             firstname=(form.firstname.data.capitalize()),
             family_name=(form.family_name.data.capitalize()),
-            country=(form.country.data.capitalize()),
-            city=form.city.data,
-            postalcode=form.postalcode.data,
-            street=(form.street.data.capitalize()),
-            house_number=form.house_number.data,
-            address_suffix=form.address_suffix.data
+            country=(form.country.data.capitalize())
         )
-        # address = Address(
-        #     country=(form.country.data.capitalize()),
-        #     city=form.city.data,
-        #     postalcode=form.postalcode.data,
-        #     street=(form.street.data.capitalize()),
-        #     house_number=form.house_number.data,
-        #     address_suffix=form.address_suffix.data
-        # )
         user.set_password(form.password.data)
-        db.session.add(user)#address is er uit gehaald hier
+        db.session.add(user)
         db.session.commit()
         flash('Your account has been created!')
         return redirect(url_for('login'))
@@ -280,109 +319,43 @@ def reset_password(token):
         db.session.commit()
         flash('Your password has been reset.')
         return redirect(url_for('login'))
-    return render_template('email/reset_password.html', form=form, title='Edit Profile')
+    return render_template('reset_password.html', form=form, title='Edit Profile')
 
 
-<<<<<<< HEAD
-@app.route('/profile/<user_id>', methods=['GET', 'POST'])
-=======
-@app.route('/profile', methods=['GET', 'POST'])
->>>>>>> inias_test
+@app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
-def profile(user_id):
+def edit_profile():
+    form = EditProfileForm(current_user.username)
+    if form.validate_on_submit():
+        # If the form is valid, update the user profile with the form data
+        current_user.firstname = form.firstname.data.capitalize()
+        current_user.family_name = form.family_name.data.capitalize()
+        current_user.country = form.country.data.capitalize()
+        db.session.commit()  # Commit the changes to the database
+        flash('Your changes have been saved.')  # Show a flash message to the user
+        return redirect(url_for('index'))  # Redirect the user back to the profile page
+
+    # If it's a GET request, pre-populate the form fields with the current user data
+    elif request.method == 'GET':
+        form.firstname.data = current_user.firstname
+        form.family_name.data = current_user.family_name
+        form.country.data = current_user.country
+
+    # Render the posts for the current user
+    return render_template('edit_profile.html', title='Edit Profile', form=form, user=current_user)
+
+
+@app.route('/profile')
+def profile():
+    user_id = request.args.get('user_id')
+    page = request.args.get('page', 1, type=int)
+    sort_by = request.args.get('sort_by', 'newest', type=str)
     if user_id is None:
-        form = EditProfileForm(current_user.username)
-        if form.validate_on_submit():
-            current_user.username = form.username.data
-            db.session.commit()
-            flash('Your changes have been saved.')
-            return redirect(url_for('edit_profile'))
-        elif request.method == 'GET':
-            form.username.data = current_user.username
-        return render_template('profile.html', user=current_user,
-                               form=form)
-    else:
-        user = db.first_or_404(sa.select(User).where(User.id == user_id))
-        # address = Address.query.filter_by(user_id=user_id).first()
-        page = request.args.get('page', 1, type=int)
-        query = user.posts.select().order_by(Post.time_of_posting.desc())
-        posts = db.paginate(query, page=page, per_page=10, error_out=False)
-        next_url = url_for('profile', user_id=user_id, page=posts.next_num) \
-            if posts.has_next else None
-        prev_url = url_for('profile', user_id=user_id, page=posts.prev_num) \
-            if posts.has_prev else None
-        form = EmptyForm()
-        return render_template('profile.html', user=user,posts=posts.items, next_url=next_url,
-                               prev_url=prev_url, form=form)#address=address is eruit gehaald
+        user_id = current_user.id
+    user = User.query.get_or_404(user_id)
+    posts = get_sorted_posts(user_id=user_id, page=page, sort_by=sort_by)
+    return render_template('profile.html', title='Profile', user=user, posts=posts, page=page, sort_by=sort_by)
 
-
-@login_required
-@app.route('/upvote/<post_id>', methods=['POST'])
-def upvote(post_id):
-    post = Post.query.get_or_404(post_id)
-    if post.author == current_user:
-        flash('You cannot upvote your own post!')
-        return redirect(url_for('index'))
-    current_user.upvote(post)
-    db.session.commit()
-    return redirect(url_for('index'))
-
-
-<<<<<<< HEAD
-# to go to edit page
-
-@app.route('/edit_profile/<int:user_id>', methods=['GET', 'POST'])
-@login_required
-def edit_profile(user_id):
-    print("User ID:", user_id)
-    if user_id is None:
-        form = EditProfileForm(original_username=current_user.username)
-        if form.validate_on_submit():
-            current_user.username = form.username.data
-            db.session.commit()
-            flash('Your changes have been saved.')
-            return redirect(url_for('edit_profile', user_id=current_user.id))
-        elif request.method == 'GET':
-            form.username.data = current_user.username
-    else:
-        user = User.query.get(user_id)
-        # address = Address.query.filter_by(user_id=user_id).first()
-
-    if 'form' not in locals():
-        form = EditProfileForm(original_username=current_user.username)
-
-    return render_template('edit_profile.html', user=current_user, form=form) #address=address, is er uit gehaald
-
-@app.route('/change_name', methods=['POST'])
-def change_name():
-    if request.method == 'POST':
-        new_name = request.form.get('new_name')
-        # Assuming you have a current_user object representing the logged-in user
-        current_user.name = new_name
-        db.session.commit()  # Commit the changes to the database
-        flash('Your name has been updated successfully!')
-        return redirect(url_for('edit_profile', user_id=current_user.id))
-
-@app.route('/change_family_name', methods=['POST'])
-def change_family_name():
-    if request.method == 'POST':
-        new_family_name = request.form.get('new_family_name')
-        # Assuming you have a current_user object representing the logged-in user
-        current_user.family_name = new_family_name
-        db.session.commit()  # Commit the changes to the database
-        flash('Your family name has been updated successfully!')
-        return redirect(url_for('edit_profile', user_id=current_user.id))
-
-@app.route('/change_country', methods=['POST'])
-def change_country():
-    if request.method == 'POST':
-        new_country = request.form.get('new_country')
-        # Assuming you have a current_user object representing the logged-in user
-        current_user.country = new_country
-        db.session.commit()  # Commit the changes to the database
-        flash('Your country has been updated successfully!')
-        return redirect(url_for('edit_profile', user_id=current_user.id))
-=======
 
 @login_required
 @app.route('/upvote/<int:post_id>', methods=['POST'])
@@ -436,4 +409,3 @@ def downvote(post_id):
     else:
         type = 'serie'
     return redirect(url_for('search', type=type, id=post.movie_id))
->>>>>>> inias_test

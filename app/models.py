@@ -2,15 +2,13 @@ from app import app, db, login
 from typing import Optional
 import sqlalchemy as sa
 import sqlalchemy.orm as so
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy.orm import relationship
 from datetime import timezone, datetime
 from time import time
 from werkzeug.security import generate_password_hash, check_password_hash
 from hashlib import md5
 from flask_login import UserMixin
 import jwt
-from hashlib import md5
-
 
 
 @login.user_loader
@@ -22,6 +20,7 @@ def load_user(id):
     """
     return db.session.get(User, int(id))
 
+
 upvotes = db.Table('upvotes',
                    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
                    db.Column('post_id', db.Integer, db.ForeignKey('post.id'))
@@ -30,6 +29,7 @@ downvotes = db.Table('downvotes',
                      db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
                      db.Column('post_id', db.Integer, db.ForeignKey('post.id'))
                      )
+
 
 def get_posts(movie_id, is_movie):
     """
@@ -56,17 +56,19 @@ class User(UserMixin, db.Model):
     upvoted_posts = relationship("Post", secondary="upvotes", back_populates="upvoters")
     # Define relationship with posts that this user has downvoted
     downvoted_posts = relationship("Post", secondary="downvotes", back_populates="downvoters")
+
     def __repr__(self):
         """
         Function defines string representation of the user object.
         """
-        return f"User: {self.username}, {self.email}, {self.password_hash}, {self.firstname}, {self.family_name}, {self.country}"
+        return f"User: {self.username}, {self.email}, {self.password_hash}, {self.firstname}, {self.family_name}"
 
     def upvote_post(self, post):
         self.upvoted_posts.append(post)
 
     def downvote_post(self, post):
         self.downvoted_posts.append(post)
+
     def set_password(self, password):
         """
         Function generates a hashed password.
@@ -106,39 +108,15 @@ class User(UserMixin, db.Model):
         return db.session.get(User, id)
 
 
-# class Address(UserMixin, db.Model):
-#     """
-#     The address info of the Users stored in an other table for efficiency.
-#     """
-#     id: so.Mapped[int] = so.mapped_column(primary_key=True)
-#     country: so.Mapped[str] = so.mapped_column(sa.String(55), index=True)
-#     city: so.Mapped[str] = so.mapped_column(sa.String(85), index=True)
-#     postalcode: so.Mapped[str] = so.mapped_column(sa.String(20))
-#     street: so.Mapped[str] = so.mapped_column(sa.String(58))
-#     house_number: so.Mapped[int] = so.mapped_column(sa.Integer)
-#     address_suffix: so.Mapped[str] = so.mapped_column(sa.String(10))
-#     user_id: so.Mapped[int] = so.mapped_column(sa.ForeignKey(User.id), index=True)  # Linked to the User id
-
-#     def __repr__(self):
-#         """
-#         Function defines string representation of the address object.
-#         """
-#         return (f'The Address is: {self.country}, {self.city}, {self.street}, '
-#                 f'{self.postalcode}, {self.house_number}, {self.address_suffix}')
-
-
 class Post(db.Model):
     """
     The posts table in the postgress database.
     """
     id: so.Mapped[int] = so.mapped_column(primary_key=True, autoincrement=True)
-    # title: so.Mapped[str] = so.mapped_column(sa.String(120))
     post_message: so.Mapped[str] = so.mapped_column(sa.Text)
     rating: so.Mapped[int] = so.mapped_column(
         sa.Integer)  # While implementing in the code we have to add min =0 and max = 10
 
-    # upvote: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=True)  # implement thumb up count.
-    # downvote: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=True)  # implement thumbs down count.
     time_of_posting: so.Mapped[datetime] = so.mapped_column(index=True, default=lambda: datetime.now(timezone.utc))
     movie_id: so.Mapped[int] = so.mapped_column(sa.Integer, nullable=True)
     is_movie: so.Mapped[bool] = so.mapped_column(sa.Boolean, nullable=True)

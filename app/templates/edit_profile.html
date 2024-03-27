@@ -1,33 +1,10 @@
 {% extends "base.html" %}
+{% import 'bootstrap_wtf.html' as wtf %}
 {% block content %}
-<div class="edit_profile">
-    <div class="container mt-4 mb-4 p-3 d-flex justify-content-center">
-        <div class="card p-4"> 
-        <div class=" image d-flex flex-column justify-content-center align-items-center">
-        
-            <button class="btn btn-secondary">
-                <img src="{{ user.avatar(300) }}" alt="Profile Picture" height="100" width="100" />
-            </button> 
-                
-                <div class="info_change">
-                    <form action="/change_name" method="post">
-                        <label for="new_name">new name</label>
-                        <input type="text" id="'new_name" name="new_name" required>
-                        <button class="btn1 btn-dark">submit</button>
-                    </form>
-                    <form action="/change_family_name" method="post">
-                        <label for="new_family_name">new famely name</label>
-                        <input type="text" id="'new_family_name" name="new_family_name" required>
-                        <button class="btn1 btn-dark">submit</button>
-                    </form>
-                    <form action="/change_country" method="post">
-                        <label for="new_country">new country</label>
-                        <input type="text" id="'new_country" name="new_country" required>
-                        <button class="btn1 btn-dark">submit</button>
-                    </form>
-                </div>
-        </div> 
-        </div>
-        </div>
-</div>
-{%endblock%}
+    <h4 class="container">Edit your profile</h4>
+    <div class="container">{{ wtf.quick_form(form) }}</div>
+
+    {% for post in posts %}
+        {% include '_post.html' %}
+    {% endfor %}
+{% endblock %}
